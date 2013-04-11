@@ -1,2 +1,4 @@
 funkscene
 =========
+
+Teach yourself JavaScript.

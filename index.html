@@ -1,16 +1,22 @@
 <html>
   <head>
 <title>Trappist Adventure</title>
+
+<!-- Stylesheets -->
 <link href="style.css" rel="stylesheet" type="text/css">
+
 </head>
 <body>
+
+<!-- Scene -->
 <div id="scene">
-  After the six-day walk it looms quickly, unmistakable in its grand austerity. You stand before the gates of a 16th-century Trappist monastery.
+  After the six-day walk it looms quickly, unmistakable in its grand austerity.
+  You stand before the gates of a 16th-century Trappist monastery.
 </div>
 <br>
 <br>
 <form action="#">
-  <div class="menu">
+  <div class="menu" id="menu">
     <label class="firstOption">
       <input type="radio" name="opt" value="0" checked/>
       First glancing around, I knock on the door <br/>
@@ -25,6 +31,13 @@
     </label>
   </div>
 </form>
-<button class="continue">Continue</button>
+<button class="continue" id="continue">
+  Continue
+</button>
+
+
+<!-- Scripts -->
+<script type="text/javascript" src="scene.js"></script>
+
 </body>
 </html>

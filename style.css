@@ -9,7 +9,7 @@ body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
-/* Menu */
+/* Menu item */
 .menu>label{
     color: black;
     line-height:20px;
@@ -20,27 +20,25 @@ body {
     border-width: 1px 1px 1px 1px
 }
 
-/* Menu item */
-label:hover {
+.menu>label:hover {
     background-color: #e0e0e0;
 }
 
-
-/* First in list */
+/* First item in list */
 .menu>.firstOption{
     border-top-width:1px;
     border-top-right-radius:10px;
     border-top-left-radius:10px;
 }
 
-/* Last in list */
+/* Last item in list */
 .menu>.lastOption{
     border-bottom-width:1px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
 }
 
-/* Only one in list */
+/* Only item in list */
 .menu>.onlyOption{
     border-width:1px;
     border-radius:10px;

@@ -1,20 +1,22 @@
 var sceneDiv = document.getElementById("scene");
 var menuDiv = document.getElementById("menu");
 var continueButton = document.getElementById("continue");
+var choiceFuncs;
 
-var Start = function() {
-    return
-    ["You are in a vortex.",
-     [["Escape", function(){["You can't",[]]}],
-      ["Fall in", function(){["A fitting end",[]]}]]];
+var startScene = function() {
+    return ["You are in a vortex.",  // no newline after return
+	    [["Escape", function(){return ["You can't.",[]]}],
+	     ["Fall in", function(){return ["A fitting end.",[]]}]]];
 };
-continueButton.onclick = function() { viewScene(Start) };
+
+continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
+viewScene(startScene);
 
 function getSelectedSceneFunction() {
     for (var i = 0; i < menuDiv.length; i++) {
-        var inputDiv = menuDiv[i][0];
+        var inputDiv = menuDiv[i];
         if (inputDiv.checked) {
-            return inputDiv.value;
+            return choiceFuncs[i];
         }
     }
     return undefined;
@@ -22,6 +24,7 @@ function getSelectedSceneFunction() {
 
 function viewScene (f) {
     menuDiv.innerHTML = "";
+    choiceFuncs = new Array;
 
     var text_options = f();
     var text = text_options[0];
@@ -29,21 +32,28 @@ function viewScene (f) {
 
     sceneDiv.innerHTML = text;
 
-    for (var i = 0; i < options.length; ++i) {
-	var text = options[i][0];
-	var sceneFunction = options[i][1];
-	var textDiv = document.createTextNode (text + " <br/>");
-	var inputDiv = document.createElement("input");
-	inputDiv.setAttribute ("type", "radio");
-	inputDiv.setAttribute ("name", "opt");
-	inputDiv.setAttribute ("value", sceneFunction);
-	var labelDiv = document.createElement("label");
-	labelDiv.appendChild (inputDiv);
-	labelDiv.appendChild (textDiv);
-	if (i == 0) { labelDiv.setAttribute("class",options.length > 1 ? "firstOption" : "onlyOption"); }
-	else if (i == options.length - 1) { labelDiv.setAttribute("class","lastOption"); }
-	menuDiv.appendChild (labelDiv);
+    if (options.length == 0) {
+	continueButton.setAttribute ("style", "display: none");  // hide button at end
+    } else {
+	for (var i = 0; i < options.length; ++i) {
+	    var text = options[i][0];
+	    var sceneFunction = options[i][1];
+	    var textDiv = document.createTextNode (text);
+	    var inputDiv = document.createElement("input");
+	    inputDiv.setAttribute ("type", "radio");
+	    inputDiv.setAttribute ("name", "opt");
+	    var labelDiv = document.createElement("label");
+	    if (i == 0) {
+		labelDiv.setAttribute ("class", options.length > 1 ? "firstOption" : "onlyOption");
+		inputDiv.setAttribute ("checked", 1);
+	    } else if (i == options.length - 1) {
+		labelDiv.setAttribute ("class", "lastOption");
+	    }
+	    labelDiv.appendChild (inputDiv);
+	    labelDiv.appendChild (textDiv);
+	    menuDiv.appendChild (labelDiv);
+	    choiceFuncs.push (sceneFunction);
+	}
+	continueButton.removeAttribute ("style");  // make sure button is visible
     }
-
-    continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
 }

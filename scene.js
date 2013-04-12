@@ -3,14 +3,14 @@ var menuDiv = document.getElementById("menu");
 var continueButton = document.getElementById("continue");
 var choiceFuncs;
 
-var startScene = function() {
-    return ["You are in a vortex.",  // no newline after return
-	    [["Escape", function(){return ["You can't.",[]]}],
-	     ["Fall in", function(){return ["A fitting end.",[]]}]]];
-};
-
-continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
-viewScene(startScene);
+if (typeof start === 'undefined') {
+    start = function() {
+	return ["You are in a vortex.",  // no newline after return
+ 		[["Escape", function(){return ["You can't.",[]]}],
+ 		 ["Fall in", function(){return ["A fitting end.",[]]}]]];
+    };
+}
+viewScene (start);
 
 function getSelectedSceneFunction() {
     for (var i = 0; i < menuDiv.length; i++) {
@@ -56,4 +56,7 @@ function viewScene (f) {
 	}
 	continueButton.removeAttribute ("style");  // make sure button is visible
     }
+
+    // activate/initialize the continue button
+    continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
 }

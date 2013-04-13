@@ -1,16 +1,21 @@
 start
-  = code:code scene:named_scene rest:start { return code + scene + rest; }
+  = body
+
+body
+  = scene:named_scene rest:body { return scene + rest; }
+  / head:code rest:body { return head + rest; }
   / code
 
 code
   = "##" tail:code { return "#" + tail; }
-  / head:[^#]* tail:code? { return head + tail; }
+  / head:[^#]+ tail:code { return head + tail; }
+  / [^#]+
 
 named_scene
   = "#PAGE" spc name:symbol spc scene:scene  { return "var " + name + " = " + scene + ";\n"; }
 
 symbol
-  = first:[A-Za-z_] rest:[0-9A-Za-z_] { return first + rest; }
+  = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
   = "#SCENE" spc scene_desc:quoted_text choices:choice_list? endscene
@@ -21,7 +26,7 @@ choice_list
  / choice
 
 choice
- = "#CHOOSE" choice_desc:quoted_text "#FOR" target:symbol { return "[" + choice_desc + "," + target + "]"; }
+ = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol spc { return "[" + choice_desc + "," + target + "]"; }
 
 endscene
   = "#ENDSCENE"
@@ -33,9 +38,10 @@ spc
   = [ \t\n\r]*
 
 quoted_text
-  = text:text { return "\"" + text + "\""; }
+  = text:text { return '"' + text + '"'; }
 
 text
   = "##" tail:text { return "#" + tail; }
-  / "\"" tail:text { return "\\\"" + tail; }
-  / head:[^#\"]* tail:text? { return head + tail; }
+  / '"' tail:text { return '\"' + tail; }
+  / head:[^#\"]+ tail:text { return head + tail; }
+  / chars:[^#\"]+ { return chars.join(""); }

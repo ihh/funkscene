@@ -36,18 +36,21 @@
 
 
 <!-- Scripts -->
-<script type="text/javascript" src="content.js"></script>
-<script type="text/javascript" src="scene.js"></script>
 
-<script type="text/javascript" src="test.js"></script>
+<!-- the parser -->
+<script type="text/javascript" src="grammar.js"></script>
+<script type="text/javascript" src="parser.js"></script>
+
+<!-- Uncomment for native javascript version of Belsidore -->
+<!-- script type="text/javascript" src="belsidore.js"></script -->
+
+<!-- load the Belsidore scene file and parse it -->
 <script type="text/javascript">
-
-var xhr = new XMLHttpRequest();
-xhr.open("GET","belsidore.scene",true);
-xhr.send();
-var content = funkscene_parser.parse(xhr.responseText);
-
+  loadSceneFile ("belsidore.scene");
 </script>
+
+<!-- load scene.js last, because it calls viewScene(start) -->
+<script type="text/javascript" src="scene.js"></script>
 
 </body>
 </html>

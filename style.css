@@ -17,7 +17,7 @@ body {
     padding: 10px 10px 10px;
     border-color:#b0b0b0;
     border-style:solid;
-    border-width: 1px 1px 1px 1px
+    border-width: 1px 1px 0px 1px
 }
 
 .menu>label:hover {

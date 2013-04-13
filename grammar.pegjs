@@ -6,13 +6,9 @@ body
   / head:code rest:body { return head + rest; }
   / code
 
-code
-  = "##" tail:code { return "#" + tail; }
-  / head:[^#]+ tail:code { return head + tail; }
-  / [^#]+
-
 named_scene
-  = "#PAGE" spc name:symbol spc scene:scene  { return "var " + name + " = " + scene + ";\n"; }
+  = "#PAGE" spc name:symbol spc scene:scene
+ { return name + " = " + scene + ";\n"; }
 
 symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
@@ -26,12 +22,11 @@ choice_list
  / choice
 
 choice
- = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol spc { return "[" + choice_desc + "," + target + "]"; }
+ = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol spc
+ { return "[" + choice_desc + "," + target + "]"; }
 
 endscene
   = "#ENDSCENE"
-  / "#END" spc "SCENE"
-  / "#END" spc "#SCENE"
   / "#END"
 
 spc
@@ -40,8 +35,18 @@ spc
 quoted_text
   = text:text { return '"' + text + '"'; }
 
+code
+  = "##" tail:code? { return "#" + tail; }
+  / head:code_chars tail:code? { return head + tail; }
+
+code_chars
+  = chars:[^#]+ { return chars.join(""); }
+
 text
-  = "##" tail:text { return "#" + tail; }
-  / '"' tail:text { return '\"' + tail; }
-  / head:[^#\"]+ tail:text { return head + tail; }
-  / chars:[^#\"]+ { return chars.join(""); }
+  = "##" tail:text? { return "#" + tail; }
+  / '"' tail:text? { return '\\"' + tail; }
+  / "\n" tail:text? { return '\\n' + tail; }
+  / head:text_chars tail:text? { return head + tail; }
+
+text_chars
+  = chars:[^#\"\n]+ { return chars.join(""); }

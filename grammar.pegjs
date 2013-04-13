@@ -14,12 +14,8 @@ symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choice_list? endscene
- { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices + "]]; }\n"; }
-
-choice_list
- = head:choice tail:choice_list { return head + ",\n\t" + tail; }
- / choice
+  = "#SCENE" spc scene_desc:quoted_text choices:choice* endscene
+ { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; }\n"; }
 
 choice
  = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol spc

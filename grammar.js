@@ -41,7 +41,6 @@ funkscene_parser = (function(){
         "named_scene": parse_named_scene,
         "symbol": parse_symbol,
         "scene": parse_scene,
-        "choice_list": parse_choice_list,
         "choice": parse_choice,
         "endscene": parse_endscene,
         "spc": parse_spc,
@@ -320,8 +319,12 @@ funkscene_parser = (function(){
           if (result1 !== null) {
             result2 = parse_quoted_text();
             if (result2 !== null) {
-              result3 = parse_choice_list();
-              result3 = result3 !== null ? result3 : "";
+              result3 = [];
+              result4 = parse_choice();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_choice();
+              }
               if (result3 !== null) {
                 result4 = parse_endscene();
                 if (result4 !== null) {
@@ -347,41 +350,10 @@ funkscene_parser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, scene_desc, choices) { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices + "]]; }\n"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[3]);
+          result0 = (function(offset, line, column, scene_desc, choices) { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; }\n"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[3]);
         }
         if (result0 === null) {
           pos = clone(pos0);
-        }
-        return result0;
-      }
-      
-      function parse_choice_list() {
-        var result0, result1;
-        var pos0, pos1;
-        
-        pos0 = clone(pos);
-        pos1 = clone(pos);
-        result0 = parse_choice();
-        if (result0 !== null) {
-          result1 = parse_choice_list();
-          if (result1 !== null) {
-            result0 = [result0, result1];
-          } else {
-            result0 = null;
-            pos = clone(pos1);
-          }
-        } else {
-          result0 = null;
-          pos = clone(pos1);
-        }
-        if (result0 !== null) {
-          result0 = (function(offset, line, column, head, tail) { return head + ",\n\t" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
-        }
-        if (result0 === null) {
-          pos = clone(pos0);
-        }
-        if (result0 === null) {
-          result0 = parse_choice();
         }
         return result0;
       }

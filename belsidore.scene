@@ -1,11 +1,16 @@
+amps = "Several"
+
 #PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore.
 #CHOOSE I smash the gates! #FOR electrified
+#IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
+#CHOOSE What is the philological origin of "Belsidore"? #FOR #SCENE NERD!!! #ENDSCENE
+#CHOOSE I kill myself #FOR #{ Done. #}
 #CHOOSE I walk away #FOR wise_choice
 #ENDSCENE
 
 #PAGE electrified
-#SCENE Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.
+#SCENE #{ amps #} amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.
 #ENDSCENE
 
 #PAGE wise_choice

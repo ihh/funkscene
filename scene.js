@@ -35,24 +35,35 @@ function viewScene (f) {
     if (options.length == 0) {
 	continueButton.setAttribute ("style", "display: none");  // hide button at end
     } else {
+	var numChecked = 0;
 	for (var i = 0; i < options.length; ++i) {
-	    var text = options[i][0];
-	    var sceneFunction = options[i][1];
-	    var textDiv = document.createTextNode (text);
-	    var inputDiv = document.createElement("input");
-	    inputDiv.setAttribute ("type", "radio");
-	    inputDiv.setAttribute ("name", "opt");
-	    var labelDiv = document.createElement("label");
-	    if (i == 0) {
-		labelDiv.setAttribute ("class", options.length > 1 ? "firstOption" : "onlyOption");
-		inputDiv.setAttribute ("checked", 1);
-	    } else if (i == options.length - 1) {
-		labelDiv.setAttribute ("class", "lastOption");
+	    if (options[i] instanceof Array
+		&& (options[i].length == 1
+		    || options[i].length == 2)) {
+		var text = options[i][0];
+		var sceneFunction = options[i].length == 2 ? options[i][1] : undefined;
+		var textDiv = document.createTextNode (text);
+		var inputDiv = document.createElement("input");
+		inputDiv.setAttribute ("type", "radio");
+		inputDiv.setAttribute ("name", "opt");
+		var labelDiv = document.createElement("label");
+		if (i == 0) {
+		    labelDiv.setAttribute ("class", options.length > 1 ? "firstOption" : "onlyOption");
+		} else if (i == options.length - 1) {
+		    labelDiv.setAttribute ("class", "lastOption");
+		}
+		if (numChecked == 0) {
+		    inputDiv.setAttribute ("checked");
+		}
+		if (typeof sceneFunction === 'undefined') {
+		    inputDiv.setAttribute ("disabled");
+		}
+		++numChecked;
+		labelDiv.appendChild (inputDiv);
+		labelDiv.appendChild (textDiv);
+		menuDiv.appendChild (labelDiv);
+		choiceFuncs.push (sceneFunction);
 	    }
-	    labelDiv.appendChild (inputDiv);
-	    labelDiv.appendChild (textDiv);
-	    menuDiv.appendChild (labelDiv);
-	    choiceFuncs.push (sceneFunction);
 	}
 	continueButton.removeAttribute ("style");  // make sure button is visible
     }

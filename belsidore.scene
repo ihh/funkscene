@@ -5,7 +5,8 @@ amps = "Several"
 #CHOOSE I smash the gates! #FOR electrified
 #IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
 #CHOOSE What is the philological origin of "Belsidore"? #FOR #SCENE NERD!!! #ENDSCENE
-#SECRETLY #IF 0 #CHOOSE I kill myself #FOR #{ Done. #}
+#CHOOSE I kill myself #FOR #{ Done. #}
+#SECRETLY #IF 0 #CHOOSE I do nothing #FOR wise_choice
 #CHOOSE I walk away #FOR wise_choice
 #ENDSCENE
 

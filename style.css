@@ -24,6 +24,14 @@ body {
     background-color: #e0e0e0;
 }
 
+.menu>label[disabled] {
+    font-style: italic;
+    color: gray;
+}
+.menu>label:hover[disabled] {
+    background-color: #f0f0f0;
+}
+
 /* First item in list */
 .menu>.firstOption{
     border-top-width:1px;

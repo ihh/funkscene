@@ -55,6 +55,7 @@ function viewScene (f) {
 		}
 		if (typeof sceneFunction === 'undefined') {
 		    inputDiv.setAttribute ("disabled");
+		    labelDiv.setAttribute ("disabled");
 		}
 		++numChecked;
 		labelDiv.appendChild (inputDiv);

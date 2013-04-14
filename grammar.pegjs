@@ -20,7 +20,7 @@ symbol
 scene
   = "#SCENE" spc scene_desc:quoted_text choices:choice* endscene
  { return sceneFunction (scene_desc, choices); }
-  / "#{" spc scene_desc:quoted_text choices:choice* "#}"
+  / "#{" scene_desc:quoted_text choices:choice* "#}"
  { return sceneFunction (scene_desc, choices); }
 
 symbol_or_scene
@@ -28,11 +28,11 @@ symbol_or_scene
   / scene
 
 choice
- = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
+ = "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "[" + choice_desc + "," + target + "]"; }
- / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
+ / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; }
- /  "#IF" spc expr:code "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
+ /  "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [" + choice_desc + "])"; }
 
 endscene
@@ -40,7 +40,10 @@ endscene
   / "#END"
 
 spc
-  = [ \t\n\r]+
+  = single_spc+
+
+single_spc
+  = [ \t\n\r]
 
 quoted_text
   = text:text { return '"' + text + '"'; }
@@ -55,8 +58,7 @@ code_chars
 text
   = "##" tail:text? { return "#" + tail; }
   / "#{" expr:code "#}" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
-  / "#CODE" expr:code "#TEXT" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
-  / "#(" statement:code "#)" tail:text? { statement; return tail; }
+  / "#CODE" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

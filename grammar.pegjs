@@ -54,8 +54,8 @@ code_chars
 
 text
   = "##" tail:text? { return "#" + tail; }
-  / "#{" expr:code "#}" tail:text? { return (expr) + tail; }
-  / "#CODE" expr:code "#TEXT" tail:text? { return (expr) + tail; }
+  / "#{" expr:code "#}" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
+  / "#CODE" expr:code "#TEXT" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#(" statement:code "#)" tail:text? { statement; return tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }

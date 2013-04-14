@@ -32,10 +32,8 @@ function viewScene (f) {
 
     sceneDiv.innerHTML = text;
 
-    if (options.length == 0) {
-	continueButton.setAttribute ("style", "display: none");  // hide button at end
-    } else {
-	var numChecked = 0;
+    var numChecked = 0;
+    if (options.length > 0) {
 	for (var i = 0; i < options.length; ++i) {
 	    if (options[i] instanceof Array
 		&& (options[i].length == 1
@@ -68,6 +66,11 @@ function viewScene (f) {
 	continueButton.removeAttribute ("style");  // make sure button is visible
     }
 
-    // activate/initialize the continue button
-    continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
+    if (numChecked > 0) {
+	// activate/initialize the continue button
+	continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
+    } else {
+	// no choices, so hide button
+	continueButton.setAttribute ("style", "display: none");
+    }
 }

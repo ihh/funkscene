@@ -522,13 +522,13 @@ funkscene_parser = (function(){
         if (result0 === null) {
           pos0 = clone(pos);
           pos1 = clone(pos);
-          if (input.substr(pos.offset, 9) === "#SILENTLY") {
-            result0 = "#SILENTLY";
+          if (input.substr(pos.offset, 9) === "#SECRETLY") {
+            result0 = "#SECRETLY";
             advance(pos, 9);
           } else {
             result0 = null;
             if (reportFailures === 0) {
-              matchFailed("\"#SILENTLY\"");
+              matchFailed("\"#SECRETLY\"");
             }
           }
           if (result0 !== null) {

@@ -30,7 +30,7 @@ symbol_or_scene
 choice
  = "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "[" + choice_desc + "," + target + "]"; }
- / "#SILENTLY" spc "#IF" spc expr:code "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
+ / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; }
  /  "#IF" spc expr:code "#CHOOSE" choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [" + choice_desc + "])"; }

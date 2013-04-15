@@ -51,11 +51,11 @@ function viewScene (f) {
 		    labelDiv.setAttribute ("class", "lastOption");
 		}
 		if (numChecked == 0) {
-		    inputDiv.setAttribute ("checked");
+		    inputDiv.setAttribute ("checked", 1);
 		}
 		if (typeof sceneFunction === 'undefined') {
-		    inputDiv.setAttribute ("disabled");
-		    labelDiv.setAttribute ("disabled");
+		    inputDiv.setAttribute ("disabled", 1);
+		    labelDiv.setAttribute ("disabled", 1);
 		}
 		++numChecked;
 		labelDiv.appendChild (inputDiv);

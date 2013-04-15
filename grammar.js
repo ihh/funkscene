@@ -408,13 +408,13 @@ funkscene_parser = (function(){
         if (result0 === null) {
           pos0 = clone(pos);
           pos1 = clone(pos);
-          if (input.substr(pos.offset, 2) === "#{") {
-            result0 = "#{";
+          if (input.substr(pos.offset, 2) === "#[") {
+            result0 = "#[";
             advance(pos, 2);
           } else {
             result0 = null;
             if (reportFailures === 0) {
-              matchFailed("\"#{\"");
+              matchFailed("\"#[\"");
             }
           }
           if (result0 !== null) {
@@ -427,13 +427,13 @@ funkscene_parser = (function(){
                 result3 = parse_choose();
               }
               if (result2 !== null) {
-                if (input.substr(pos.offset, 2) === "#}") {
-                  result3 = "#}";
+                if (input.substr(pos.offset, 2) === "#]") {
+                  result3 = "#]";
                   advance(pos, 2);
                 } else {
                   result3 = null;
                   if (reportFailures === 0) {
-                    matchFailed("\"#}\"");
+                    matchFailed("\"#]\"");
                   }
                 }
                 if (result3 !== null) {

@@ -20,7 +20,7 @@ symbol
 scene
   = "#SCENE" spc scene_desc:quoted_text choices:choose* endscene
  { return sceneFunction (scene_desc, choices); }
-  / "#{" scene_desc:quoted_text choices:choose* "#}"
+  / "#[" scene_desc:quoted_text choices:choose* "#]"
  { return sceneFunction (scene_desc, choices); }
 
 symbol_or_scene

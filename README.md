@@ -6,28 +6,27 @@ programming in the creation of choice-based interactive fiction (IF).
 
 Most JavaScript programs are valid FunkScene programs. In addition,
 FunkScene provides a few macros to construct the staples of
-choice-based IF: passages of text ("scenes"), with choices that lead
+choice-based IF: passages of text _("scenes")_ with choices that lead
 to other scenes.
 
 JavaScript API
 --------------
 
-The fundamental concept in the FunkScene JavaScript API is the "scene
-function". A scene function is a JavaScript function, taking no
-arguments, which (when called) must return an array containing two
-objects:
+The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
+A scene function is a JavaScript function, taking no arguments,
+which (when called) must return an array containing two objects:
 
-1. a text string (the "scene text"),
-2. an array of choices (the "choice list").
+1. a text string (the _"scene text"_ ),
+2. an array of choices (the _"choice list"_ ).
 
 Each choice in the choice list is itself an array containing two
 objects:
 
-1. a text string (the "choice text"),
-2. a scene function (the "choice target").
+1. a text string (the _"choice text"_ ),
+2. a scene function (the _"choice target"_ ).
 
 Succintly: a scene function returns a piece of text (describing the
-scene) along with a list of (choicetext,scenefunction) pairs.
+scene) along with a list of ( _choicetext_, _scenefunction_ ) pairs.
 
 The JavaScript API has special interpretations for certain edge cases
 (the FunkScene macros `#GOTO` and `#IF` make use of some of these):
@@ -41,8 +40,8 @@ The JavaScript API has special interpretations for certain edge cases
   grayed-out and the choice disabled. (Used to implement hints about
   choices that could be unlocked, i.e. failed `#IF` tests.)
 
-The choiceHistory array holds the history of choices (with each choice
-represented as an integer index into the choice list). The restore()
+The `choiceHistory` array holds the history of choices (with each choice
+represented as an integer index into the choice list). The `restore()`
 function can be used to replay a history.
 
 

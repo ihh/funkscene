@@ -1,7 +1,7 @@
 var sceneDiv = document.getElementById("scene");
 var menuDiv = document.getElementById("menu");
 var continueButton = document.getElementById("continue");
-var choiceFuncs;
+var choiceFuncs, choiceHistory;
 
 if (typeof start === 'undefined') {
     start = function() {
@@ -10,12 +10,12 @@ if (typeof start === 'undefined') {
  		 ["Fall in", function(){return ["A fitting end.",[]]}]]];
     };
 }
-viewScene (start);
 
 function getSelectedSceneFunction() {
     for (var i = 0; i < menuDiv.length; i++) {
         var inputDiv = menuDiv[i];
         if (inputDiv.checked) {
+	    choiceHistory.push (i);
             return choiceFuncs[i];
         }
     }
@@ -77,4 +77,33 @@ function viewScene (f) {
 	// no choices, so hide button
 	continueButton.setAttribute ("style", "display: none");
     }
+}
+
+function loadSceneFile (url) {
+    var xhr = new XMLHttpRequest();
+    xhr.open ("GET", url, false);
+    xhr.send();
+    var raw = xhr.responseText;
+//    console.log (raw);
+    var processed = funkscene_parser.parse (raw);
+//    console.log (processed);
+    eval (processed);
+}
+
+function initialize() {
+    viewScene (start);
+    choiceHistory = new Array;
+}
+
+function restore (history) {
+    // already done: viewScene(start)
+    if (history.length > 0) {
+	var f = choiceFuncs[history[0]];
+	for (var i = 1; i < history.length; ++i) {
+	    var text_options = f();
+	    f = text_options[1][history[i]][1];
+	}
+	viewScene (f);
+    }
+    choiceHistory = history;
 }

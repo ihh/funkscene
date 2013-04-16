@@ -1,5 +1,5 @@
-FunkScene Language Quick Start for JavaScript programmers
-=========================================================
+FunkScene
+=========
 
 FunkScene is a dialect of JavaScript intended to encourage functional
 programming in the creation of choice-based interactive fiction (IF).
@@ -10,21 +10,21 @@ choice-based IF: passages of text ("scenes"), with choices that lead
 to other scenes.
 
 JavaScript API
-==============
+--------------
 
 The fundamental concept in the FunkScene JavaScript API is the "scene
 function". A scene function is a JavaScript function, taking no
 arguments, which (when called) must return an array containing two
 objects:
 
-	(a) a text string (the "scene text"),
-	(b) an array of choices (the "choice list").
+1. a text string (the "scene text"),
+2. an array of choices (the "choice list").
 
 Each choice in the choice list is itself an array containing two
 objects:
 
-	(a) a text string (the "choice text"),
-	(b) a scene function (the "choice target").
+1. a text string (the "choice text"),
+2. a scene function (the "choice target").
 
 Succintly: a scene function returns a piece of text (describing the
 scene) along with a list of (choicetext,scenefunction) pairs.
@@ -32,14 +32,14 @@ scene) along with a list of (choicetext,scenefunction) pairs.
 The JavaScript API has special interpretations for certain edge cases
 (the FunkScene macros #GOTO and #IF make use of some of these):
 
-	- An empty choice list signifies that the game is over.
-	- If the choice text is an empty string, the choice will be
-	   hidden. (This is used to implement the #GOTO case where no choice
-	   list is to be shown, but the game should still continue, so there
-	   still needs to be a default choice.)
-	- If a choice target is undefined, the choice text will be shown but
-	   grayed-out and the choice disabled. (Used to implement hints about
-	   choices that could be unlocked, i.e. failed #IF tests.)
+* An empty choice list signifies that the game is over.
+* If the choice text is an empty string, the choice will be
+  hidden. (This is used to implement the #GOTO case where no choice
+  list is to be shown, but the game should still continue, so there
+  still needs to be a default choice.)
+* If a choice target is undefined, the choice text will be shown but
+  grayed-out and the choice disabled. (Used to implement hints about
+  choices that could be unlocked, i.e. failed #IF tests.)
 
 The choiceHistory array holds the history of choices (with each choice
 represented as an integer index into the choice list). The restore()
@@ -47,7 +47,7 @@ function can be used to replay a history.
 
 
 FunkScene language JavaScript extensions
-========================================
+----------------------------------------
 
 FunkScene is JavaScript, plus a few keywords for constructing scene
 functions, and a small amount of boilerplate code for hooking up scene
@@ -78,7 +78,7 @@ JavaScript or your text, escape it as "##").
 
 
 Beginnings, endings, middles
-============================
+----------------------------
 
 Note that one of the scene functions is called "start"; regardless of
 where it is declared in the program, this will always be the first
@@ -112,23 +112,23 @@ use"#ENDSCENE", too.)
 
 
 JavaScript object code
-======================
+----------------------
 
 FunkScene is compiled internally to JavaScript. The above program
 compiles to the following:
 
-	start = function() {
+	start - function() {
 	    return ["You stand before the gates of the Temple of Belsidore. A sign reads \"BEWARE!\"",
 	            [["I smash the gates!", electrified],
 	             ["I walk away", wise_choice]]];
 	}
 
-	electrified = function() {
+	electrified - function() {
 	    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
 		     []];
 	}
 
-	wise_choice = function() {
+	wise_choice - function() {
 	    return ["A wise choice, my friend.",
 	     []];
 	}
@@ -139,7 +139,7 @@ JavaScript.
 
 
 General format of a scene declaration
-=====================================
+-------------------------------------
 
 The general format of the FunkScene #PAGE...#SCENE...#ENDSCENE macro,
 which constructs a scenefunction and assigns it to a JavaScript var,
@@ -161,7 +161,7 @@ parenthesis-balancing feature to check that your brackets match.)
 
 
 Anonymous scene functions
-=========================
+-------------------------
 
 You can declare scenes in nested (inline) fashion, as well as
 standalone blocks. For example:
@@ -190,7 +190,7 @@ standalone blocks. For example:
 
 
 Single-choice scenes
-====================
+--------------------
 
 There are two ways to implement single-choice scenes
 (i.e. non-interactive fiction...)
@@ -199,7 +199,7 @@ If you want the choice to be visible
 
 
 Choices that are disabled but still visible
-===========================================
+-------------------------------------------
 
 The choice can be prefixed by #IF <JavaScript expression>, e.g.
 	#IF <JavaScript expression> #CHOOSE <text> #FOR <var name>
@@ -209,13 +209,13 @@ or the anonymous version
 
 
 Choices that are disabled and invisible
-=======================================
+---------------------------------------
 
 	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <var name>
 	#SECRETLY #IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
 
 Programmatically generated choice lists
-=======================================
+---------------------------------------
 
 As well as just generating them directly in JavaScript, you can build
 scene functions using a mix of JS and FunkScene:
@@ -242,7 +242,7 @@ array delimiters explicitly, even when using #CHOOSE...#FOR blocks.
 
 
 Embedding and interpolating code in text
-========================================
+----------------------------------------
 
 	#EVAL <...JavaScript expression to be interpolated...> #TEXT
 
@@ -264,6 +264,6 @@ run inside an anonymous closure).
 
 
 Text input to variables
-=======================
+-----------------------
 
 TBD.

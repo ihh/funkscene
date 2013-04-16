@@ -95,6 +95,7 @@ function initialize() {
     choiceHistory = new Array;
 }
 
+// restore() assumes exact reproducibility (i.e. do NOT use Math.Rand!)
 function restore (history) {
     // already done: viewScene(start)
     if (history.length > 0) {

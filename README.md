@@ -224,15 +224,6 @@ scene:
 Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
 (You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
 
-If you just want one scene's text to run on from the previous one,
-with no need to manually advance the story by pressing a button, you
-can just use a function call:
-
-	#PAGE solitaire
-	#SCENE You while away the train journey playing Solitaire.
-	#[ train_reaches_station() #]
-	#ENDSCENE
-
 
 Programmatically generated choice lists
 ---------------------------------------

@@ -76,51 +76,6 @@ begin with a `#`; if you need to use an actual hash symbol in your
 JavaScript or your text, escape it as a double hash `##`).
 
 
-Beginnings, endings, middles
-----------------------------
-
-Note that one of the scene functions is called `start`; regardless of
-where it is declared in the program, this will always be the first
-scene the player sees.
-
-The other two scenes (page names `electrified` and `wise_choice`) have
-zero choices available to the player, and are therefore interpreted as
-game-ending scenes.
-
-For middle passages, i.e. scenes that have only one choice, you can
-either list a single choice, emphasizing that the player is taking the
-only course of action available:
-
-	#PAGE hanging_on
-	#SCENE You hang onto the ledge for as long as possible,
-	  but the pain is unbearable. Eventually you have no choice but to...
-	#CHOOSE ...let go #FOR #( You let go, and plummet to your doom. #)
-	#ENDSCENE
-
-Or, you can use the special `#GOTO` keyword, which hides the choice list
-altogether, but still forces the player to click a button to move to the next
-scene:
-
-	#PAGE drink_wine
-	#SCENE The wine burns the back of your throat. Poison! You reach for
-	 the door, but your legs buckle and the door-handle recedes down a
-	 tunnel as you slip into unconsciousness...
-	#GOTO handcuffed_to_chair
-	#ENDSCENE
-
-Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
-(You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
-
-If you just want one scene's text to run on from the previous one,
-with no need to manually advance the story by pressing a button, you
-can just use a function call:
-
-	#PAGE solitaire
-	#SCENE You while away the train journey playing Solitaire.
-	#[ train_reaches_station() #]
-	#ENDSCENE
-
-
 JavaScript object code
 ----------------------
 
@@ -214,6 +169,52 @@ Choices that are invisible when disabled
 
 	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <var name>
 	#SECRETLY #IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
+
+
+Beginnings, endings, middles
+----------------------------
+
+Note that one of the scene functions is called `start`; regardless of
+where it is declared in the program, this will always be the first
+scene the player sees.
+
+The other two scenes (page names `electrified` and `wise_choice`) have
+zero choices available to the player, and are therefore interpreted as
+game-ending scenes.
+
+For middle passages, i.e. scenes that have only one choice, you can
+either list a single choice, emphasizing that the player is taking the
+only course of action available:
+
+	#PAGE hanging_on
+	#SCENE You hang onto the ledge for as long as possible,
+	  but the pain is unbearable. Eventually you have no choice but to...
+	#CHOOSE ...let go #FOR #( You let go, and plummet to your doom. #)
+	#ENDSCENE
+
+Or, you can use the special `#GOTO` keyword, which hides the choice list
+altogether, but still forces the player to click a button to move to the next
+scene:
+
+	#PAGE drink_wine
+	#SCENE The wine burns the back of your throat. Poison! You reach for
+	 the door, but your legs buckle and the door-handle recedes down a
+	 tunnel as you slip into unconsciousness...
+	#GOTO handcuffed_to_chair
+	#ENDSCENE
+
+Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
+(You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
+
+If you just want one scene's text to run on from the previous one,
+with no need to manually advance the story by pressing a button, you
+can just use a function call:
+
+	#PAGE solitaire
+	#SCENE You while away the train journey playing Solitaire.
+	#[ train_reaches_station() #]
+	#ENDSCENE
+
 
 Programmatically generated choice lists
 ---------------------------------------

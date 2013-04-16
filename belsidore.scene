@@ -1,10 +1,11 @@
 amps = "Several"
+dial = "dial"
 
 #PAGE start
-#SCENE You stand before the gates of the Temple of Belsidore. Beside the gate is a dial.
+#SCENE You stand before the gates of the Temple of Belsidore. Beside the gate is a #[dial#].
 #CHOOSE I smash the gates! #FOR electrified
-#SECRETLY #IF amps === "Several"
- #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps="Eleven" #} #GOTO start #)
+#SECRETLY #IF amps == "Several"
+ #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps="Eleven"; dial="dial, turned to eleven" #} #GOTO start #)
 #IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
 #CHOOSE What is the philological origin of "Belsidore"? #FOR #SCENE NERD!!! #ENDSCENE
 #CHOOSE I kill myself #FOR #( Done. #)

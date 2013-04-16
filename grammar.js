@@ -1132,7 +1132,7 @@ funkscene_parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, code, tail) { return "\" + stringOrEmpty((function(){" + code + "})()) + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
+            result0 = (function(offset, line, column, code, tail) { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -1401,9 +1401,6 @@ funkscene_parser = (function(){
       }
       
       
-      
-        function stringOrEmpty(s)
-          { return typeof(s) === 'string' ? s : ""; }
       
         function sceneFunction(scene_desc,choices)		
           { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }

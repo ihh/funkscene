@@ -1,7 +1,4 @@
 {
-  function stringOrEmpty(s)
-    { return typeof(s) === 'string' ? s : ""; }
-
   function sceneFunction(scene_desc,choices)		
     { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }
 }
@@ -70,7 +67,7 @@ code_chars
 
 text
   = "##" tail:text? { return "#" + tail; }
-  / "#{" code:code "#}" tail:text? { return "\" + stringOrEmpty((function(){" + code + "})()) + \"" + tail; }
+  / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#CODE" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }

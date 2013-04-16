@@ -3,7 +3,8 @@ amps = "Several"
 #PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore. Beside the gate is a dial.
 #CHOOSE I smash the gates! #FOR electrified
-#IF amps === "Several" #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps=11 #} #GOTO start #)
+#SECRETLY #IF amps === "Several"
+ #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps="Eleven" #} #GOTO start #)
 #IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
 #CHOOSE What is the philological origin of "Belsidore"? #FOR #SCENE NERD!!! #ENDSCENE
 #CHOOSE I kill myself #FOR #( Done. #)
@@ -12,7 +13,8 @@ amps = "Several"
 #ENDSCENE
 
 #PAGE electrified
-#SCENE #[ amps #] amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.
+#SCENE #[ amps #] amps flow through your body.
+Think that doesn't sound like a lot? No, you don't think that, because you're dead.
 #ENDSCENE
 
 #PAGE wise_choice

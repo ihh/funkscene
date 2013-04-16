@@ -1,5 +1,10 @@
-{ function sceneFunction(scene_desc,choices)		
-  { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; }\n"; } }
+{
+  function stringOrEmpty(s)
+    { return typeof(s) === 'string' ? s : ""; }
+
+  function sceneFunction(scene_desc,choices)		
+    { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }
+}
 
 start
   = body
@@ -18,10 +23,14 @@ symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choose* endscene
+  = "#SCENE" spc scene_desc:quoted_text choices:choice_list endscene
  { return sceneFunction (scene_desc, choices); }
-  / "#(" scene_desc:quoted_text choices:choose* "#)"
+  / "#(" scene_desc:quoted_text choices:choice_list "#)"
  { return sceneFunction (scene_desc, choices); }
+
+choice_list
+ = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
+ / choose*
 
 symbol_or_scene
   = symbol
@@ -61,7 +70,8 @@ code_chars
 
 text
   = "##" tail:text? { return "#" + tail; }
-  / "#{" expr:code "#}" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
+  / "#{" code:code "#}" tail:text? { return "\" + stringOrEmpty((function(){" + code + "})()) + \"" + tail; }
+  / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#CODE" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }

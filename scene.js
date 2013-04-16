@@ -57,6 +57,9 @@ function viewScene (f) {
 		    inputDiv.setAttribute ("disabled", 1);
 		    labelDiv.setAttribute ("disabled", 1);
 		}
+		if (text === '') {
+		    labelDiv.setAttribute ("style", "display: none");
+		}
 		++numChecked;
 		labelDiv.appendChild (inputDiv);
 		labelDiv.appendChild (textDiv);

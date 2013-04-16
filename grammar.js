@@ -41,6 +41,7 @@ funkscene_parser = (function(){
         "named_scene": parse_named_scene,
         "symbol": parse_symbol,
         "scene": parse_scene,
+        "choice_list": parse_choice_list,
         "symbol_or_scene": parse_symbol_or_scene,
         "choose": parse_choose,
         "choice": parse_choice,
@@ -369,12 +370,7 @@ funkscene_parser = (function(){
           if (result1 !== null) {
             result2 = parse_quoted_text();
             if (result2 !== null) {
-              result3 = [];
-              result4 = parse_choose();
-              while (result4 !== null) {
-                result3.push(result4);
-                result4 = parse_choose();
-              }
+              result3 = parse_choice_list();
               if (result3 !== null) {
                 result4 = parse_endscene();
                 if (result4 !== null) {
@@ -420,12 +416,7 @@ funkscene_parser = (function(){
           if (result0 !== null) {
             result1 = parse_quoted_text();
             if (result1 !== null) {
-              result2 = [];
-              result3 = parse_choose();
-              while (result3 !== null) {
-                result2.push(result3);
-                result3 = parse_choose();
-              }
+              result2 = parse_choice_list();
               if (result2 !== null) {
                 if (input.substr(pos.offset, 2) === "#)") {
                   result3 = "#)";
@@ -459,6 +450,62 @@ funkscene_parser = (function(){
           }
           if (result0 === null) {
             pos = clone(pos0);
+          }
+        }
+        return result0;
+      }
+      
+      function parse_choice_list() {
+        var result0, result1, result2, result3;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        if (input.substr(pos.offset, 5) === "#GOTO") {
+          result0 = "#GOTO";
+          advance(pos, 5);
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"#GOTO\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_spc();
+          if (result1 !== null) {
+            result2 = parse_symbol_or_scene();
+            if (result2 !== null) {
+              result3 = parse_spc();
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+          } else {
+            result0 = null;
+            pos = clone(pos1);
+          }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, target) { return ["[\"\", " + target + "]"]; })(pos0.offset, pos0.line, pos0.column, result0[2]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        if (result0 === null) {
+          result0 = [];
+          result1 = parse_choose();
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_choose();
           }
         }
         return result0;
@@ -1085,7 +1132,7 @@ funkscene_parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
+            result0 = (function(offset, line, column, code, tail) { return "\" + stringOrEmpty((function(){" + code + "})()) + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -1093,36 +1140,91 @@ funkscene_parser = (function(){
           if (result0 === null) {
             pos0 = clone(pos);
             pos1 = clone(pos);
-            if (input.substr(pos.offset, 5) === "#CODE") {
-              result0 = "#CODE";
-              advance(pos, 5);
+            if (input.substr(pos.offset, 2) === "#[") {
+              result0 = "#[";
+              advance(pos, 2);
             } else {
               result0 = null;
               if (reportFailures === 0) {
-                matchFailed("\"#CODE\"");
+                matchFailed("\"#[\"");
               }
             }
             if (result0 !== null) {
-              result1 = parse_spc();
+              result1 = parse_code();
               if (result1 !== null) {
-                result2 = parse_code();
-                if (result2 !== null) {
-                  if (input.substr(pos.offset, 5) === "#TEXT") {
-                    result3 = "#TEXT";
-                    advance(pos, 5);
-                  } else {
-                    result3 = null;
-                    if (reportFailures === 0) {
-                      matchFailed("\"#TEXT\"");
-                    }
+                if (input.substr(pos.offset, 2) === "#]") {
+                  result2 = "#]";
+                  advance(pos, 2);
+                } else {
+                  result2 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#]\"");
                   }
+                }
+                if (result2 !== null) {
+                  result3 = parse_text();
+                  result3 = result3 !== null ? result3 : "";
                   if (result3 !== null) {
-                    result4 = parse_single_spc();
-                    if (result4 !== null) {
-                      result5 = parse_text();
-                      result5 = result5 !== null ? result5 : "";
-                      if (result5 !== null) {
-                        result0 = [result0, result1, result2, result3, result4, result5];
+                    result0 = [result0, result1, result2, result3];
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
+            }
+            if (result0 === null) {
+              pos = clone(pos0);
+            }
+            if (result0 === null) {
+              pos0 = clone(pos);
+              pos1 = clone(pos);
+              if (input.substr(pos.offset, 5) === "#CODE") {
+                result0 = "#CODE";
+                advance(pos, 5);
+              } else {
+                result0 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"#CODE\"");
+                }
+              }
+              if (result0 !== null) {
+                result1 = parse_spc();
+                if (result1 !== null) {
+                  result2 = parse_code();
+                  if (result2 !== null) {
+                    if (input.substr(pos.offset, 5) === "#TEXT") {
+                      result3 = "#TEXT";
+                      advance(pos, 5);
+                    } else {
+                      result3 = null;
+                      if (reportFailures === 0) {
+                        matchFailed("\"#TEXT\"");
+                      }
+                    }
+                    if (result3 !== null) {
+                      result4 = parse_single_spc();
+                      if (result4 !== null) {
+                        result5 = parse_text();
+                        result5 = result5 !== null ? result5 : "";
+                        if (result5 !== null) {
+                          result0 = [result0, result1, result2, result3, result4, result5];
+                        } else {
+                          result0 = null;
+                          pos = clone(pos1);
+                        }
                       } else {
                         result0 = null;
                         pos = clone(pos1);
@@ -1143,43 +1245,8 @@ funkscene_parser = (function(){
                 result0 = null;
                 pos = clone(pos1);
               }
-            } else {
-              result0 = null;
-              pos = clone(pos1);
-            }
-            if (result0 !== null) {
-              result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
-            }
-            if (result0 === null) {
-              pos = clone(pos0);
-            }
-            if (result0 === null) {
-              pos0 = clone(pos);
-              pos1 = clone(pos);
-              if (input.charCodeAt(pos.offset) === 34) {
-                result0 = "\"";
-                advance(pos, 1);
-              } else {
-                result0 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"\\\"\"");
-                }
-              }
               if (result0 !== null) {
-                result1 = parse_text();
-                result1 = result1 !== null ? result1 : "";
-                if (result1 !== null) {
-                  result0 = [result0, result1];
-                } else {
-                  result0 = null;
-                  pos = clone(pos1);
-                }
-              } else {
-                result0 = null;
-                pos = clone(pos1);
-              }
-              if (result0 !== null) {
-                result0 = (function(offset, line, column, tail) { return '\\"' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+                result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
               }
               if (result0 === null) {
                 pos = clone(pos0);
@@ -1187,13 +1254,13 @@ funkscene_parser = (function(){
               if (result0 === null) {
                 pos0 = clone(pos);
                 pos1 = clone(pos);
-                if (input.charCodeAt(pos.offset) === 10) {
-                  result0 = "\n";
+                if (input.charCodeAt(pos.offset) === 34) {
+                  result0 = "\"";
                   advance(pos, 1);
                 } else {
                   result0 = null;
                   if (reportFailures === 0) {
-                    matchFailed("\"\\n\"");
+                    matchFailed("\"\\\"\"");
                   }
                 }
                 if (result0 !== null) {
@@ -1210,7 +1277,7 @@ funkscene_parser = (function(){
                   pos = clone(pos1);
                 }
                 if (result0 !== null) {
-                  result0 = (function(offset, line, column, tail) { return '\\n' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+                  result0 = (function(offset, line, column, tail) { return '\\"' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
                 }
                 if (result0 === null) {
                   pos = clone(pos0);
@@ -1218,7 +1285,15 @@ funkscene_parser = (function(){
                 if (result0 === null) {
                   pos0 = clone(pos);
                   pos1 = clone(pos);
-                  result0 = parse_text_chars();
+                  if (input.charCodeAt(pos.offset) === 10) {
+                    result0 = "\n";
+                    advance(pos, 1);
+                  } else {
+                    result0 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"\\n\"");
+                    }
+                  }
                   if (result0 !== null) {
                     result1 = parse_text();
                     result1 = result1 !== null ? result1 : "";
@@ -1233,10 +1308,34 @@ funkscene_parser = (function(){
                     pos = clone(pos1);
                   }
                   if (result0 !== null) {
-                    result0 = (function(offset, line, column, head, tail) { return head + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                    result0 = (function(offset, line, column, tail) { return '\\n' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
                   }
                   if (result0 === null) {
                     pos = clone(pos0);
+                  }
+                  if (result0 === null) {
+                    pos0 = clone(pos);
+                    pos1 = clone(pos);
+                    result0 = parse_text_chars();
+                    if (result0 !== null) {
+                      result1 = parse_text();
+                      result1 = result1 !== null ? result1 : "";
+                      if (result1 !== null) {
+                        result0 = [result0, result1];
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                    if (result0 !== null) {
+                      result0 = (function(offset, line, column, head, tail) { return head + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                    }
+                    if (result0 === null) {
+                      pos = clone(pos0);
+                    }
                   }
                 }
               }
@@ -1302,8 +1401,13 @@ funkscene_parser = (function(){
       }
       
       
-       function sceneFunction(scene_desc,choices)		
-        { return "function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; }\n"; } 
+      
+        function stringOrEmpty(s)
+          { return typeof(s) === 'string' ? s : ""; }
+      
+        function sceneFunction(scene_desc,choices)		
+          { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }
+      
       
       var result = parseFunctions[startRule]();
       

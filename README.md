@@ -158,9 +158,11 @@ Choices that can be disabled but still visible
 ----------------------------------------------
 
 The choice can be prefixed by `#IF <JavaScript expression>`, e.g.
+
 	#IF <JavaScript expression> #CHOOSE <text> #FOR <var name>
 
 or the anonymous version
+
 	#IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
 
 

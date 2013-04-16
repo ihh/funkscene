@@ -30,7 +30,7 @@ Succintly: a scene function returns a piece of text (describing the
 scene) along with a list of (choicetext,scenefunction) pairs.
 
 The JavaScript API has special interpretations for certain edge cases
-(the grammar generates cases like these for 
+(the FunkScene macros #GOTO and #IF make use of some of these):
 
  - An empty choice list signifies that the game is over.
  - If the choice text is an empty string, the choice will be

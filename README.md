@@ -91,14 +91,17 @@ For middle passages, i.e. scenes that have only one choice, you can
 either list a single choice, emphasizing that the player is taking the
 only course of action available:
 
+	#PAGE hanging_on
 	#SCENE You hang onto the ledge for as long as possible,
 	  but the pain is unbearable. Eventually you have no choice but to...
 	#CHOOSE ...let go #FOR #( You let go, and plummet to your doom. #)
 	#ENDSCENE
 
 Or, you can use the special `#GOTO` keyword, which hides the choice list
-altogether:
+altogether, but still forces the player to click a button to move to the next
+scene:
 
+	#PAGE drink_wine
 	#SCENE The wine burns the back of your throat. Poison! You reach for
 	 the door, but your legs buckle and the door-handle recedes down a
 	 tunnel as you slip into unconsciousness...
@@ -107,6 +110,15 @@ altogether:
 
 Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
 (You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
+
+If you just want one scene's text to run on from the previous one,
+with no need to manually advance the story by pressing a button, you
+can just use a function call:
+
+	#PAGE solitaire
+	#SCENE You while away the train journey playing Solitaire.
+	#[ train_reaches_station() #]
+	#ENDSCENE
 
 
 JavaScript object code

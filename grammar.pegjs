@@ -20,12 +20,12 @@ symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choice_list endscene
+  = "#SCENE" spc scene_desc:quoted_text choices:choose_list endscene
  { return sceneFunction (scene_desc, choices); }
-  / "#(" scene_desc:quoted_text choices:choice_list "#)"
+  / "#(" scene_desc:quoted_text choices:choose_list "#)"
  { return sceneFunction (scene_desc, choices); }
 
-choice_list
+choose_list
  = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
  / choose*
 
@@ -33,17 +33,16 @@ symbol_or_scene
   = symbol
   / scene
 
-choose
+choice
  = "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "[" + choice_desc + "," + target + "]"; }
+
+choose
+ = choice
  / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; }
  /  "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [" + choice_desc + "])"; }
-
-choice
- = "#CHOICE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene single_spc
- { return "[" + choice_desc + "," + target + "]"; }
 
 endscene
   = "#ENDSCENE"
@@ -69,7 +68,7 @@ text
   = "##" tail:text? { return "#" + tail; }
   / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
-  / "#CODE" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
+  / "#EVAL" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

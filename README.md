@@ -75,6 +75,22 @@ uses only the constructs added by FunkScene (all FunkScene keywords
 begin with a `#`; if you need to use an actual hash symbol in your
 JavaScript or your text, escape it as a double hash `##`).
 
+Playing the game
+----------------
+
+To play this game, you will need to save it with a filename like
+`mygame.scene` and then edit the supplied `index.html` file as follows:
+
+	<script type="text/javascript">
+	  loadSceneFile ("mygame.scene");
+	  initialize();
+	</script>
+
+You'll then need to open `index.html` over a web connection (i.e. an
+`http` URL, not a `file` URL, because the `loadSceneFile` function
+needs to do an `XMLHttpRequest`). So you'll need to put the
+`funkscene` directory somewhere web-servable, or create a symlink.
+
 
 JavaScript object code
 ----------------------

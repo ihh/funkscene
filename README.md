@@ -113,8 +113,8 @@ exactly the same as any other whitespace):
 
 	#PAGE <"page name", i.e. name of scenefunction var>
 	#SCENE <...some text...>
-	#CHOOSE <...choice text...> #FOR <name of choicetarget var>
-	#CHOOSE <...more choice text...> #FOR <another var name>
+	#CHOOSE <...choice text...> #FOR <name of target page>
+	#CHOOSE <...more choice text...> #FOR <another page name>
 	 <more #CHOOSE...#FOR... blocks here, if you want them>
 	 <...>
 	#ENDSCENE
@@ -159,7 +159,7 @@ Choices that can be disabled but still visible
 
 The choice can be prefixed by `#IF <JavaScript expression>`, e.g.
 
-	#IF <JavaScript expression> #CHOOSE <text> #FOR <var name>
+	#IF <JavaScript expression> #CHOOSE <text> #FOR <page name>
 
 or the anonymous version
 
@@ -169,7 +169,7 @@ or the anonymous version
 Choices that are invisible when disabled
 ----------------------------------------
 
-	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <var name>
+	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <page name>
 	#SECRETLY #IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
 
 

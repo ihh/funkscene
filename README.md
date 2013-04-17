@@ -224,6 +224,25 @@ scene:
 Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
 (You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
 
+If what you want is for one scene to flow seamlessly into another with
+no detectable interruption, use `#APPEND`, like so:
+
+	hair_status = "messy"
+	
+	#PAGE start
+	#SCENE You stand before the gates of the Temple of Belsidore.
+	#CHOOSE I smash the gates! #FOR electrified
+	#CHOOSE I walk away #FOR wise_choice
+	#APPEND messy_hair
+	#ENDSCENE
+
+	#PAGE messy_hair
+	#SCENE Your hair is very #[ hair_status #].
+	#CHOOSE I brush my hair #FOR #( You preen. #{ hair_status = "neat" #} #GOTO #PREVIOUS #)
+	#ENDSCENE
+
+The keyword `#PREVIOUS` yields the previous scene function, while
+`#CURRENT` gives the current one.
 
 Programmatically generated choice lists
 ---------------------------------------

@@ -1,6 +1,16 @@
 {
-  function sceneFunction(scene_desc,choices)
-    { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })"; }
+  function sceneFunction(scene_desc,choices,appends) {
+      if (appends.length == 0) {
+          return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+      } else {
+	  var func =  "(function() {\n\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
+	  for (var i = 0; i < appends.length; ++i) {
+	      func += "_appendix_text_opts = " + appends[i] + "();\n\t_text += _appendix_text_opts[0];\n\t_opts = _opts.concat (_appendix_text_opts[1]);\n\t";
+	  }
+	  func += "return [_text, _opts]; })";
+      }
+      return func;
+  }
 }
 
 start
@@ -20,17 +30,22 @@ symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choice_list endscene
- { return sceneFunction (scene_desc, choices); }
-  / "#(" scene_desc:quoted_text choices:choice_list "#)"
- { return sceneFunction (scene_desc, choices); }
+  = "#SCENE" spc scene_desc:quoted_text choices:choice_list appends:append* endscene
+ { return sceneFunction (scene_desc, choices, appends); }
+  / "#(" scene_desc:quoted_text choices:choice_list appends:append* "#)"
+ { return sceneFunction (scene_desc, choices, appends); }
+
+append
+ = "#APPEND" spc appendix:symbol_or_scene spc { return appendix; }
 
 choice_list
  = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
  / choose_expr*
 
 symbol_or_scene
-  = '(' expr:code ')' { return expr; }
+  = '#CURRENT' { return "currentScene"; }
+  / '#PREVIOUS' { return "previousScene"; }
+  / '(' expr:code ')' { return expr; }
   / symbol
   / scene
 

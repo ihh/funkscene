@@ -1,7 +1,7 @@
 var sceneDiv = document.getElementById("scene");
 var menuDiv = document.getElementById("menu");
 var continueButton = document.getElementById("continue");
-var choiceFuncs, choiceHistory;
+var choiceFuncs, choiceHistory, currentScene, previousScene;
 
 if (typeof start === 'undefined') {
     start = function() {
@@ -26,6 +26,8 @@ function viewScene (f) {
     menuDiv.innerHTML = "";
     choiceFuncs = new Array;
 
+    previousScene = currentScene;
+    currentScene = f;
     var text_options = f();
     var text = text_options[0];
     var options = text_options[1];
@@ -85,7 +87,7 @@ function loadSceneFile (url) {
     xhr.send();
     var raw = xhr.responseText;
 //    console.log (raw);
-    var processed = funkscene_parser.parse (raw);
+    var processed = funksceneParser.parse (raw);
 //    console.log (processed);
     eval (processed);
 }
@@ -115,6 +117,8 @@ function joinScenes (sceneList) {
 	var sceneText = "";
 	for (var i = 0; i < sceneList.length; ++i) {
 	    var f = sceneList[i];
+	    previousScene = currentScene;
+	    currentScene = f;
 	    var text_opts = f();
 	    sceneText = sceneText + text_opts[0];
 	    choiceList = choiceList.concat (text_opts[1]);

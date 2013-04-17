@@ -1,5 +1,6 @@
 amps = "Several"
 dial = "dial"
+hair = "messy"
 
 #PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore. Beside the gate is a #[dial#].
@@ -11,6 +12,7 @@ dial = "dial"
 #CHOOSE I kill myself #FOR #( Done. #)
 #SECRETLY #IF 0 #CHOOSE I do nothing #FOR wise_choice
 #CHOOSE I walk away #FOR wise_choice
+#APPEND messy_hair
 #ENDSCENE
 
 #PAGE electrified
@@ -21,3 +23,8 @@ Think that doesn't sound like a lot? No, you don't think that, because you're de
 #PAGE wise_choice
 #SCENE A wise choice, my friend.
 #ENDSCENE
+
+#PAGE messy_hair
+#SCENE Your hair is very #[hair#].
+#CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #GOTO #PREVIOUS #)
+#END

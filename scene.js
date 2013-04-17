@@ -116,8 +116,8 @@ function joinScenes (sceneList) {
 	for (var i = 0; i < sceneList.length; ++i) {
 	    var f = sceneList[i];
 	    var text_opts = f();
-	    sceneText += text_opts[0];
-	    choiceList.append (text_opts[1]);
+	    sceneText = sceneText + text_opts[0];
+	    choiceList = choiceList.concat (text_opts[1]);
 	}
 	return [sceneText, choiceList];
     });

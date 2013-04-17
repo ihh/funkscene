@@ -41,10 +41,10 @@ funkscene_parser = (function(){
         "named_scene": parse_named_scene,
         "symbol": parse_symbol,
         "scene": parse_scene,
-        "choose_list": parse_choose_list,
+        "choice_list": parse_choice_list,
         "symbol_or_scene": parse_symbol_or_scene,
         "choice": parse_choice,
-        "choose": parse_choose,
+        "choose_expr": parse_choose_expr,
         "endscene": parse_endscene,
         "spc": parse_spc,
         "single_spc": parse_single_spc,
@@ -370,7 +370,7 @@ funkscene_parser = (function(){
           if (result1 !== null) {
             result2 = parse_quoted_text();
             if (result2 !== null) {
-              result3 = parse_choose_list();
+              result3 = parse_choice_list();
               if (result3 !== null) {
                 result4 = parse_endscene();
                 if (result4 !== null) {
@@ -416,7 +416,7 @@ funkscene_parser = (function(){
           if (result0 !== null) {
             result1 = parse_quoted_text();
             if (result1 !== null) {
-              result2 = parse_choose_list();
+              result2 = parse_choice_list();
               if (result2 !== null) {
                 if (input.substr(pos.offset, 2) === "#)") {
                   result3 = "#)";
@@ -455,7 +455,7 @@ funkscene_parser = (function(){
         return result0;
       }
       
-      function parse_choose_list() {
+      function parse_choice_list() {
         var result0, result1, result2, result3;
         var pos0, pos1;
         
@@ -502,10 +502,10 @@ funkscene_parser = (function(){
         }
         if (result0 === null) {
           result0 = [];
-          result1 = parse_choose();
+          result1 = parse_choose_expr();
           while (result1 !== null) {
             result0.push(result1);
-            result1 = parse_choose();
+            result1 = parse_choose_expr();
           }
         }
         return result0;
@@ -641,7 +641,7 @@ funkscene_parser = (function(){
         return result0;
       }
       
-      function parse_choose() {
+      function parse_choose_expr() {
         var result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, result11;
         var pos0, pos1;
         
@@ -1382,8 +1382,8 @@ funkscene_parser = (function(){
       
       
       
-        function sceneFunction(scene_desc,choices)		
-          { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }
+        function sceneFunction(scene_desc,choices)
+          { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })"; }
       
       
       var result = parseFunctions[startRule]();

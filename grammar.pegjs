@@ -1,6 +1,6 @@
 {
-  function sceneFunction(scene_desc,choices)		
-    { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })\n"; }
+  function sceneFunction(scene_desc,choices)
+    { return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })"; }
 }
 
 start
@@ -20,14 +20,14 @@ symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choose_list endscene
+  = "#SCENE" spc scene_desc:quoted_text choices:choice_list endscene
  { return sceneFunction (scene_desc, choices); }
-  / "#(" scene_desc:quoted_text choices:choose_list "#)"
+  / "#(" scene_desc:quoted_text choices:choice_list "#)"
  { return sceneFunction (scene_desc, choices); }
 
-choose_list
+choice_list
  = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
- / choose*
+ / choose_expr*
 
 symbol_or_scene
   = '(' expr:code ')' { return expr; }
@@ -38,7 +38,7 @@ choice
  = "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "[" + choice_desc + "," + target + "]"; }
 
-choose
+choose_expr
  = choice
  / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
  { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; }

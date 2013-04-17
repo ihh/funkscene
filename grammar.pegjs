@@ -30,7 +30,8 @@ choose_list
  / choose*
 
 symbol_or_scene
-  = symbol
+  = '(' expr:code ')' { return expr; }
+  / symbol
   / scene
 
 choice

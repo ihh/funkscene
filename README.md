@@ -276,6 +276,7 @@ Prefix a choice with `#ONCE` to indicate that it can only be selected once (afte
 	#ENDSCENE
 
 If you have a group of choices and you want them all to disappear as soon as the player selects one of them, use `#AS`
+to tag them all as belonging to the same group:
 
 	#AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
 	#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)

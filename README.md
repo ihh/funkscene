@@ -18,8 +18,8 @@ to the player, describing the scene) along with a list of _choices_, each of whi
 consists of a _choice text_ (a first-person statement by the player to the narrator)
 and another _scene function_ (the next thing that's going to happen if the player takes that choice).
 
-FunkScene language JavaScript extensions
-----------------------------------------
+FunkScene language
+------------------
 
 FunkScene is JavaScript, plus a few keywords for constructing scene
 functions, and a small amount of boilerplate code for hooking up scene
@@ -48,22 +48,31 @@ uses only the constructs added by FunkScene (all FunkScene keywords
 begin with a `#`; if you need to use an actual hash symbol in your
 JavaScript or your text, escape it as a double hash `##`).
 
-Playing the game
-----------------
+JavaScript object code
+----------------------
 
-To play this game, you will need to save it with a filename like
-`mygame.scene` and then edit the supplied `index.html` file as follows:
+FunkScene is compiled internally to JavaScript. The Temple of Belsidore
+compiles to the following:
 
-	<script type="text/javascript">
-	  loadSceneFile ("mygame.scene");
-	  initialize();
-	</script>
+	start = function() {
+	    return ["You stand before the gates of the Temple of Belsidore. A sign reads \"BEWARE!\"",
+	            [["I smash the gates!", electrified],
+	             ["I walk away", wise_choice]]];
+	};
 
-You'll then need to open `index.html` over a web connection (i.e. an
-`http` URL, not a `file` URL, because the `loadSceneFile` function
-needs to do an `XMLHttpRequest`). So you'll need to put the
-`funkscene` directory somewhere web-servable, or create a symlink.
+	electrified = function() {
+	    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
+		     []];
+	};
 
+	wise_choice = function() {
+	    return ["A wise choice, my friend.",
+	     []];
+	};
+
+Note that the quotation marks around `"BEWARE!"` do not need to be escaped in the
+FunkScene macro, although obviously they are in the compiled
+JavaScript.
 
 JavaScript API
 --------------
@@ -92,36 +101,40 @@ The JavaScript API has special interpretations for certain edge cases
   grayed-out and the choice disabled. (Used to implement hints about
   choices that could be unlocked, i.e. failed `#IF` tests.)
 
+Several other helper functions are defined in `scene.js`.
 The `choiceHistory` array holds the history of choices (with each choice
 represented as an integer index into the choice list). The `restore()`
 function can be used to replay a history.
 
 
-JavaScript object code
-----------------------
+Playing the game
+----------------
 
-FunkScene is compiled internally to JavaScript. The Temple of Belsidore
-compiles to the following:
+To play the Temple of Belsidore "game", you will need to save it with a filename like
+`mygame.scene` and then edit the supplied `index.html` file as follows:
 
-	start = function() {
-	    return ["You stand before the gates of the Temple of Belsidore. A sign reads \"BEWARE!\"",
-	            [["I smash the gates!", electrified],
-	             ["I walk away", wise_choice]]];
-	};
+	<script type="text/javascript">
+	  loadSceneFile ("mygame.scene");
+	  initialize();
+	</script>
 
-	electrified = function() {
-	    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
-		     []];
-	};
+The `index.html` file will also include a couple other scripts
 
-	wise_choice = function() {
-	    return ["A wise choice, my friend.",
-	     []];
-	};
+	<script type="text/javascript" src="grammar.js"></script>
+	<script type="text/javascript" src="scene.js"></script>
 
-Note that the quotation marks around `"BEWARE!"` do not need to be escaped in the
-FunkScene macro, although obviously they are in the compiled
-JavaScript.
+and should contain some minimal DOM structure
+
+	<div id="scene"> </div> ...
+	<form action="#" class="menu" id="menu"> </form> ...
+	<button type="button" class="continue" id="continue">
+	 Continue
+	</button>
+
+You'll then need to open `index.html` over a web connection (i.e. an
+`http` URL, not a `file` URL, because the `loadSceneFile` function
+needs to do an `XMLHttpRequest`). So you'll need to put the
+`funkscene` directory somewhere web-servable, or create a symlink.
 
 
 General format of a scene declaration

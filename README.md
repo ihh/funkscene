@@ -193,9 +193,9 @@ Choices that can be disabled but still visible
 
 The choice can be prefixed by `#IF <JavaScript expression>`, e.g.
 
-	#IF <JavaScript expression> #CHOOSE <text> #FOR <page name>
+	#IF <JavaScript expression> #CHOOSE <text> #FOR <page variable name>
 
-or the anonymous version
+or the anonymous version (no page variable)
 
 	#IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
 

@@ -11,6 +11,7 @@
       }
       return func;
   }
+  var oneTimeCount = 0;
 }
 
 start
@@ -40,11 +41,12 @@ append
 
 choice_list
  = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
- / choose_expr*
+ / "#BACK" spc { return ["[\"\", previousScene]"]; }
+ / qualified_choose_expr*
 
 symbol_or_scene
-  = '#CURRENT' { return "currentScene"; }
-  / '#PREVIOUS' { return "previousScene"; }
+  = "#CURRENT" { return "currentScene"; }
+  / "#PREVIOUS" { return "previousScene"; }
   / '(' expr:code ')' { return expr; }
   / symbol
   / scene
@@ -60,6 +62,21 @@ choose_expr
   { return "((" + expr + ") ? [" + c + "] : [])"; }
  /  "#IF" spc expr:code c:choice
   { return "((" + expr + ") ? [" + c + "] : [" + c[0] + "])"; }
+
+qualified_choose_expr
+ = choose_expr
+ / tag:onetime_tag_expr cond:if_expr? c:choice
+  { var v = "namedEventCount[\"" + tag + "\"]";
+    c[1] = "(function(){if(typeof " + v + " === 'undefined'){" + v + "=0}" + v + "++;return (" + c[1] + ")();})";
+    return "(" + v + " > 0) ? [] : " +
+     (((typeof cond === 'undefined') || cond.length == 0) ? ("[" + c + "]") : ("((" + cond + ") ? [" + c + "] : [])")); }
+
+onetime_tag_expr
+ = "#AS" spc tag:symbol spc { return tag; }
+ / "#ONCE" spc { return "once" + (++oneTimeCount); }
+
+if_expr
+ = "#IF" spc expr:code { return expr; }
 
 endscene
   = "#ENDSCENE"

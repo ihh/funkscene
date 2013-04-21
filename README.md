@@ -141,14 +141,14 @@ General format of a scene declaration
 -------------------------------------
 
 The general format of the FunkScene `#PAGE...#SCENE...#ENDSCENE` macro,
-which constructs a scenefunction and assigns it to a JavaScript `var`,
+which constructs a scenefunction and assigns it to a JavaScript `var` (the _"page variable"_ ),
 is as follows (NB newlines are not significant, they are treated
 exactly the same as any other whitespace):
 
-	#PAGE <"page name", i.e. name of scenefunction var>
+	#PAGE <name of page variable>
 	#SCENE <...some text...>
-	#CHOOSE <...choice text...> #FOR <name of target page>
-	#CHOOSE <...more choice text...> #FOR <another page name>
+	#CHOOSE <...choice text...> #FOR <name of target page variable>
+	#CHOOSE <...more choice text...> #FOR <another page variable name>
 	 <more #CHOOSE...#FOR... blocks here, if you want them>
 	 <...>
 	#ENDSCENE
@@ -260,7 +260,27 @@ no detectable interruption, use `#APPEND`, like so:
 	#ENDSCENE
 
 The keyword `#PREVIOUS` yields the previous scene function, while
-`#CURRENT` gives the current one.
+`#CURRENT` gives the current one. Because `#GOTO #PREVIOUS` is a common construct, this can be shortened to `#BACK`.
+
+One-time choices
+----------------
+
+Prefix a choice with `#ONCE` to indicate that it can only be selected once (after which it will disappear)
+
+	#PAGE start
+	#SCENE You're on the train to Hell.
+	#ONCE #CHOOSE I play cards. #FOR #( You play a few games of cards, or was it a few thousand? Before long you're bored. #BACK #)
+	#ONCE #CHOOSE I play dice. #FOR #( You play some dice games, but quickly lose your money. #BACK #)
+	#ONCE #CHOOSE Fornicate. #FOR #( CENSORED #BACK #)
+	#CHOOSE Go to hell #FOR #( Welcome to Hell, sinner. #)
+	#ENDSCENE
+
+If you have a group of choices and you want them all to disappear as soon as the player selects one of them, use `#AS`
+
+	#AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
+	#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
+
+This will allow only one of the two "As penance..." choices to be taken.
 
 Programmatically generated choice lists
 ---------------------------------------

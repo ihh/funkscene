@@ -3,6 +3,8 @@ var menuDiv = document.getElementById("menu");
 var continueButton = document.getElementById("continue");
 var choiceFuncs, choiceHistory, currentScene, previousScene;
 
+var namedEventCount = {};
+
 if (typeof start === 'undefined') {
     start = function() {
 	return ["You are in a vortex.",  // no newline after return
@@ -34,46 +36,51 @@ function viewScene (f) {
 
     sceneDiv.innerHTML = text;
 
-    var numChecked = 0;
+    var validOptions = new Array();
     if (options.length > 0) {
 	for (var i = 0; i < options.length; ++i) {
 	    if (options[i] instanceof Array
 		&& (options[i].length == 1
 		    || options[i].length == 2)) {
-		var text = options[i][0];
-		var sceneFunction = options[i].length == 2 ? options[i][1] : undefined;
-		var textDiv = document.createTextNode (text);
-		var inputDiv = document.createElement("input");
-		inputDiv.setAttribute ("type", "radio");
-		inputDiv.setAttribute ("name", "opt");
-		var labelDiv = document.createElement("label");
-		if (i == 0) {
-		    labelDiv.setAttribute ("class", options.length > 1 ? "firstOption" : "onlyOption");
-		} else if (i == options.length - 1) {
-		    labelDiv.setAttribute ("class", "lastOption");
-		}
-		if (numChecked == 0) {
-		    inputDiv.setAttribute ("checked", 1);
-		}
-		if (typeof sceneFunction === 'undefined') {
-		    inputDiv.setAttribute ("disabled", 1);
-		    labelDiv.setAttribute ("disabled", 1);
-		}
-		if (text === '') {
-		    labelDiv.setAttribute ("style", "display: none");
-		}
-		++numChecked;
-		labelDiv.appendChild (inputDiv);
-		labelDiv.appendChild (textDiv);
-		menuDiv.appendChild (labelDiv);
-		choiceFuncs.push (sceneFunction);
+		validOptions.push (i);
 	    }
 	}
-	continueButton.removeAttribute ("style");  // make sure button is visible
+	for (var j = 0; j < validOptions.length; ++j) {
+	    var i = validOptions[j];
+	    var text = options[i][0];
+	    var sceneFunction = options[i].length == 2 ? options[i][1] : undefined;
+	    var textDiv = document.createTextNode (text);
+	    var inputDiv = document.createElement("input");
+	    inputDiv.setAttribute ("type", "radio");
+	    inputDiv.setAttribute ("name", "opt");
+	    var labelDiv = document.createElement("label");
+	    if (j == 0 && validOptions.length == 1) {
+		labelDiv.setAttribute ("class", "onlyOption");
+	    } else if (j == 0) {
+		labelDiv.setAttribute ("class", "firstOption");
+	    } else if (j == validOptions.length - 1) {
+		labelDiv.setAttribute ("class", "lastOption");
+	    }
+	    if (j == 0) {
+		inputDiv.setAttribute ("checked", 1);
+	    }
+	    if (typeof sceneFunction === 'undefined') {
+		inputDiv.setAttribute ("disabled", 1);
+		labelDiv.setAttribute ("disabled", 1);
+	    }
+	    if (text === '') {
+		labelDiv.setAttribute ("style", "display: none");
+	    }
+	    labelDiv.appendChild (inputDiv);
+	    labelDiv.appendChild (textDiv);
+	    menuDiv.appendChild (labelDiv);
+	    choiceFuncs.push (sceneFunction);
+	}
     }
 
-    if (numChecked > 0) {
+    if (validOptions.length > 0) {
 	// activate/initialize the continue button
+	continueButton.removeAttribute ("style");  // make sure button is visible
 	continueButton.onclick = function() { viewScene(getSelectedSceneFunction()) };
     } else {
 	// no choices, so hide button

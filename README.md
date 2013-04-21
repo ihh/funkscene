@@ -71,7 +71,7 @@ compiles to the following:
 	};
 
 Note that the quotation marks around `"BEWARE!"` do not need to be escaped in the
-FunkScene macro, although obviously they are in the compiled
+FunkScene macro; they are automatically escaped in the compiled
 JavaScript.
 
 JavaScript API

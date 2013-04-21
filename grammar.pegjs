@@ -82,6 +82,7 @@ code_chars
 
 text
   = "##" tail:text? { return "#" + tail; }
+  / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#EVAL" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }

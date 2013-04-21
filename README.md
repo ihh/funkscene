@@ -9,41 +9,14 @@ FunkScene provides a few macros to construct the staples of
 choice-based IF: passages of text _("scenes")_ with choices that lead
 to other scenes.
 
-JavaScript API
---------------
+Scene functions
+---------------
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
-A scene function is a JavaScript function, taking no arguments,
-which (when called) must return an array containing two objects:
-
-1. a text string (the _"scene text"_ ),
-2. an array of choices (the _"choice list"_ ).
-
-Each choice in the choice list is itself an array containing two
-objects:
-
-1. a text string (the _"choice text"_ ),
-2. a scene function (the _"choice target"_ ).
-
-Succintly: a scene function returns a piece of text (describing the
-scene) along with a list of ( _choicetext_, _scenefunction_ ) pairs.
-
-The JavaScript API has special interpretations for certain edge cases
-(the FunkScene macros `#GOTO` and `#IF` make use of some of these):
-
-* An empty choice list signifies that the game is over.
-* If the choice text is an empty string, the choice will be
-  hidden. (This is used to implement the `#GOTO` case where no choice
-  list is to be shown, but the game should still continue, so there
-  still needs to be a default choice.)
-* If a choice target is undefined, the choice text will be shown but
-  grayed-out and the choice disabled. (Used to implement hints about
-  choices that could be unlocked, i.e. failed `#IF` tests.)
-
-The `choiceHistory` array holds the history of choices (with each choice
-represented as an integer index into the choice list). The `restore()`
-function can be used to replay a history.
-
+A scene function returns a piece of text (a _"You..."_ statement from the narrator
+to the player, describing the scene) along with a list of _choices_, each of which
+consists of a _choice text_ (an _"I..."_ statement by the player)
+and a _scene function_ (the target of the choice).
 
 FunkScene language JavaScript extensions
 ----------------------------------------
@@ -92,10 +65,42 @@ needs to do an `XMLHttpRequest`). So you'll need to put the
 `funkscene` directory somewhere web-servable, or create a symlink.
 
 
+JavaScript API
+--------------
+
+A scene function is a JavaScript function, taking no arguments,
+which (when called) must return an array containing two objects:
+
+1. a text string (the _"scene text"_ ),
+2. an array of choices (the _"choice list"_ ).
+
+Each choice in the choice list is itself an array containing two
+objects:
+
+1. a text string (the _"choice text"_ ),
+2. a scene function (the _"choice target"_ ).
+
+The JavaScript API has special interpretations for certain edge cases
+(the FunkScene macros `#GOTO` and `#IF` make use of some of these):
+
+* An empty choice list signifies that the game is over.
+* If the choice text is an empty string, the choice will be
+  hidden. (This is used to implement the `#GOTO` case where no choice
+  list is to be shown, but the game should still continue, so there
+  still needs to be a default choice.)
+* If a choice target is undefined, the choice text will be shown but
+  grayed-out and the choice disabled. (Used to implement hints about
+  choices that could be unlocked, i.e. failed `#IF` tests.)
+
+The `choiceHistory` array holds the history of choices (with each choice
+represented as an integer index into the choice list). The `restore()`
+function can be used to replay a history.
+
+
 JavaScript object code
 ----------------------
 
-FunkScene is compiled internally to JavaScript. The above program
+FunkScene is compiled internally to JavaScript. The Temple of Belsidore
 compiles to the following:
 
 	start - function() {
@@ -274,14 +279,15 @@ array delimiters explicitly, even when using `#CHOOSE...#FOR` blocks.
 Embedding and interpolating code in text
 ----------------------------------------
 
-	#EVAL <...JavaScript expression to be interpolated...> #TEXT
+	#EVAL <...JavaScript expression to be evaluated and the results interpolated into the text...> #TEXT
 
-	#[ <...JavaScript expression to be interpolated...> #]
+	#[ <...JavaScript expression to be evaluated and the results interpolated...> #]
 
-	#{ <...JavaScript code to be discarded...> #}
+	#{ <...JavaScript statements to be executed inside a function context, the return value (if any) interpolated...> #}
 
-An expression can, in fact, optionally be interpolated from the latter
-form, by use of "return". This...
+	#$<JavaScript variable name>
+
+An expression can optionally be interpolated from the latter form, by use of `return`. This...
 
 	#{ return "Hi there" #}
 

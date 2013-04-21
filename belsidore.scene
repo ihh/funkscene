@@ -25,6 +25,6 @@ Think that doesn't sound like a lot? No, you don't think that, because you're de
 #ENDSCENE
 
 #PAGE messy_hair
-#SCENE Your hair is very #[hair#].
+#SCENE Your hair is very #$hair.
 #CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #GOTO #PREVIOUS #)
 #END

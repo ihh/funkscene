@@ -13,9 +13,9 @@ Scene functions
 ---------------
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
-A scene function returns a piece of text (a second-person present-tense statement by the narrator
-to the player, describing the scene) along with a list of _choices_, each of which
-consists of a _choice text_ (a first-person statement by the player to the narrator)
+A scene function returns a piece of _scene text_ (a second-person present-tense statement by the narrator
+to the player, describing the scene: "You are in the room") along with a list of _choices_, each of which
+consists of a _choice text_ (a first-person statement by the player to the narrator: "I pick up the axe.")
 and another _scene function_ (the next thing that's going to happen if the player takes that choice).
 
 FunkScene language

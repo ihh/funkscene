@@ -203,8 +203,8 @@ or the anonymous version
 Choices that are invisible when disabled
 ----------------------------------------
 
-	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <page name>
-	#SECRETLY #IF <JavaScript expression> #CHOOSE <text> #FOR #( <scene> #)
+	#SECRETLY #IF <expression> #CHOOSE <text> #FOR <page variable name>
+	#SECRETLY #IF <expression> #CHOOSE <text> #FOR #( <scene> #)
 
 
 Beginnings, endings, middles
@@ -214,7 +214,7 @@ Note that one of the scene functions is called `start`; regardless of
 where it is declared in the program, this will always be the first
 scene the player sees.
 
-The other two scenes (page names `electrified` and `wise_choice`) have
+The other two scenes (page variables `electrified` and `wise_choice`) have
 zero choices available to the player, and are therefore interpreted as
 game-ending scenes.
 

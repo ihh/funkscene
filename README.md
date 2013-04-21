@@ -103,21 +103,21 @@ JavaScript object code
 FunkScene is compiled internally to JavaScript. The Temple of Belsidore
 compiles to the following:
 
-	start - function() {
+	start = function() {
 	    return ["You stand before the gates of the Temple of Belsidore. A sign reads \"BEWARE!\"",
 	            [["I smash the gates!", electrified],
 	             ["I walk away", wise_choice]]];
-	}
+	};
 
-	electrified - function() {
+	electrified = function() {
 	    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
 		     []];
-	}
+	};
 
-	wise_choice - function() {
+	wise_choice = function() {
 	    return ["A wise choice, my friend.",
 	     []];
-	}
+	};
 
 Note that the quotation marks around `"BEWARE!"` do not need to be escaped in the
 FunkScene macro, although obviously they are in the compiled

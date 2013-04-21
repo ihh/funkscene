@@ -302,7 +302,7 @@ or the shorter form
 
 If all you want is the contents of a JavaScript `var` then use
 
-	#$<JavaScript variable name>
+	#$<varname>
 
 To execute JavaScript statements inside a function context with private scope,
 whose return value (if any) will be interpolated into the text,

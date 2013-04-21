@@ -146,7 +146,7 @@ is as follows (NB newlines are not significant, they are treated
 exactly the same as any other whitespace):
 
 	#PAGE <name of page variable>
-	#SCENE <...some text...>
+	#SCENE <...scene text...>
 	#CHOOSE <...choice text...> #FOR <name of target page variable>
 	#CHOOSE <...more choice text...> #FOR <another page variable name>
 	 <more #CHOOSE...#FOR... blocks here, if you want them>

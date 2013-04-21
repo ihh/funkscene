@@ -19,7 +19,7 @@ start
 body
   = page:named_scene rest:body? { return page + rest; }
   / scene:scene rest:body? { return scene + rest; }
-  / choice:choice rest:body? { return choice + rest; }
+  / c:choice rest:body? { return "[" + c + "]" + rest; }
   / code:code rest:body? { return code + rest; }
 
 named_scene
@@ -51,14 +51,15 @@ symbol_or_scene
 
 choice
  = "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
- { return "[" + choice_desc + "," + target + "]"; }
+ { return [choice_desc, target]; }
 
 choose_expr
- = choice
- / "#SECRETLY" spc "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
- { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; }
- /  "#IF" spc expr:code "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
- { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [" + choice_desc + "])"; }
+ = c:choice
+  { return "[" + c + "]"; }
+ / "#SECRETLY" spc "#IF" spc expr:code c:choice
+  { return "((" + expr + ") ? [" + c + "] : [])"; }
+ /  "#IF" spc expr:code c:choice
+  { return "((" + expr + ") ? [" + c + "] : [" + c[0] + "])"; }
 
 endscene
   = "#ENDSCENE"

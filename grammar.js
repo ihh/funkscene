@@ -206,7 +206,7 @@ funksceneParser = (function(){
               pos = clone(pos1);
             }
             if (result0 !== null) {
-              result0 = (function(offset, line, column, choice, rest) { return choice + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+              result0 = (function(offset, line, column, c, rest) { return "[" + c + "]" + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
             }
             if (result0 === null) {
               pos = clone(pos0);
@@ -740,7 +740,7 @@ funksceneParser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, choice_desc, target) { return "[" + choice_desc + "," + target + "]"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
+          result0 = (function(offset, line, column, choice_desc, target) { return [choice_desc, target]; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -749,10 +749,17 @@ funksceneParser = (function(){
       }
       
       function parse_choose_expr() {
-        var result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, result11;
+        var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
+        pos0 = clone(pos);
         result0 = parse_choice();
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, c) { return "[" + c + "]"; })(pos0.offset, pos0.line, pos0.column, result0);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
         if (result0 === null) {
           pos0 = clone(pos);
           pos1 = clone(pos);
@@ -782,61 +789,9 @@ funksceneParser = (function(){
                 if (result3 !== null) {
                   result4 = parse_code();
                   if (result4 !== null) {
-                    if (input.substr(pos.offset, 7) === "#CHOOSE") {
-                      result5 = "#CHOOSE";
-                      advance(pos, 7);
-                    } else {
-                      result5 = null;
-                      if (reportFailures === 0) {
-                        matchFailed("\"#CHOOSE\"");
-                      }
-                    }
+                    result5 = parse_choice();
                     if (result5 !== null) {
-                      result6 = parse_spc();
-                      if (result6 !== null) {
-                        result7 = parse_quoted_text();
-                        if (result7 !== null) {
-                          if (input.substr(pos.offset, 4) === "#FOR") {
-                            result8 = "#FOR";
-                            advance(pos, 4);
-                          } else {
-                            result8 = null;
-                            if (reportFailures === 0) {
-                              matchFailed("\"#FOR\"");
-                            }
-                          }
-                          if (result8 !== null) {
-                            result9 = parse_spc();
-                            if (result9 !== null) {
-                              result10 = parse_symbol_or_scene();
-                              if (result10 !== null) {
-                                result11 = parse_spc();
-                                if (result11 !== null) {
-                                  result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, result11];
-                                } else {
-                                  result0 = null;
-                                  pos = clone(pos1);
-                                }
-                              } else {
-                                result0 = null;
-                                pos = clone(pos1);
-                              }
-                            } else {
-                              result0 = null;
-                              pos = clone(pos1);
-                            }
-                          } else {
-                            result0 = null;
-                            pos = clone(pos1);
-                          }
-                        } else {
-                          result0 = null;
-                          pos = clone(pos1);
-                        }
-                      } else {
-                        result0 = null;
-                        pos = clone(pos1);
-                      }
+                      result0 = [result0, result1, result2, result3, result4, result5];
                     } else {
                       result0 = null;
                       pos = clone(pos1);
@@ -862,7 +817,7 @@ funksceneParser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, expr, choice_desc, target) { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [])"; })(pos0.offset, pos0.line, pos0.column, result0[4], result0[7], result0[10]);
+            result0 = (function(offset, line, column, expr, c) { return "((" + expr + ") ? [" + c + "] : [])"; })(pos0.offset, pos0.line, pos0.column, result0[4], result0[5]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -884,61 +839,9 @@ funksceneParser = (function(){
               if (result1 !== null) {
                 result2 = parse_code();
                 if (result2 !== null) {
-                  if (input.substr(pos.offset, 7) === "#CHOOSE") {
-                    result3 = "#CHOOSE";
-                    advance(pos, 7);
-                  } else {
-                    result3 = null;
-                    if (reportFailures === 0) {
-                      matchFailed("\"#CHOOSE\"");
-                    }
-                  }
+                  result3 = parse_choice();
                   if (result3 !== null) {
-                    result4 = parse_spc();
-                    if (result4 !== null) {
-                      result5 = parse_quoted_text();
-                      if (result5 !== null) {
-                        if (input.substr(pos.offset, 4) === "#FOR") {
-                          result6 = "#FOR";
-                          advance(pos, 4);
-                        } else {
-                          result6 = null;
-                          if (reportFailures === 0) {
-                            matchFailed("\"#FOR\"");
-                          }
-                        }
-                        if (result6 !== null) {
-                          result7 = parse_spc();
-                          if (result7 !== null) {
-                            result8 = parse_symbol_or_scene();
-                            if (result8 !== null) {
-                              result9 = parse_spc();
-                              if (result9 !== null) {
-                                result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9];
-                              } else {
-                                result0 = null;
-                                pos = clone(pos1);
-                              }
-                            } else {
-                              result0 = null;
-                              pos = clone(pos1);
-                            }
-                          } else {
-                            result0 = null;
-                            pos = clone(pos1);
-                          }
-                        } else {
-                          result0 = null;
-                          pos = clone(pos1);
-                        }
-                      } else {
-                        result0 = null;
-                        pos = clone(pos1);
-                      }
-                    } else {
-                      result0 = null;
-                      pos = clone(pos1);
-                    }
+                    result0 = [result0, result1, result2, result3];
                   } else {
                     result0 = null;
                     pos = clone(pos1);
@@ -956,7 +859,7 @@ funksceneParser = (function(){
               pos = clone(pos1);
             }
             if (result0 !== null) {
-              result0 = (function(offset, line, column, expr, choice_desc, target) { return "((" + expr + ") ? [" + choice_desc + "," + target + "] : [" + choice_desc + "])"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5], result0[8]);
+              result0 = (function(offset, line, column, expr, c) { return "((" + expr + ") ? [" + c + "] : [" + c[0] + "])"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[3]);
             }
             if (result0 === null) {
               pos = clone(pos0);

@@ -292,15 +292,25 @@ array delimiters explicitly, even when using `#CHOOSE...#FOR` blocks.
 Embedding and interpolating code in text
 ----------------------------------------
 
-	#EVAL <...JavaScript expression to be evaluated and the results interpolated into the text...> #TEXT
+To evaluate a JavaScript expression and interpolate the result into text, use
 
-	#[ <...JavaScript expression to be evaluated and the results interpolated...> #]
+	#EVAL <expression> #TEXT
 
-	#{ <...JavaScript statements to be executed inside a function context, the return value (if any) interpolated...> #}
+or the shorter form
+
+	#[ <expression> #]
+
+If all you want is the contents of a JavaScript `var` then use
 
 	#$<JavaScript variable name>
 
-An expression can optionally be interpolated from the latter form, by use of `return`. This...
+To execute JavaScript statements inside a function context with private scope,
+whose return value (if any) will be interpolated into the text,
+use this form:
+
+	#{ <...statements...> #}
+
+This...
 
 	#{ return "Hi there" #}
 
@@ -308,8 +318,8 @@ An expression can optionally be interpolated from the latter form, by use of `re
 
 	#[ "Hi there" #]
 
-...although they are implemented slightly differently (`#{...#}` blocks
-run inside an anonymous closure).
+...although they are implemented slightly differently:
+statements inside a `#{...#}` block are run inside an anonymous closure.
 
 
 Text input directly to variables

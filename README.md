@@ -343,11 +343,13 @@ This...
 statements inside a `#{...#}` block are run inside an anonymous closure.
 
 
-Text input directly to variables
---------------------------------
+Text input direct to variables
+------------------------------
+
+	name = "Adventurer"
 
 	#PAGE start
-	#SCENE Before we do anything, how about you tell me your name?
+	#SCENE Before we do anything, #$name, how about you tell me your name?
 	#INPUT Type your name: #TO name #GOTO thanks
 	#ENDSCENE
 

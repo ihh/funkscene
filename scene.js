@@ -65,6 +65,10 @@ function viewScene (f) {
 	    var labelDiv = document.createElement("label");
 	    if (options[i].length == 3) {
 		inputDiv.setAttribute ("type", "text");
+		inputDiv.onkeypress = function (e) {
+		    if (e.keyCode == 13)
+			continueButton.click();
+		};
 		textboxDiv = inputDiv;
 		labelDiv.appendChild (textDiv);
 		labelDiv.appendChild (inputDiv);

@@ -20,7 +20,7 @@ start
 body
   = page:named_scene rest:body? { return page + rest; }
   / scene:scene rest:body? { return scene + rest; }
-  / c:choice rest:body? { return "[" + c + "]" + rest; }
+  / c:qualified_choose_expr rest:body? { return c + rest; }
   / code:code rest:body? { return code + rest; }
 
 named_scene

@@ -194,7 +194,7 @@ funksceneParser = (function(){
           if (result0 === null) {
             pos0 = clone(pos);
             pos1 = clone(pos);
-            result0 = parse_choice();
+            result0 = parse_qualified_choose_expr();
             if (result0 !== null) {
               result1 = parse_body();
               result1 = result1 !== null ? result1 : "";
@@ -209,7 +209,7 @@ funksceneParser = (function(){
               pos = clone(pos1);
             }
             if (result0 !== null) {
-              result0 = (function(offset, line, column, c, rest) { return "[" + c + "]" + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+              result0 = (function(offset, line, column, c, rest) { return c + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
             }
             if (result0 === null) {
               pos = clone(pos0);

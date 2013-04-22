@@ -155,19 +155,3 @@ function restore (history) {
     }
     choiceHistory = history;
 }
-
-function joinScenes (sceneList) {
-    return (function() {
-	var choiceList = new Array;
-	var sceneText = "";
-	for (var i = 0; i < sceneList.length; ++i) {
-	    var f = sceneList[i];
-	    previousScene = currentScene;
-	    currentScene = f;
-	    var text_opts = f();
-	    sceneText = sceneText + text_opts[0];
-	    choiceList = choiceList.concat (text_opts[1]);
-	}
-	return [sceneText, choiceList];
-    });
-}

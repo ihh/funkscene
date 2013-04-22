@@ -368,3 +368,8 @@ The general form is always
 	#INPUT <...prompt text...> #TO <name of input variable>
 	#GOTO <next page>
 	#ENDSCENE
+
+No other choices are allowed: it has to be a single text box, and a `#GOTO`.
+
+This is represented in the JavaScript API as a single choice that is a triple, interpreted as _(prompt text, next scene, name of input variable)_,
+instead of the usual _(choice text, next scene)_ pair.

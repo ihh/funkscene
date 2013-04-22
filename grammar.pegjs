@@ -1,7 +1,11 @@
 {
   function sceneFunction(scene_desc,choices,appends) {
       if (appends.length == 0) {
-          return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+          if (typeof choices === 'string') {
+              return "(function() {\n\treturn [" + scene_desc + ", " + choices + "]; })";
+          } else {
+              return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+          }
       } else {
 	  var func =  "(function() {\n\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
 	  for (var i = 0; i < appends.length; ++i) {
@@ -40,9 +44,14 @@ append
  = "#APPEND" spc appendix:symbol_or_scene spc { return appendix; }
 
 choice_list
- = "#GOTO" spc target:symbol_or_scene spc { return ["[\"\", " + target + "]"]; }
- / "#BACK" spc { return ["[\"\", previousScene]"]; }
+ = "#INPUT" single_spc prompt:text? "#TO" single_spc var_name:symbol spc target:goto_clause
+    { return ["[\"" + prompt + "\", " + target + ", \"" + var_name + "\"]"]; }
+ / target:goto_clause { return ["[\"\", " + target + "]"]; }
  / qualified_choose_expr*
+
+goto_clause
+ = "#GOTO" spc target:symbol_or_scene spc { return target; }
+ / "#BACK" spc { return "previousScene"; }
 
 symbol_or_scene
   = "#CURRENT" { return "currentScene"; }

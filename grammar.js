@@ -43,6 +43,7 @@ funksceneParser = (function(){
         "scene": parse_scene,
         "append": parse_append,
         "choice_list": parse_choice_list,
+        "goto_clause": parse_goto_clause,
         "symbol_or_scene": parse_symbol_or_scene,
         "choice": parse_choice,
         "choose_expr": parse_choose_expr,
@@ -530,6 +531,105 @@ funksceneParser = (function(){
       }
       
       function parse_choice_list() {
+        var result0, result1, result2, result3, result4, result5, result6, result7;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        if (input.substr(pos.offset, 6) === "#INPUT") {
+          result0 = "#INPUT";
+          advance(pos, 6);
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"#INPUT\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_single_spc();
+          if (result1 !== null) {
+            result2 = parse_text();
+            result2 = result2 !== null ? result2 : "";
+            if (result2 !== null) {
+              if (input.substr(pos.offset, 3) === "#TO") {
+                result3 = "#TO";
+                advance(pos, 3);
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"#TO\"");
+                }
+              }
+              if (result3 !== null) {
+                result4 = parse_single_spc();
+                if (result4 !== null) {
+                  result5 = parse_symbol();
+                  if (result5 !== null) {
+                    result6 = parse_spc();
+                    if (result6 !== null) {
+                      result7 = parse_goto_clause();
+                      if (result7 !== null) {
+                        result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+          } else {
+            result0 = null;
+            pos = clone(pos1);
+          }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, prompt, var_name, target) { return ["[\"" + prompt + "\", " + target + ", \"" + var_name + "\"]"]; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5], result0[7]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        if (result0 === null) {
+          pos0 = clone(pos);
+          result0 = parse_goto_clause();
+          if (result0 !== null) {
+            result0 = (function(offset, line, column, target) { return ["[\"\", " + target + "]"]; })(pos0.offset, pos0.line, pos0.column, result0);
+          }
+          if (result0 === null) {
+            pos = clone(pos0);
+          }
+          if (result0 === null) {
+            result0 = [];
+            result1 = parse_qualified_choose_expr();
+            while (result1 !== null) {
+              result0.push(result1);
+              result1 = parse_qualified_choose_expr();
+            }
+          }
+        }
+        return result0;
+      }
+      
+      function parse_goto_clause() {
         var result0, result1, result2, result3;
         var pos0, pos1;
         
@@ -569,7 +669,7 @@ funksceneParser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, target) { return ["[\"\", " + target + "]"]; })(pos0.offset, pos0.line, pos0.column, result0[2]);
+          result0 = (function(offset, line, column, target) { return target; })(pos0.offset, pos0.line, pos0.column, result0[2]);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -599,18 +699,10 @@ funksceneParser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column) { return ["[\"\", previousScene]"]; })(pos0.offset, pos0.line, pos0.column);
+            result0 = (function(offset, line, column) { return "previousScene"; })(pos0.offset, pos0.line, pos0.column);
           }
           if (result0 === null) {
             pos = clone(pos0);
-          }
-          if (result0 === null) {
-            result0 = [];
-            result1 = parse_qualified_choose_expr();
-            while (result1 !== null) {
-              result0.push(result1);
-              result1 = parse_qualified_choose_expr();
-            }
           }
         }
         return result0;
@@ -1628,7 +1720,11 @@ funksceneParser = (function(){
       
         function sceneFunction(scene_desc,choices,appends) {
             if (appends.length == 0) {
-                return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+                if (typeof choices === 'string') {
+                    return "(function() {\n\treturn [" + scene_desc + ", " + choices + "]; })";
+                } else {
+                    return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+                }
             } else {
       	  var func =  "(function() {\n\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
       	  for (var i = 0; i < appends.length; ++i) {

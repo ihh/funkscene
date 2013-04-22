@@ -346,4 +346,23 @@ statements inside a `#{...#}` block are run inside an anonymous closure.
 Text input directly to variables
 --------------------------------
 
-TBD.
+	#PAGE start
+	#SCENE Before we do anything, how about you tell me your name?
+	#INPUT Type your name: #TO name #GOTO thanks
+	#ENDSCENE
+
+	#PAGE thanks
+	#SCENE Thanks, #$name !
+	#GOTO next
+	#ENDSCENE
+
+	#PAGE next
+	...
+
+The general form is always
+
+	#PAGE <name of page variable>
+	#SCENE <...scene text...>
+	#INPUT <...prompt text...> #TO <name of input variable>
+	#GOTO <next page>
+	#ENDSCENE

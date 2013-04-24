@@ -38,6 +38,7 @@ The design philosophy of FunkScene is
 1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
 2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) and drop-down menus (Schooz)
 3. a functional programming style (building on an earlier prototype, Schooz)
+4. get out of the way
 
 
 FunkScene language

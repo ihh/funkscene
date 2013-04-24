@@ -30,8 +30,8 @@ Aesthetics
 
 A scene is always presented as a scene text followed by a choice list.
 There are no inline hyperlinks or dropdown menus in the current release of FunkScene.
-While links encourage close examination of a text, they can detract from the pace of a story and the balancing of choices.
-A deliberate decision was made to omit hyperlinks in the development of FunkScene.
+While links encourage close examination of a text, and indeed add extra semantics, they can detract from the pace of a story and the balancing of choices.
+A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.
 
 The design philosophy of FunkScene is
 

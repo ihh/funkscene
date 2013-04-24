@@ -26,6 +26,7 @@ While these encourage close examination of a text, they can detract from the pac
 A deliberate decision was made to omit hyperlinks in the development of FunkScene.
 
 The design philosophy of FunkScene is
+
 1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
 2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) and drop-down menus (Schooz)
 3. a functional programming style (building on an earlier prototype, Schooz)

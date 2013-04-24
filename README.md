@@ -157,8 +157,8 @@ The `index.html` file will also include a couple other scripts
 and should contain some minimal DOM structure
 
 	<div id="scene"> </div> ...
-	<form action="#" class="menu" id="menu"> </form> ...
-	<button type="button" class="continue" id="continue">
+	<form action="#" id="menu"> </form> ...
+	<button type="button" id="continue">
 	 Continue
 	</button>
 

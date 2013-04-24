@@ -13,7 +13,7 @@ Scene functions
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
 A scene function returns a piece of _scene text_
-(typically a statement, made by the narrator to the player, describing their character's experience: "You are in Guinevere's Dungeon.")
+(typically a statement, made by the narrator to the player, describing their character's experience: "You are in Melchior's Dungeon.")
 along with a list of _choices_, each of which consists of a _choice text_
 (a first-person statement in-character by the player to the narrator: "I pick up the mottled axe.")
 and another _scene function_

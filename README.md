@@ -114,7 +114,7 @@ two objects:
 2. a scene function (the _"choice target"_ ).
 
 The JavaScript API has special interpretations for certain edge cases
-(the FunkScene macros `#GOTO` and `#IF` make use of some of these):
+(the FunkScene keywords `#GOTO`, `#IF`, `#ONCE` etc., make use of these):
 
 * An empty choice list signifies that the game is over.
 * If the choice text is an empty string, the choice will be
@@ -122,7 +122,7 @@ The JavaScript API has special interpretations for certain edge cases
   list is to be shown, but the game should still continue, so there
   still needs to be a default choice.)
 * If the choice is an empty array `[]` instead of a two-element array,
-  then that choice will be ignored. (This is used as a placeholder
+  then that choice will not even be displayed. (This is used as a placeholder
   for choices that failed a `#SECRETLY #IF`, `#AS` or `#ONCE` test.)
 * If the choice text is present but the choice target is missing
   (i.e. the choice is a one-element array instead of a two-element

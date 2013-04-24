@@ -12,17 +12,25 @@ Scene functions
 ---------------
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
-A scene function returns a piece of _scene text_ (a second-person present-tense statement by the narrator
-to the player, describing the scene: "You are in Guinevere's Dungeon.") along with a list of _choices_, each of which
-consists of a _choice text_ (a first-person statement by the player to the narrator: "I pick up the mottled axe.")
-and another _scene function_ (the next scene that's going to be displayed if the player makes that choice).
+A scene function returns a piece of _scene text_
+(typically a statement, made by the narrator to the player, describing their character's experience: "You are in Guinevere's Dungeon.")
+along with a list of _choices_, each of which consists of a _choice text_
+(a first-person statement in-character by the player to the narrator: "I pick up the mottled axe.")
+and another _scene function_
+(the next scene that's going to be displayed if the player makes that choice).
+
+As a design aside, it's usually preferable in CYO fiction to have the player make first person statements
+("I pick up the axe") rather than give second-person orders to their character ("Pick up the axe").
+First-person statements may be a cheap trick to make the player identify with their character,
+but they are often effective.
+
 
 Aesthetics
 ----------
 
 A scene is always presented as a scene text followed by a choice list.
 There are no inline hyperlinks or dropdown menus in the current release of FunkScene.
-While these encourage close examination of a text, they can detract from the pace of a fast story.
+While links encourage close examination of a text, they can detract from the pace of a story and the balancing of choices.
 A deliberate decision was made to omit hyperlinks in the development of FunkScene.
 
 The design philosophy of FunkScene is

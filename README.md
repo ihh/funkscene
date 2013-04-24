@@ -2,21 +2,34 @@ FunkScene
 =========
 
 FunkScene is a dialect of JavaScript intended to encourage functional
-programming in the creation of choice-based interactive fiction (IF).
+programming in the creation of choose-your-own (CYO) interactive fiction.
 
 Most JavaScript programs are valid FunkScene programs. In addition,
-FunkScene provides a few macros to construct the staples of
-choice-based IF: passages of text _("scenes")_ with choices that lead
-to other scenes.
+FunkScene provides a few macros to construct the staples of CYO fiction:
+passages of text _("scenes")_ with choices that lead to other scenes.
 
 Scene functions
 ---------------
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
 A scene function returns a piece of _scene text_ (a second-person present-tense statement by the narrator
-to the player, describing the scene: "You are in the room") along with a list of _choices_, each of which
-consists of a _choice text_ (a first-person statement by the player to the narrator: "I pick up the axe.")
-and another _scene function_ (the next thing that's going to happen if the player takes that choice).
+to the player, describing the scene: "You are in Guinevere's Dungeon.") along with a list of _choices_, each of which
+consists of a _choice text_ (a first-person statement by the player to the narrator: "I pick up the mottled axe.")
+and another _scene function_ (the next scene that's going to be displayed if the player makes that choice).
+
+Aesthetics
+----------
+
+A scene is always presented as a scene text followed by a choice list.
+There are no inline hyperlinks or dropdown menus in the current release of FunkScene.
+While these encourage close examination of a text, they can detract from the pace of a fast story.
+A deliberate decision was made to omit hyperlinks in the development of FunkScene.
+
+The design philosophy of FunkScene is
+1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
+2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) and drop-down menus (Schooz)
+3. a functional programming style (building on an earlier prototype, Schooz)
+
 
 FunkScene language
 ------------------

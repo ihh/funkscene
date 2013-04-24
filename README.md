@@ -8,6 +8,8 @@ Most JavaScript programs are valid FunkScene programs. In addition,
 FunkScene provides a few macros to construct the staples of CYO fiction:
 passages of text _("scenes")_ with choices that lead to other scenes.
 
+This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.
+
 Scene functions
 ---------------
 

@@ -16,6 +16,9 @@
       return func;
   }
   var oneTimeCount = 0;
+  var oneTimeEventPrefix = "once";
+  var cycleCount = 0;
+  var cyclePrefix = "cycle";
 }
 
 start
@@ -44,8 +47,8 @@ append
  = "#APPEND" spc appendix:symbol_or_scene spc { return appendix; }
 
 choice_list
- = "#INPUT" single_spc prompt:text? "#TO" single_spc var_name:symbol spc target:goto_clause
-    { return ["[\"" + prompt + "\", " + target + ", \"" + var_name + "\"]"]; }
+ = "#INPUT" single_spc prompt:quoted_text? "#TO" single_spc var_name:symbol spc target:goto_clause
+    { return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"]; }
  / target:goto_clause { return ["[\"\", " + target + "]"]; }
  / qualified_choose_expr*
 
@@ -82,7 +85,7 @@ qualified_choose_expr
 
 onetime_tag_expr
  = "#AS" spc tag:symbol spc { return tag; }
- / "#ONCE" spc { return "once" + (++oneTimeCount); }
+ / "#ONCE" spc { return oneTimeEventPrefix + (++oneTimeCount); }
 
 if_expr
  = "#IF" spc expr:code { return expr; }
@@ -90,6 +93,19 @@ if_expr
 endscene
   = "#ENDSCENE"
   / "#END"
+
+cycle
+  = "#CYCLE" single_spc cycles:cycle_list loop_flag:end_cycle
+  { var c = cyclePrefix + (++cycleCount);
+    return "[" + cycles.join(",") + "][" + c + " = ((typeof(" + c + ") === 'undefined') ? 0 : (" + c + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + c + " + 1))]"; }
+
+cycle_list
+  = head:quoted_text "#NEXT" single_spc tail:cycle_list  { return [head].concat (tail); }
+  / last:quoted_text  { return [last]; }
+
+end_cycle
+  = "#LOOP" { return 1; }
+  / "#STOP" { return 0; }
 
 spc
   = single_spc+
@@ -113,6 +129,7 @@ text
   / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#EVAL" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
+  / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

@@ -113,10 +113,10 @@ To play the Temple of Belsidore "game", you will need to save it with a filename
 
 The `index.html` file will also include a couple other scripts
 
-	<script type="text/javascript" src="grammar.js"></script>
 	<script type="text/javascript" src="scene.js"></script>
+	<script type="text/javascript" src="grammar.js"></script>
 
-and should contain some minimal DOM structure
+and must contain some minimal DOM structure
 
 	<div id="scene"> </div> ...
 	<form action="#" id="menu"> </form> ...

@@ -1,0 +1,450 @@
+<h1>FunkScene</h1>
+
+<p>FunkScene is a dialect of JavaScript intended to encourage functional
+programming in the creation of choose-your-own (CYO) interactive fiction.</p>
+
+<p>Most JavaScript programs are valid FunkScene programs. In addition,
+FunkScene provides a few macros to construct the staples of CYO fiction:
+passages of text <em>("scenes")</em> with choices that lead to other scenes.</p>
+
+<p>This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.</p>
+
+<h2>Scene functions</h2>
+
+<p>The fundamental concept in the FunkScene JavaScript API is the <em>"scene function".</em>
+A scene function returns a piece of <em>scene text</em>
+(typically a statement, made by the narrator to the player, describing their character's experience: "You are in Melchior's Dungeon.")
+along with a list of <em>choices</em>, each of which consists of a <em>choice text</em>
+(a first-person statement in-character by the player to the narrator: "I pick up the mottled axe.")
+and another <em>scene function</em>
+(the next scene that's going to be displayed if the player makes that choice).</p>
+
+<p>As a stylistic aside:
+A common abbreviation of the player's first person statements ("I pick up the axe")
+involves dropping the "I", yielding something a bit like a command ("Pick up the axe").
+Each has their merits: first-person sentences invite the player to identify with the character,
+while commands are shorter and evoke the tone of RPGs and parser-based IF.
+It's usually a good idea to stick consistently to one style or the other.</p>
+
+<h2>Aesthetics</h2>
+
+<p>A scene is always presented as a scene text followed by a choice list.
+There are currently no inline hyperlinks or dropdown menus in FunkScene.
+While links encourage close examination of a text, and indeed add extra semantics, they can detract from the pace of a story and the balancing of choices.
+A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.</p>
+
+<p>The design philosophy of FunkScene is</p>
+
+<ol>
+<li>a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)</li>
+<li>an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) and drop-down menus (Schooz)</li>
+<li>a functional programming style (building on an earlier prototype, Schooz)</li>
+</ol>
+
+<h2>FunkScene language</h2>
+
+<p>FunkScene is JavaScript, plus a few keywords for constructing scene
+functions, and a small amount of boilerplate code for hooking up scene
+text and choice list to the DOM.</p>
+
+<p>The following FunkScene describes a tiny story composed of three
+vanilla scene functions, with one choice-point:</p>
+
+<pre><code>#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
+#CHOOSE I smash the gates! #FOR electrified
+#CHOOSE I walk away #FOR wise_choice
+#ENDSCENE
+
+#PAGE electrified
+#SCENE Several amps flow through your body.
+Think that doesn't sound like a lot? No, you don't think that, because you're dead.
+#ENDSCENE
+
+#PAGE wise_choice
+#SCENE A wise choice, my friend.
+#ENDSCENE
+</code></pre>
+
+<p>That doesn't look much like JavaScript, because it isn't: this program
+uses only the constructs added by FunkScene (all FunkScene keywords
+begin with a <code>#</code>; if you need to use an actual hash symbol in your
+JavaScript or your text, escape it as a double hash <code>##</code>).</p>
+
+<h2>JavaScript object code</h2>
+
+<p>FunkScene is compiled internally to JavaScript. The Temple of Belsidore
+compiles to the following:</p>
+
+<pre><code>start = function() {
+    return ["You stand before the gates of the Temple of Belsidore. A sign reads \"BEWARE!\"",
+            [["I smash the gates!", electrified],
+             ["I walk away", wise_choice]]];
+};
+
+electrified = function() {
+    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
+         []];
+};
+
+wise_choice = function() {
+    return ["A wise choice, my friend.",
+     []];
+};
+</code></pre>
+
+<p>Note that the quotation marks around <code>"BEWARE!"</code> do not need to be escaped in the
+FunkScene macro; they are automatically escaped in the compiled
+JavaScript.</p>
+
+<h2>Playing the game</h2>
+
+<p>To play the Temple of Belsidore "game", you will need to save it with a filename like
+<code>mygame.scene</code> and then edit the supplied <code>index.html</code> file as follows:</p>
+
+<pre><code>&lt;script type="text/javascript"&gt;
+  loadSceneFile ("mygame.scene");
+  initialize();
+&lt;/script&gt;
+</code></pre>
+
+<p>The <code>index.html</code> file will also include a couple other scripts</p>
+
+<pre><code>&lt;script type="text/javascript" src="scene.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="grammar.js"&gt;&lt;/script&gt;
+</code></pre>
+
+<p>and must contain some minimal DOM structure</p>
+
+<pre><code>&lt;div id="scene"&gt; &lt;/div&gt; ...
+&lt;form action="#" id="menu"&gt; &lt;/form&gt; ...
+&lt;button type="button" id="continue"&gt;
+ Continue
+&lt;/button&gt;
+</code></pre>
+
+<p>You'll then need to open <code>index.html</code> over a web connection (i.e. an
+<code>http</code> URL, not a <code>file</code> URL, because the <code>loadSceneFile</code> function
+needs to do an <code>XMLHttpRequest</code>). So you'll need to put the
+<code>funkscene</code> directory somewhere web-servable, or create a symlink.</p>
+
+<h2>General format of a scene declaration</h2>
+
+<p>The general format of the FunkScene <code>#PAGE...#SCENE...#ENDSCENE</code> macro,
+which constructs a scenefunction and assigns it to a JavaScript <code>var</code> (the <em>"page variable"</em> ),
+is as follows (NB newlines are not significant, they are treated
+exactly the same as any other whitespace):</p>
+
+<pre><code>#PAGE &lt;name of page variable&gt;
+#SCENE &lt;...scene text...&gt;
+#CHOOSE &lt;...choice text...&gt; #FOR &lt;name of target page variable&gt;
+#CHOOSE &lt;...more choice text...&gt; #FOR &lt;another page variable name&gt;
+ &lt;more #CHOOSE...#FOR... blocks here, if you want them&gt;
+ &lt;...&gt;
+#ENDSCENE
+</code></pre>
+
+<p>You can use <code>#(...#)</code> in place of <code>#SCENE...#ENDSCENE</code>, if cryptic
+uber-efficiency via punctuation is your thing. (Actually, this has an
+added benefit that you can use many text editors'
+parenthesis-balancing feature to check that your brackets match.)</p>
+
+<h2>Anonymous scene functions</h2>
+
+<p>You can declare scenes in nested (inline) fashion, as well as
+standalone blocks. For example:</p>
+
+<pre><code>#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
+#CHOOSE I smash the gates! #FOR electrified
+#CHOOSE I walk away #FOR
+ #SCENE Are you sure?
+ #CHOOSE Yes #FOR wise_choice
+ #CHOOSE No #FOR start
+ #ENDSCENE
+#ENDSCENE
+</code></pre>
+
+<p>...or...</p>
+
+<pre><code>#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
+#CHOOSE I smash the gates! #FOR electrified
+#CHOOSE I walk away #FOR
+ #( Are you sure?
+  #CHOOSE Yes #FOR wise_choice
+  #CHOOSE No #FOR start
+ #)
+#ENDSCENE
+</code></pre>
+
+<h2>Choices that can be disabled but still visible</h2>
+
+<p>The choice can be prefixed by <code>#IF &lt;JavaScript expression&gt;</code>, e.g.</p>
+
+<pre><code>#IF &lt;JavaScript expression&gt; #CHOOSE &lt;text&gt; #FOR &lt;page variable name&gt;
+</code></pre>
+
+<p>or the anonymous version (no page variable)</p>
+
+<pre><code>#IF &lt;JavaScript expression&gt; #CHOOSE &lt;text&gt; #FOR #( &lt;scene&gt; #)
+</code></pre>
+
+<h2>Choices that are invisible when disabled</h2>
+
+<pre><code>#SECRETLY #IF &lt;expression&gt; #CHOOSE &lt;text&gt; #FOR &lt;page variable name&gt;
+#SECRETLY #IF &lt;expression&gt; #CHOOSE &lt;text&gt; #FOR #( &lt;scene&gt; #)
+</code></pre>
+
+<h2>Beginnings, endings, middles</h2>
+
+<p>Note that one of the scene functions is called <code>start</code>; regardless of
+where it is declared in the program, this will always be the first
+scene the player sees.</p>
+
+<p>The other two scenes (page variables <code>electrified</code> and <code>wise_choice</code>) have
+zero choices available to the player, and are therefore interpreted as
+game-ending scenes.</p>
+
+<p>For middle passages, i.e. scenes that have only one choice, you can
+either list a single choice, emphasizing that the player is taking the
+only course of action available:</p>
+
+<pre><code>#PAGE hanging_on
+#SCENE You hang onto the ledge for as long as possible,
+  but the pain is unbearable. Eventually you have no choice but to...
+#CHOOSE ...let go #FOR #( You let go, and plummet to your doom. #)
+#ENDSCENE
+</code></pre>
+
+<p>Or, you can use the special <code>#GOTO</code> keyword, which hides the choice list
+altogether, but still forces the player to click a button to move to the next
+scene:</p>
+
+<pre><code>#PAGE drink_wine
+#SCENE The wine burns the back of your throat. Poison! You reach for
+ the door, but your legs buckle and the door-handle recedes down a
+ tunnel as you slip into unconsciousness...
+#GOTO handcuffed_to_chair
+#ENDSCENE
+</code></pre>
+
+<p>Note the final <code>#ENDSCENE</code> delimiter is still required after a <code>#GOTO</code>.
+(You can optionally use <code>#END</code> any place you can use <code>#ENDSCENE</code>, too.)</p>
+
+<p>If what you want is for one scene to flow seamlessly into another with
+no detectable interruption, use <code>#APPEND</code>, like so:</p>
+
+<pre><code>hair_status = "messy"
+
+#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore.
+#CHOOSE I smash the gates! #FOR electrified
+#CHOOSE I walk away #FOR wise_choice
+#APPEND messy_hair
+#ENDSCENE
+
+#PAGE messy_hair
+#SCENE Your hair is very #[ hair_status #].
+#CHOOSE I brush my hair #FOR #( You preen. #{ hair_status = "neat" #} #GOTO #PREVIOUS #)
+#ENDSCENE
+</code></pre>
+
+<p>The keyword <code>#PREVIOUS</code> yields the previous scene function, while
+<code>#CURRENT</code> gives the current one. Because <code>#GOTO #PREVIOUS</code> is a common construct, this can be shortened to <code>#BACK</code>.</p>
+
+<h2>One-time choices</h2>
+
+<p>Prefix a choice with <code>#ONCE</code> to indicate that it can only be selected once (after which it will disappear)</p>
+
+<pre><code>#PAGE start
+#SCENE You're on the train to Hell.
+#ONCE #CHOOSE I play cards. #FOR #( You play a few games of cards, or was it a few thousand? Before long you're bored. #BACK #)
+#ONCE #CHOOSE I play dice. #FOR #( You play some dice games, but quickly lose your money. #BACK #)
+#ONCE #CHOOSE Fornicate. #FOR #( CENSORED #BACK #)
+#CHOOSE Go to hell #FOR #( Welcome to Hell, sinner. #)
+#ENDSCENE
+</code></pre>
+
+<p>If you have a group of choices and you want them all to disappear as soon as the player selects one of them, use <code>#AS</code>
+to tag them all as belonging to the same group:</p>
+
+<pre><code>#AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
+#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
+</code></pre>
+
+<p>This will allow only one of the two "As penance, I..." choices to be taken.</p>
+
+<h2>Scenes that cycle through several different descriptions</h2>
+
+<p>The following, as part of a scene, will cycle predictably through several statements about the weather</p>
+
+<pre><code>#CYCLE The wind sighs.
+#NEXT A light rain spatters.
+#NEXT You feel a chill.
+#LOOP
+</code></pre>
+
+<p>If you want to stop at the last one, use <code>#STOP</code> instead of <code>#LOOP</code></p>
+
+<pre><code>#CYCLE You saunter into the lobby, drawing sharp glances from the conservatively-dressed bankers.
+#NEXT The bankers are pretending not to notice you. You brush some imaginary phlegm off your leather jacket.
+#NEXT This bank has gotten used to you. Time to take your punk ass elsewhere.
+#STOP
+</code></pre>
+
+<p>If you want access to the current state of the cycler, you can give the state variable a name</p>
+
+<pre><code>#CYCLE(wind) The wind sighs.
+#NEXT A light rain spatters.
+#NEXT You feel a chill.
+#LOOP
+#SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #BACK #)
+</code></pre>
+
+<p>The state is an integer starting at zero; so, in the above example, the option to pull the cloak tighter
+only appears when the text about feeling a chill has been shown.</p>
+
+<p>Note that there cannot be any whitespace between the <code>#CYCLE</code> and the opening bracket.</p>
+
+<h2>Programmatically generated choice lists</h2>
+
+<p>As well as just generating them directly in JavaScript, you can build
+scene functions using a mix of JS and FunkScene:</p>
+
+<pre><code>#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
+#CHOICES
+ [["I smash the gates!", electrified],
+  ["I walk away", wise_choice]]
+#ENDSCENE
+</code></pre>
+
+<p>or even</p>
+
+<pre><code>#PAGE start
+#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
+#CHOICES
+ [["I smash the gates!", electrified],
+  #CHOOSE I walk away #FOR wise_choice
+ ]
+#ENDSCENE
+</code></pre>
+
+<p>Note that in a <code>#CHOICES</code> block, you need to specify commas and <code>[...]</code>
+array delimiters explicitly, even when using <code>#CHOOSE...#FOR</code> blocks.</p>
+
+<h2>Embedding and interpolating code in text</h2>
+
+<p>To evaluate a JavaScript expression and interpolate the result into text, use</p>
+
+<pre><code>#EVAL &lt;expression&gt; #TEXT
+</code></pre>
+
+<p>or the shorter form</p>
+
+<pre><code>#[ &lt;expression&gt; #]
+</code></pre>
+
+<p>If all you want is the contents of a JavaScript <code>var</code> then use</p>
+
+<pre><code>#$&lt;varname&gt;
+</code></pre>
+
+<p>To execute JavaScript statements inside a function context with private scope,
+whose return value (if any) will be interpolated into the text,
+use this form:</p>
+
+<pre><code>#{ &lt;...statements...&gt; #}
+</code></pre>
+
+<p>This...</p>
+
+<pre><code>#{ return "Hi there" #}
+</code></pre>
+
+<p>...gives the same result as this...</p>
+
+<pre><code>#[ "Hi there" #]
+</code></pre>
+
+<p>...although they are implemented slightly differently:
+statements inside a <code>#{...#}</code> block are run inside an anonymous closure.</p>
+
+<h2>Text input direct to variables</h2>
+
+<pre><code>name = "Adventurer"
+
+#PAGE start
+#SCENE Before we do anything, #$name, how about you tell me your name?
+#INPUT Type your name: #TO name #GOTO thanks
+#ENDSCENE
+
+#PAGE thanks
+#SCENE Thanks, #$name !
+#GOTO next
+#ENDSCENE
+
+#PAGE next
+...
+</code></pre>
+
+<p>The general form is always</p>
+
+<pre><code>#PAGE &lt;name of page variable&gt;
+#SCENE &lt;...scene text...&gt;
+#INPUT &lt;...prompt text...&gt; #TO &lt;name of input variable&gt;
+#GOTO &lt;next page&gt;
+#ENDSCENE
+</code></pre>
+
+<p>No other choices are allowed: it has to be a single text box, and a <code>#GOTO</code>.</p>
+
+<p>This is represented in the JavaScript API as a single choice that is a triple, interpreted as <em>(prompt text, next scene, name of input variable)</em>,
+instead of the usual <em>(choice text, next scene)</em> pair.</p>
+
+<h2>JavaScript API</h2>
+
+<p>A scene function is a JavaScript function, taking no arguments,
+which (when called) must return an array containing two objects:</p>
+
+<ol>
+<li>a text string (the <em>"scene text"</em> ),</li>
+<li>an array of choices (the <em>"choice list"</em> ).</li>
+</ol>
+
+<p>Each choice in the choice list is itself an array containing (usually)
+two objects:</p>
+
+<ol>
+<li>a text string (the <em>"choice text"</em> ),</li>
+<li>a scene function (the <em>"choice target"</em> ).</li>
+</ol>
+
+<p>The JavaScript API has special interpretations for certain edge cases
+(the FunkScene keywords <code>#GOTO</code>, <code>#IF</code>, <code>#ONCE</code> etc., make use of these):</p>
+
+<ul>
+<li>An empty choice list signifies that the game is over.</li>
+<li>If the choice text is an empty string, the choice will be
+hidden. (This is used to implement the <code>#GOTO</code> case where no choice
+list is to be shown, but the game should still continue, so there
+still needs to be a default choice.)</li>
+<li>If the choice is an empty array <code>[]</code> instead of a two-element array,
+then that choice will not even be displayed. (This is used as a placeholder
+for choices that failed a <code>#SECRETLY #IF</code>, <code>#AS</code> or <code>#ONCE</code> test.)</li>
+<li>If the choice text is present but the choice target is missing
+(i.e. the choice is a one-element array instead of a two-element
+array), of if the choice target is <code>undefined</code>, the choice text will be shown
+grayed-out and the choice will be disabled. (This is used to implement hints about
+choices that could be unlocked, i.e. failed <code>#IF</code> tests.)</li>
+<li>If there is only one choice in the choice list, and that choice is a
+three-element array instead of the usual two-element array, then
+the third element is interpreted as the name of a variable to store
+direct text input from the player, as generated by an <code>#INPUT</code> clause.</li>
+</ul>
+
+<p>Several helper functions are defined as methods of the <code>funkscene</code> object in <code>scene.js</code>.
+The <code>choiceHistory</code> array holds the history of choices (with each choice
+represented as an integer index into the choice list). The <code>restore()</code>
+method can be used to replay a history.</p>

@@ -96,8 +96,8 @@ cycle
   { return "[" + cycles.join(",") + "][" + c + " = ((typeof(" + c + ") === 'undefined') ? 0 : (" + c + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + c + " + 1))]"; }
 
 cycle_list
-  = head:quoted_text "#NEXT" single_spc tail:cycle_list  { return [head].concat (tail); }
-  / last:quoted_text  { return [last]; }
+  = head:postponed_quoted_text "#NEXT" single_spc tail:cycle_list  { return [head].concat (tail); }
+  / last:postponed_quoted_text  { return [last]; }
 
 begin_cycle
   = "#CYCLE(" spc? c:symbol spc? ")"   { return c; }
@@ -122,6 +122,9 @@ code
 
 code_chars
   = chars:[^#]+ { return chars.join(""); }
+
+postponed_quoted_text
+ = text:quoted_text { return "(function(){return" + text + ";})()"; }
 
 quoted_text
   = text:text? { return '"' + text + '"'; }

@@ -59,6 +59,7 @@ funkscene.parser = (function(){
         "symbol": parse_symbol,
         "code": parse_code,
         "code_chars": parse_code_chars,
+        "postponed_quoted_text": parse_postponed_quoted_text,
         "quoted_text": parse_quoted_text,
         "text": parse_text,
         "text_chars": parse_text_chars
@@ -1176,7 +1177,7 @@ funkscene.parser = (function(){
         
         pos0 = clone(pos);
         pos1 = clone(pos);
-        result0 = parse_quoted_text();
+        result0 = parse_postponed_quoted_text();
         if (result0 !== null) {
           if (input.substr(pos.offset, 5) === "#NEXT") {
             result1 = "#NEXT";
@@ -1217,7 +1218,7 @@ funkscene.parser = (function(){
         }
         if (result0 === null) {
           pos0 = clone(pos);
-          result0 = parse_quoted_text();
+          result0 = parse_postponed_quoted_text();
           if (result0 !== null) {
             result0 = (function(offset, line, column, last) { return [last]; })(pos0.offset, pos0.line, pos0.column, result0);
           }
@@ -1533,6 +1534,21 @@ funkscene.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, line, column, chars) { return chars.join(""); })(pos0.offset, pos0.line, pos0.column, result0);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        return result0;
+      }
+      
+      function parse_postponed_quoted_text() {
+        var result0;
+        var pos0;
+        
+        pos0 = clone(pos);
+        result0 = parse_quoted_text();
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, text) { return "(function(){return" + text + ";})()"; })(pos0.offset, pos0.line, pos0.column, result0);
         }
         if (result0 === null) {
           pos = clone(pos0);

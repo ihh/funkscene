@@ -34,9 +34,6 @@ named_scene
   = "#PAGE" spc name:symbol spc scene:scene
  { return name + " = " + scene + ";\n"; }
 
-symbol
-  = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
-
 scene
   = "#SCENE" spc scene_desc:quoted_text choices:choice_list appends:append* endscene
  { return sceneFunction (scene_desc, choices, appends); }
@@ -95,13 +92,16 @@ endscene
   / "#END"
 
 cycle
-  = "#CYCLE" single_spc cycles:cycle_list loop_flag:end_cycle
-  { var c = cyclePrefix + (++cycleCount);
-    return "[" + cycles.join(",") + "][" + c + " = ((typeof(" + c + ") === 'undefined') ? 0 : (" + c + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + c + " + 1))]"; }
+  = c:begin_cycle single_spc cycles:cycle_list loop_flag:end_cycle
+  { return "[" + cycles.join(",") + "][" + c + " = ((typeof(" + c + ") === 'undefined') ? 0 : (" + c + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + c + " + 1))]"; }
 
 cycle_list
   = head:quoted_text "#NEXT" single_spc tail:cycle_list  { return [head].concat (tail); }
   / last:quoted_text  { return [last]; }
+
+begin_cycle
+  = "#CYCLE(" spc? c:symbol spc? ")"   { return c; }
+  / "#CYCLE"  { return cyclePrefix + (++cycleCount); }
 
 end_cycle
   = "#LOOP" { return 1; }
@@ -113,8 +113,8 @@ spc
 single_spc
   = [ \t\n\r]
 
-quoted_text
-  = text:text { return '"' + text + '"'; }
+symbol
+  = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 code
   = "##" tail:code? { return "#" + tail; }
@@ -122,6 +122,9 @@ code
 
 code_chars
   = chars:[^#]+ { return chars.join(""); }
+
+quoted_text
+  = text:text { return '"' + text + '"'; }
 
 text
   = "##" tail:text? { return "#" + tail; }

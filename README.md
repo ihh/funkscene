@@ -274,7 +274,7 @@ to tag them all as belonging to the same group:
 	#AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
 	#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
 
-This will allow only one of the two "As penance..." choices to be taken.
+This will allow only one of the two "As penance, I..." choices to be taken.
 
 
 Scenes that cycle through several different descriptions
@@ -293,6 +293,19 @@ If you want to stop at the last one, use `#STOP` instead of `#LOOP`
 	#NEXT The bankers are pretending not to notice you. You brush some imaginary phlegm off your leather jacket.
 	#NEXT This bank has gotten used to you. Time to take your punk ass elsewhere.
 	#STOP
+
+If you want access to the current state of the cycler, you can give the state variable a name
+
+	#CYCLE(wind) The wind sighs.
+	#NEXT A light rain spatters.
+	#NEXT You feel a chill.
+	#LOOP
+	#SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #BACK #)
+
+The state is an integer starting at zero; so, in the above example, the option to pull the cloak tighter
+only appears when the text about feeling a chill has been shown.
+
+Note that there cannot be any whitespace between the `#CYCLE` and the opening bracket.
 
 
 Programmatically generated choice lists

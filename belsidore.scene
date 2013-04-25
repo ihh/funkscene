@@ -8,7 +8,7 @@ name = "Adventurer"
 
 #PAGE start
 #SCENE You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate is a #[dial#].
-#CYCLE The wind sighs.
+#CYCLE(wind) The wind sighs.
 #NEXT A light rain spatters.
 #NEXT You feel a chill.
 #LOOP
@@ -24,6 +24,7 @@ name = "Adventurer"
 #SECRETLY #IF 0 #CHOOSE I do nothing #FOR wise_choice
 #CHOOSE I walk away #FOR wise_choice
 #ONCE #CHOOSE I have a name, you know. #FOR #( OK then, tell me your name. #INPUT Type your name: #TO name #BACK #)
+#SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #BACK #)
 #APPEND messy_hair
 #ENDSCENE
 

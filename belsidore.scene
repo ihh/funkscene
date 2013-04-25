@@ -9,6 +9,7 @@ name = "Adventurer"
 #PAGE start
 #SCENE Belsidore: An Interactive Test
 #GOSUB temple
+#GOSUB limbo
 #GOTO afterlife
 #END
 
@@ -23,7 +24,7 @@ name = "Adventurer"
  #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps="Eleven"; dial="dial, turned to eleven" #} #GOTO start #)
 #IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
 #CHOOSE What is the philological origin of "Belsidore"? #FOR #SCENE NERD!!! #ENDSCENE
-#CHOOSE I kill myself #FOR #( Done. #)
+#CHOOSE I kill myself #FOR #( Done. #CONTINUE #)
 #ONCE #CHOOSE I think of the good times. #FOR #( You think about all the good times. It doesn't take long. #GOTO #PREVIOUS #)
 #AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
 #AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
@@ -37,15 +38,22 @@ name = "Adventurer"
 #PAGE electrified
 #SCENE #[ amps #] amps flow through your body.
 Think that doesn't sound like a lot, #$name? No, you don't think that, because you're dead.
+#CONTINUE
 #ENDSCENE
 
 #PAGE wise_choice
 #SCENE A wise choice, my friend.
+#CONTINUE
 #ENDSCENE
 
 #PAGE messy_hair
 #SCENE Your hair is very #$hair.
 #CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #GOTO #PREVIOUS #)
+#END
+
+#PAGE limbo
+#SCENE You feel ... nothing. A strange, gray void.
+#CONTINUE
 #END
 
 #PAGE afterlife

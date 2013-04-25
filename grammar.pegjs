@@ -51,8 +51,9 @@ choice_list
 
 goto_clause
  = "#GOTO" spc target:symbol_or_scene spc { return target; }
- / "#GOSUB" spc gosub:symbol_or_scene spc "#GOTO" spc target:symbol_or_scene spc
+ / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause
    { return "(function(){funkscene.sceneDeque.push(" + target + ");return(" + gosub + ")();})"; }
+ / "#CONTINUE" spc { return "funkscene.continuationScene()"; }
  / "#BACK" spc { return "funkscene.previousScene"; }
 
 symbol_or_scene

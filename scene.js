@@ -10,7 +10,11 @@
     fs.previousScene = undefined;
 
     fs.namedEventCount = {};
+
     fs.sceneDeque = [];
+    fs.continuationScene = function() { return fs.sceneDeque.pop(); }
+
+    fs.sceneTextToHtml = function(t) { return t; }
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -41,7 +45,7 @@
 	var text = text_options[0];
 	var options = text_options[1];
 
-	sceneDiv.innerHTML = text;
+	sceneDiv.innerHTML = fs.sceneTextToHtml (text);
 
 	var validOptions = new Array();
 	for (var i = 0; i < options.length; ++i) {
@@ -51,11 +55,6 @@
 		    || options[i].length == 3)) {
 		validOptions.push (i);
 	    }
-	}
-
-	if (validOptions.length == 0 && fs.sceneDeque.length > 0) {
-	    options.push (["", fs.sceneDeque.pop()]);
-	    validOptions.push (options.length - 1);
 	}
 
 	var i = 0;

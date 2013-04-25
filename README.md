@@ -22,10 +22,10 @@ and another _scene function_
 (the next scene that's going to be displayed if the player makes that choice).
 
 As a stylistic aside:
-The alternative to having the player make first person statements ("I pick up the axe")
-is to have them give second-person orders to their character ("Pick up the axe").
-Each has their merits: first-person statements invite the player to identify with the character,
-while second-person instructions evoke the tone of RPGs and parser-based IF.
+A common abbreviation of the player's first person statements ("I pick up the axe")
+involves dropping the "I", yielding something a bit like a command ("Pick up the axe").
+Each has their merits: first-person sentences invite the player to identify with the character,
+while commands are shorter and evoke the tone of RPGs and parser-based IF.
 It's usually a good idea to stick consistently to one style or the other.
 
 

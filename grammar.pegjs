@@ -51,11 +51,11 @@ choice_list
 
 goto_clause
  = "#GOTO" spc target:symbol_or_scene spc { return target; }
- / "#BACK" spc { return "previousScene"; }
+ / "#BACK" spc { return "funkscene.previousScene"; }
 
 symbol_or_scene
-  = "#CURRENT" { return "currentScene"; }
-  / "#PREVIOUS" { return "previousScene"; }
+  = "#CURRENT" { return "funkscene.currentScene"; }
+  / "#PREVIOUS" { return "funkscene.previousScene"; }
   / '(' expr:code ')' { return expr; }
   / symbol
   / scene
@@ -75,7 +75,7 @@ choose_expr
 qualified_choose_expr
  = choose_expr
  / tag:onetime_tag_expr cond:if_expr? c:choice
-  { var v = "namedEventCount[\"" + tag + "\"]";
+  { var v = "funkscene.namedEventCount[\"" + tag + "\"]";
     c[1] = "(function(){if(typeof " + v + " === 'undefined'){" + v + "=0}" + v + "++;return (" + c[1] + ")();})";
     return "(" + v + " > 0) ? [] : " +
      (((typeof cond === 'undefined') || cond.length == 0) ? ("[" + c + "]") : ("((" + cond + ") ? [" + c + "] : [])")); }

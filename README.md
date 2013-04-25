@@ -21,10 +21,11 @@ along with a list of _choices_, each of which consists of a _choice text_
 and another _scene function_
 (the next scene that's going to be displayed if the player makes that choice).
 
-As a design aside, it's usually preferable in CYO fiction to have the player make first person statements
-("I pick up the axe") rather than give second-person orders to their character ("Pick up the axe").
-First-person statements may be a cheap trick to make the player identify with their character,
-but they are often effective.
+The alternative to having the player make first person statements ("I pick up the axe")
+is to have them give second-person orders to their character ("Pick up the axe").
+Each has their merits: first-person statements invite the player to identify with the character,
+while second-person instructions evoke the tone of RPGs and parser-based IF.
+It's usually a good idea to stick consistently to one style or the other.
 
 
 Aesthetics

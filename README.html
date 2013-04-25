@@ -253,6 +253,36 @@ no detectable interruption, use <code>#APPEND</code>, like so:</p>
 <p>The keyword <code>#PREVIOUS</code> yields the previous scene function, while
 <code>#CURRENT</code> gives the current one. Because <code>#GOTO #PREVIOUS</code> is a common construct, this can be shortened to <code>#BACK</code>.</p>
 
+<h2>Scheduling scenes</h2>
+
+<p>You can schedule scenes for later presentation using <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
+Both will postpone the delayed scene until an <em>end scene</em> is reached (that is, a scene with no available options).
+<code>#STACK</code> puts the scene on the front of the scene queue, whereas <code>#QUEUE</code> puts it at the back.</p>
+
+<p>As an alternative to <code>#STACK</code>, at the end of a scene you can use <code>#GOSUB</code> followed by <code>#GOTO</code>, like so:</p>
+
+<pre><code>#PAGE battle
+#SCENE You fight valiantly against the stronger opponent.
+#GOSUB death_blow
+#GOTO afterlife
+#ENDSCENE
+
+#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #)
+
+#PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
+</code></pre>
+
+<p>The following version of the <code>battle</code> scene is exactly equivalent:</p>
+
+<pre><code>#PAGE battle
+#SCENE You fight valiantly against the stronger opponent.
+#STACK afterlife
+#GOTO death_blow
+#ENDSCENE
+</code></pre>
+
+<p>If you really want an end scene to be a death scene (game over, no afterlife) then use <code>#FLUSH</code> to clear the scene queue.</p>
+
 <h2>One-time choices</h2>
 
 <p>Prefix a choice with <code>#ONCE</code> to indicate that it can only be selected once (after which it will disappear)</p>

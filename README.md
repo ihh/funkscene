@@ -255,6 +255,36 @@ no detectable interruption, use `#APPEND`, like so:
 The keyword `#PREVIOUS` yields the previous scene function, while
 `#CURRENT` gives the current one. Because `#GOTO #PREVIOUS` is a common construct, this can be shortened to `#BACK`.
 
+Scheduling scenes
+-----------------
+
+You can schedule scenes for later presentation using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
+Both will postpone the delayed scene until an _end scene_ is reached (that is, a scene with no available options).
+`#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
+
+As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` followed by `#GOTO`, like so:
+
+	#PAGE battle
+	#SCENE You fight valiantly against the stronger opponent.
+	#GOSUB death_blow
+	#GOTO afterlife
+	#ENDSCENE
+	
+	#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #)
+	
+	#PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
+
+The following version of the `battle` scene is exactly equivalent:
+
+	#PAGE battle
+	#SCENE You fight valiantly against the stronger opponent.
+	#STACK afterlife
+	#GOTO death_blow
+	#ENDSCENE
+
+If you really want an end scene to be a death scene (game over, no afterlife) then use `#FLUSH` to clear the scene queue.
+
+
 One-time choices
 ----------------
 

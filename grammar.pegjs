@@ -51,6 +51,8 @@ choice_list
 
 goto_clause
  = "#GOTO" spc target:symbol_or_scene spc { return target; }
+ / "#GOSUB" spc gosub:symbol_or_scene spc "#GOTO" spc target:symbol_or_scene spc
+   { return "(function(){funkscene.sceneDeque.push(" + target + ");return(" + gosub + ")();})"; }
  / "#BACK" spc { return "funkscene.previousScene"; }
 
 symbol_or_scene
@@ -107,6 +109,14 @@ end_cycle
   = "#LOOP" { return 1; }
   / "#STOP" { return 0; }
 
+scene_deque
+  = "#STACK" spc s:symbol_or_scene spc { return "funkscene.sceneDeque.push(" + s + ");"; }
+  / "#QUEUE" spc s:symbol_or_scene spc { return "funkscene.sceneDeque.unshift(" + s + ");"; }
+  / "#FLUSH" spc                       { return "funkscene.sceneDeque = [];"; }
+
+wrapped_scene_deque
+  = s:scene_deque  { return "(function(){" + s + ";return\"\";})()"; }
+
 spc
   = single_spc+
 
@@ -136,6 +146,7 @@ text
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / "#EVAL" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
+  / s:wrapped_scene_deque tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

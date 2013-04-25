@@ -10,6 +10,7 @@
     fs.previousScene = undefined;
 
     fs.namedEventCount = {};
+    fs.sceneDeque = [];
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -43,73 +44,77 @@
 	sceneDiv.innerHTML = text;
 
 	var validOptions = new Array();
-	if (options.length > 0) {
-	    for (var i = 0; i < options.length; ++i) {
-		if (options[i] instanceof Array
-		    && (options[i].length == 1
-			|| options[i].length == 2
-			|| options[i].length == 3)) {
-		    validOptions.push (i);
-		}
+	for (var i = 0; i < options.length; ++i) {
+	    if (options[i] instanceof Array
+		&& (options[i].length == 1
+		    || options[i].length == 2
+		    || options[i].length == 3)) {
+		validOptions.push (i);
 	    }
-	    var i = 0;
-	    var textboxHack;
-	    for (var j = 0; j < validOptions.length; ++j) {
-		while (i < validOptions[j]) {
-		    var emptyDiv = document.createElement("DIV");
-		    menuDiv.appendChild (emptyDiv);
-		    ++i;
-		}
-		var text = options[i][0];
-		if (typeof text === 'undefined') { text = 'Enter text:  '; }
-		var sceneFunction = options[i].length > 1 ? options[i][1] : undefined;
-		var inputVarName = options[i].length > 2 ? options[i][2] : undefined;
-		//	    console.log ("j="+j+" i="+i+" text=\""+text+"\" sceneFunction="+sceneFunction+" inputVarName="+inputVarName);
-		var textDiv = document.createTextNode (text);
-		var inputDiv = document.createElement("input");
-		var labelDiv = document.createElement("label");
-		if (options[i].length == 3) {
-		    inputDiv.setAttribute ("type", "text");
-		    inputDiv.onkeypress = function (e) {
-			if (e.keyCode == 13)
-			    continueButton.click();
-		    };
-		    textboxDiv = inputDiv;
-		    labelDiv.appendChild (textDiv);
-		    labelDiv.appendChild (inputDiv);
-		    textboxHack = function() {
-			var ____val = textboxDiv.value;
-			eval (inputVarName + " = ____val;");  // code smell, should ensure inputVarName != "____val" I guess
-			var choiceIndex = fs.choiceHistory.pop();
-			fs.choiceHistory.push ([choiceIndex, inputVarName, ____val]);
-		    };
-		} else {
-		    inputDiv.setAttribute ("type", "radio");
-		    textboxDiv = undefined;
-		    if (text === '') {
-			labelDiv.setAttribute ("style", "display: none");
-		    }
-		    labelDiv.appendChild (inputDiv);
-		    labelDiv.appendChild (textDiv);
-		}
-		inputDiv.setAttribute ("name", "opt");
-		if (j == 0 && validOptions.length == 1) {
-		    labelDiv.setAttribute ("class", "onlyOption");
-		} else if (j == 0) {
-		    labelDiv.setAttribute ("class", "firstOption");
-		} else if (j == validOptions.length - 1) {
-		    labelDiv.setAttribute ("class", "lastOption");
-		}
-		if (j == 0) {
-		    inputDiv.setAttribute ("checked", 1);
-		}
-		if (typeof sceneFunction === 'undefined') {
-		    inputDiv.setAttribute ("disabled", 1);
-		    labelDiv.setAttribute ("disabled", 1);
-		}
-		menuDiv.appendChild (labelDiv);
-		fs.choiceFuncs.push (sceneFunction);
+	}
+
+	if (validOptions.length == 0 && fs.sceneDeque.length > 0) {
+	    options.push (["", fs.sceneDeque.pop()]);
+	    validOptions.push (options.length - 1);
+	}
+
+	var i = 0;
+	var textboxHack;
+	for (var j = 0; j < validOptions.length; ++j) {
+	    while (i < validOptions[j]) {
+		var emptyDiv = document.createElement("DIV");
+		menuDiv.appendChild (emptyDiv);
+		++i;
 	    }
+	    var text = options[i][0];
+	    if (typeof text === 'undefined') { text = 'Enter text:  '; }
+	    var sceneFunction = options[i].length > 1 ? options[i][1] : undefined;
+	    var inputVarName = options[i].length > 2 ? options[i][2] : undefined;
+	    //	    console.log ("j="+j+" i="+i+" text=\""+text+"\" sceneFunction="+sceneFunction+" inputVarName="+inputVarName);
+	    var textDiv = document.createTextNode (text);
+	    var inputDiv = document.createElement("input");
+	    var labelDiv = document.createElement("label");
+	    if (options[i].length == 3) {
+		inputDiv.setAttribute ("type", "text");
+		inputDiv.onkeypress = function (e) {
+		    if (e.keyCode == 13)
+			continueButton.click();
+		};
+		textboxDiv = inputDiv;
+		labelDiv.appendChild (textDiv);
+		labelDiv.appendChild (inputDiv);
+		textboxHack = function() {
+		    var ____val = textboxDiv.value;
+		    eval (inputVarName + " = ____val;");  // code smell, should ensure inputVarName != "____val" I guess
+		    var choiceIndex = fs.choiceHistory.pop();
+		    fs.choiceHistory.push ([choiceIndex, inputVarName, ____val]);
+		};
+	    } else {
+		inputDiv.setAttribute ("type", "radio");
+		textboxDiv = undefined;
+		if (text === '') {
+		    labelDiv.setAttribute ("style", "display: none");
+		}
+		labelDiv.appendChild (inputDiv);
+		labelDiv.appendChild (textDiv);
+	    }
+	    inputDiv.setAttribute ("name", "opt");
+	    if (j == 0 && validOptions.length == 1) {
+		labelDiv.setAttribute ("class", "onlyOption");
+	    } else if (j == 0) {
+		labelDiv.setAttribute ("class", "firstOption");
+	    } else if (j == validOptions.length - 1) {
+		labelDiv.setAttribute ("class", "lastOption");
+	    }
+	    if (j == 0) {
+		inputDiv.setAttribute ("checked", 1);
+	    }
+	    if (typeof sceneFunction === 'undefined') {
+		inputDiv.setAttribute ("disabled", 1);
+		labelDiv.setAttribute ("disabled", 1);
+	    }
+	    menuDiv.appendChild (labelDiv);
+	    fs.choiceFuncs.push (sceneFunction);
 	}
 
 	if (typeof textboxHack != 'undefined') {

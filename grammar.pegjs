@@ -124,7 +124,7 @@ code_chars
   = chars:[^#]+ { return chars.join(""); }
 
 quoted_text
-  = text:text { return '"' + text + '"'; }
+  = text:text? { return '"' + text + '"'; }
 
 text
   = "##" tail:text? { return "#" + tail; }

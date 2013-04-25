@@ -1546,6 +1546,7 @@ funkscene.parser = (function(){
         
         pos0 = clone(pos);
         result0 = parse_text();
+        result0 = result0 !== null ? result0 : "";
         if (result0 !== null) {
           result0 = (function(offset, line, column, text) { return '"' + text + '"'; })(pos0.offset, pos0.line, pos0.column, result0);
         }

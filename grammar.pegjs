@@ -207,11 +207,21 @@ status_page
  = "#STATS" single_spc contents:quoted_text "#ENDSTATS"
    { return "funkscene.makeStatusPage = function() { return " + contents + "; };\n"; }
 
-status_line
- = "#SHOW" single_spc badge:badge "#IF" single_spc expr:status_condition spc
+status_badge
+ = "#SHOW" single_spc badge:nonempty_quoted_text "#IF" single_spc expr:status_condition spc
    { return "((" + expr + ") ? (" + badge + ") : \"\")"; }
 
-badge = nonempty_quoted_text
+meter_bars
+ = bars:meter_bar+
+ { return "\"<table class=\\\"meterTable\\\">\\n\" + " + bars.join(" + ") + " + \"</table>\""; }
+
+meter_bar
+ = "#BAR" label:quoted_text "#VALUE" spc expr:code "#COLOR" spc color:meter_bar_color spc "#ENDBAR" single_spc
+   { return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + ",\"" + color + "\") + \"</td></tr>\\n\""; }
+ / "#BAR" label:quoted_text "#VALUE" spc expr:code "#ENDBAR" single_spc
+   { return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + ") + \"</td></tr>\\n\""; }
+
+meter_bar_color = "green" / "orange" / "red"
 
 status_condition
  = expr:code "#NOW"
@@ -289,7 +299,8 @@ text
   / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / s:scene_scheduling_statement tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
   / c:inc_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
-  / s:status_line tail:text? { return "\" + " + s + " + \"" + tail; }
+  / s:status_badge tail:text? { return "\" + " + s + " + \"" + tail; }
+  / s:meter_bars tail:text? { return "\" + " + s + " + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

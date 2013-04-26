@@ -47,4 +47,11 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 #STATS
 Your name is #$name.
 #SHOW You are penitent. #IF #ACHIEVED penance #NOW
+#BAR Skill #VALUE 0 #COLOR green #ENDBAR
+#BAR Experience #VALUE .1 #COLOR orange #ENDBAR
+#BAR Luck #VALUE .5 #COLOR red #ENDBAR
+#BAR Charisma #VALUE .7 #ENDBAR
+#BAR Dexterity #VALUE .9 #ENDBAR
+#BAR Health #VALUE 1 #ENDBAR
+
 #ENDSTATS

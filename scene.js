@@ -251,4 +251,17 @@
 	fs.choiceHistory = history;
     };
 
+    fs.makeMeterBar = function (level, color) {
+	if (level < 0) { level = 0; }
+	else if (level > 1) { level = 1; }
+	var meterBarDiv = document.createElement("DIV");
+	meterBarClass = "meter";
+	if (typeof color != 'undefined') { meterBarClass += " " + color; }
+	meterBarDiv.setAttribute ("class", meterBarClass);
+	var meterBarSegment = document.createElement("SPAN");
+	meterBarSegment.setAttribute ("style", "width: " + (100*level) + "%");
+	meterBarDiv.appendChild (meterBarSegment);
+	return meterBarDiv.outerHTML;
+    };
+
 })(funkscene = {});

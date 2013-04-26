@@ -246,13 +246,13 @@ but it can also be used to schedule scenes in a more general way,
 e.g. as a queue; see below.
 
 If what you want is for one scene to flow seamlessly into another with
-no detectable interruption, use `#APPEND`, like so:
+no detectable interruption, use `#INCLUDE`, like so:
 
 	hair_status = "messy"
 	
 	#PAGE start
 	#SCENE You stand before the gates of the Temple of Belsidore.
-	#APPEND messy_hair
+	#INCLUDE messy_hair
 	#CHOOSE I smash the gates! #FOR electrified
 	#CHOOSE I walk away #FOR wise_choice
 	#ENDSCENE

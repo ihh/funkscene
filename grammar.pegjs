@@ -1,23 +1,34 @@
 {
-  function sceneFunction(continuation,scene_desc,choices,appends) {
-      var define_continuation = "";
+  function sceneFunction(continuation,includes,scene_desc,choices) {
+      var f = "(function() {\n";
       if (typeof(continuation) != 'undefined') {
-          define_continuation = "\tvar defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
+          f += "var defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
       }
-      if (appends.length == 0) {
-          if (typeof choices === 'string') {
-              return "(function() {\n" + define_continuation + "\treturn [" + scene_desc + ", " + choices + "]; })";
-          } else {
-              return "(function() {\n" + define_continuation + "\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
-          }
-      } else {
-	  var func =  "(function() {\n" + define_continuation + "\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
-	  for (var i = 0; i < appends.length; ++i) {
-	      func += "_appendix_text_opts = " + appends[i] + "();\n\t_text += _appendix_text_opts[0];\n\t_opts = _opts.concat (_appendix_text_opts[1]);\n\t";
+      f += "var __t=\"\",__c=[],__tc;\n";
+      if (typeof(includes) != 'undefined') {
+          for (var i = 0; i < includes.length; ++i) {
+	      var text = includes[i][0], incl = includes[i][1];
+	      if (typeof(text) != 'undefined') { f += "__t+=" + text + ";\n"; }
+	      if (typeof(incl) != 'undefined') { f += "__tc=(" + incl + ")();\n__t+=__tc[0];\n__c=__c.concat(__tc[1]);\n"; }
 	  }
-	  func += "return [_text, _opts]; })";
       }
-      return func;
+      f += "__t+=" + scene_desc + ";\n";
+      f += "__c=__c.concat(" + renderList(choices) + ");\n";
+      f += "return [__t,__c];})";
+
+      return f;
+  }
+
+  function renderList(x) {
+      if (typeof x === 'string') {
+          return x;
+      } else {
+          return "[" + x.join(",") + "]";
+      }
+  }
+
+  function joinScenes(scenes) {
+      return "(function(){return funkscene.joinScenes([" + scenes.join(",") + "]);})";	
   }
 
   function gotoIfDefined(x) {
@@ -45,20 +56,20 @@ body
 
 named_scene
   = "#PAGE" spc name:symbol spc scene:scene
- { return name + " = " + scene + ";\n"; }
+   { return name + " = " + scene + ";\n"; }
 
 scene
  = "#SCENE" single_spc s:scene_body endscene  { return s; }
-  / "#(" single_spc s:scene_body "#)"         { return s; }
+ / "#("     single_spc s:scene_body "#)"      { return s; }
 
 scene_body
- = scene_desc:nonempty_quoted_text appends:append* choices:conjunctive_choice_list cont:scene_body
-  { return sceneFunction (cont, scene_desc, choices, appends); }
- / scene_desc:nonempty_quoted_text appends:append* choices:choice_list
-  { return sceneFunction (undefined, scene_desc, choices, appends); }
+ = incl:include* scene_desc:quoted_text choices:conjunctive_choice_list cont:scene_body
+  { return sceneFunction (cont, incl, scene_desc, choices); }
+ / incl:include* scene_desc:quoted_text choices:choice_list
+  { return sceneFunction (undefined, incl, scene_desc, choices); }
 
-append
- = "#APPEND" spc appendix:symbol_or_scene spc { return appendix; }
+include
+ = scene_desc:quoted_text? "#INCLUDE" spc included:symbol_or_scene { return [scene_desc,included]; }
 
 conjunctive_choice_list
  = "#INPUT" single_spc prompt:quoted_text "#TO" single_spc var_name:symbol spc target:goto_clause_or_continuation
@@ -177,7 +188,7 @@ quoted_text
 
 text
   = "##" tail:text? { return "#" + tail; }
-  / "#" number:[0-9] tail:text? { return "#" + number + tail; }
+  / rank:hash_rank tail:text? { return rank + tail; }
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
@@ -187,6 +198,9 @@ text
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }
+
+hash_rank
+ = "#!" / "#0" / "#1" / "#2" / "#3" / "#4" / "#5" / "#6" / "#7" / "#8" / "#9"
 
 text_chars
   = chars:[^#\"\n]+ { return chars.join(""); }

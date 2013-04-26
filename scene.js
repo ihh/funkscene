@@ -12,9 +12,9 @@
     fs.namedEventCount = {};
 
     fs.sceneDeque = [];
-    fs.continuationScene = function() { return fs.sceneDeque.pop(); }
+    fs.continuationScene = function() { return fs.sceneDeque.pop(); };
 
-    fs.sceneTextToHtml = function(t) { return t; }
+    fs.sceneTextToHtml = function(t) { return t; };
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -33,7 +33,7 @@
             }
 	}
 	return undefined;
-    }
+    };
 
     fs.viewScene = function (f) {
 	menuDiv.innerHTML = "";
@@ -128,7 +128,7 @@
 	    // no choices, so hide button
 	    continueButton.setAttribute ("style", "display: none");
 	}
-    }
+    };
 
     fs.loadSceneFile = function (url) {
 	var xhr = new XMLHttpRequest();
@@ -141,10 +141,22 @@
 	eval (processed);
     }
 
+    fs.joinScenes = function (scenes) {
+	var text = "";
+	var choices = [];
+	for (var i = 0; i < scenes.length; ++i) {
+	    var f = scenes[i];
+	    var text_options = f();
+	    text = text + text_options[0];
+	    choices = choices.concat (text_options[1]);
+	}
+	return [text, choices];
+    };
+
     fs.initialize = function() {
 	fs.viewScene (start);
 	fs.choiceHistory = new Array;
-    }
+    };
 
     // restore() assumes exact reproducibility (i.e. do NOT use Math.Rand!)
     fs.restore = function (history) {
@@ -167,6 +179,6 @@
 	    }
 	}
 	fs.choiceHistory = history;
-    }
+    };
 
 })(funkscene = {});

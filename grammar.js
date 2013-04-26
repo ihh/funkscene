@@ -44,6 +44,8 @@ funkscene.parser = (function(){
         "include": parse_include,
         "conjunctive_choice_list": parse_conjunctive_choice_list,
         "choice_list": parse_choice_list,
+        "explicit_or_implicit_continuation": parse_explicit_or_implicit_continuation,
+        "basic_goto_clause": parse_basic_goto_clause,
         "goto_clause": parse_goto_clause,
         "goto_clause_or_continuation": parse_goto_clause_or_continuation,
         "symbol_or_scene": parse_symbol_or_scene,
@@ -422,11 +424,11 @@ funkscene.parser = (function(){
           result1 = parse_include();
         }
         if (result0 !== null) {
-          result1 = parse_quoted_text();
+          result1 = parse_nonempty_quoted_text();
           if (result1 !== null) {
             result2 = parse_conjunctive_choice_list();
             if (result2 !== null) {
-              result3 = parse_scene_body();
+              result3 = parse_explicit_or_implicit_continuation();
               if (result3 !== null) {
                 result0 = [result0, result1, result2, result3];
               } else {
@@ -461,7 +463,7 @@ funkscene.parser = (function(){
             result1 = parse_include();
           }
           if (result0 !== null) {
-            result1 = parse_quoted_text();
+            result1 = parse_nonempty_quoted_text();
             if (result1 !== null) {
               result2 = parse_choice_list();
               if (result2 !== null) {
@@ -689,8 +691,18 @@ funkscene.parser = (function(){
         return result0;
       }
       
-      function parse_goto_clause() {
-        var result0, result1, result2, result3, result4;
+      function parse_explicit_or_implicit_continuation() {
+        var result0;
+        
+        result0 = parse_basic_goto_clause();
+        if (result0 === null) {
+          result0 = parse_scene_body();
+        }
+        return result0;
+      }
+      
+      function parse_basic_goto_clause() {
+        var result0, result1, result2, result3;
         var pos0, pos1;
         
         pos0 = clone(pos);
@@ -734,6 +746,14 @@ funkscene.parser = (function(){
         if (result0 === null) {
           pos = clone(pos0);
         }
+        return result0;
+      }
+      
+      function parse_goto_clause() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        result0 = parse_basic_goto_clause();
         if (result0 === null) {
           pos0 = clone(pos);
           pos1 = clone(pos);

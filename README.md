@@ -357,7 +357,24 @@ Any dead-end choices from the first block will implicitly `#GOTO` the second blo
 	#GOTO free_fall
 	#ENDSCENE
 
-Here is a longer code excerpt, wherein several scenes are run together.
+You can also keep the scenes separate, but specify a default continuation
+explicitly, with a `#GOTO` at the end of the first scene.
+
+	#PAGE in_plane
+	#SCENE Are you ready?
+	#CHOOSE Definitely! #FOR #( That's the spirit! #)
+	#CHOOSE Just about. #FOR #( Good! #)
+	#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+	#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+	#GOTO jump
+	#ENDSCENE
+	
+	#PAGE jump
+	#SCENE You pull the ripcord and jump...
+	#GOTO free_fall
+	#ENDSCENE
+
+Here is a longer code excerpt, wherein several scenes are run together using implicit continuations.
 Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" between scenes.
 
 	#PAGE start

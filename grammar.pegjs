@@ -63,9 +63,9 @@ scene
  / "#("     single_spc s:scene_body "#)"      { return s; }
 
 scene_body
- = incl:include* scene_desc:quoted_text choices:conjunctive_choice_list cont:scene_body
+ = incl:include* scene_desc:nonempty_quoted_text choices:conjunctive_choice_list cont:explicit_or_implicit_continuation
   { return sceneFunction (cont, incl, scene_desc, choices); }
- / incl:include* scene_desc:quoted_text choices:choice_list
+ / incl:include* scene_desc:nonempty_quoted_text choices:choice_list
   { return sceneFunction (undefined, incl, scene_desc, choices); }
 
 include
@@ -82,9 +82,15 @@ choice_list
  / "#OVER" spc { return []; }
  / { return [gotoIfDefined("defaultContinuation")]; }
 
+explicit_or_implicit_continuation
+ = basic_goto_clause
+ / scene_body
+
+basic_goto_clause
+ = "#GOTO" spc target:symbol_or_scene spc  { return target; }
+
 goto_clause
- = "#GOTO" spc target:symbol_or_scene spc
-   { return target; }
+ = basic_goto_clause
  / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause_or_continuation
    { return gosubWithContinuation(gosub,target); }
  / "#GOSUB" spc gosub:symbol_or_scene spc

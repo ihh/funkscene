@@ -1,11 +1,20 @@
 (function (fs) {
     var sceneDiv = document.getElementById("scene");
     var menuDiv = document.getElementById("menu");
-    var textboxDiv;
+    var historyDiv = document.getElementById("history");
+    var statsDiv = document.getElementById("stats");
     var continueButton = document.getElementById("continue");
+    var storyParentDiv = document.getElementById("storyParent");
+    var statsParentDiv = document.getElementById("statsParent");
+    var historyParentDiv = document.getElementById("historyParent");
+    var statsButton = document.getElementById("showStats");
+    var historyButton = document.getElementById("showHistory");
+    var storyButton = document.getElementById("showStory");
 
-    fs.choiceFuncs = undefined;
+    var choiceFuncs = undefined;
+    var choiceTexts = undefined;
     fs.choiceHistory = undefined;
+
     fs.currentScene = undefined;
     fs.previousScene = undefined;
 
@@ -15,6 +24,10 @@
     fs.continuationScene = function() { return fs.sceneDeque.pop(); };
 
     fs.sceneTextToHtml = function(t) { return t; };
+    fs.sceneTextToHistoryHtml = function(t) { return fs.sceneTextToHtml(t) + "<br>"; };
+    fs.choiceTextToHistoryHtml = function(t) { return "<i>" + t + "</i><br>"; };
+
+    fs.makeStatusPage = function() { return "Your status is \"Mostly Harmless\"."; };
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -24,28 +37,73 @@
 	};
     }
 
-    fs.getSelectedSceneFunction = function() {
+    function hideElement(e) { e.setAttribute ("style", "display: none"); };
+    function showElement(e) { e.setAttribute ("style", "display: inline"); };
+
+    statsButton.onclick = function() {
+	hideElement (statsButton);
+	showElement (historyButton);
+	showElement (storyButton);
+	hideElement (storyParentDiv);
+	hideElement (historyParentDiv);
+	showElement (statsParentDiv);
+    };
+
+    historyButton.onclick = function() {
+	hideElement (historyButton);
+	showElement (statsButton);
+	showElement (storyButton);
+	hideElement (storyParentDiv);
+	hideElement (statsParentDiv);
+	showElement (historyParentDiv);
+    };
+
+    storyButton.onclick = function() {
+	hideElement (storyButton);
+	showElement (statsButton);
+	showElement (historyButton);
+	hideElement (statsParentDiv);
+	hideElement (historyParentDiv);
+	showElement (storyParentDiv);
+    };
+
+    function getSelectedSceneFunction() {
 	for (var i = 0; i < menuDiv.length; i++) {
             var inputDiv = menuDiv[i];
             if (inputDiv.checked) {
 		fs.choiceHistory.push (i);
-		return fs.choiceFuncs[i];
+		return [choiceTexts[i], choiceFuncs[i]];
             }
 	}
 	return undefined;
     };
 
-    fs.viewScene = function (f) {
+    function recordChoiceText(c) {
+	if (typeof(c) != 'undefined' && c != '') {
+	    historyDiv.innerHTML += fs.choiceTextToHistoryHtml(c);
+	}
+    };
+
+    function recordSceneText(s) {
+	historyDiv.innerHTML += fs.sceneTextToHistoryHtml(s);
+    };
+
+    function viewScene(f) {
 	menuDiv.innerHTML = "";
-	fs.choiceFuncs = new Array;
+	choiceFuncs = [];
+	choiceTexts = [];
 
 	fs.previousScene = fs.currentScene;
 	fs.currentScene = f;
 	var text_options = f();
-	var text = text_options[0];
+	var sceneText = text_options[0];
 	var options = text_options[1];
 
-	sceneDiv.innerHTML = fs.sceneTextToHtml (text);
+	var sceneHtml = fs.sceneTextToHtml (sceneText);
+	sceneDiv.innerHTML = sceneHtml;
+	recordSceneText (sceneText);
+
+	statsDiv.innerHTML = fs.makeStatusPage();
 
 	var validOptions = new Array();
 	for (var i = 0; i < options.length; ++i) {
@@ -65,14 +123,14 @@
 		menuDiv.appendChild (emptyDiv);
 		++i;
 	    }
-	    var text = options[i][0];
-	    if (typeof text === 'undefined') { text = 'Enter text:  '; }
+	    var choiceText = options[i][0];
+	    if (typeof choiceText === 'undefined') { choiceText = 'Enter text:  '; }
 	    var sceneFunction = options[i].length > 1 ? options[i][1] : undefined;
 	    var inputVarName = options[i].length > 2 ? options[i][2] : undefined;
-	    //	    console.log ("j="+j+" i="+i+" text=\""+text+"\" sceneFunction="+sceneFunction+" inputVarName="+inputVarName);
-	    var textDiv = document.createTextNode (text);
+	    var textDiv = document.createTextNode (choiceText);
 	    var inputDiv = document.createElement("input");
 	    var labelDiv = document.createElement("label");
+	    var textboxDiv;
 	    if (options[i].length == 3) {
 		inputDiv.setAttribute ("type", "text");
 		inputDiv.onkeypress = function (e) {
@@ -87,12 +145,13 @@
 		    eval (inputVarName + " = ____val;");  // code smell, should ensure inputVarName != "____val" I guess
 		    var choiceIndex = fs.choiceHistory.pop();
 		    fs.choiceHistory.push ([choiceIndex, inputVarName, ____val]);
+		    return ____val;
 		};
 	    } else {
 		inputDiv.setAttribute ("type", "radio");
 		textboxDiv = undefined;
-		if (text === '') {
-		    labelDiv.setAttribute ("style", "display: none");
+		if (choiceText === '') {
+		    hideElement (labelDiv);
 		}
 		labelDiv.appendChild (inputDiv);
 		labelDiv.appendChild (textDiv);
@@ -113,17 +172,25 @@
 		labelDiv.setAttribute ("disabled", 1);
 	    }
 	    menuDiv.appendChild (labelDiv);
-	    fs.choiceFuncs.push (sceneFunction);
+	    choiceFuncs.push (sceneFunction);
+	    choiceTexts.push (choiceText);
 	}
 
 	if (typeof textboxHack != 'undefined') {
 	    // activate/initialize the continue button, calling textboxHack to set the associated variable
 	    continueButton.removeAttribute ("style");  // make sure button is visible
-	    continueButton.onclick = function() { var next = fs.getSelectedSceneFunction(); textboxHack(); fs.viewScene(next); };
+	    continueButton.onclick = function() {
+		var text_func = getSelectedSceneFunction();
+		var input_val = textboxHack();
+		recordChoiceText(input_val);
+		viewScene(text_func[1]); };
 	} else if (validOptions.length > 0) {
 	    // activate/initialize the continue button
 	    continueButton.removeAttribute ("style");  // make sure button is visible
-	    continueButton.onclick = function() { fs.viewScene (fs.getSelectedSceneFunction()) };
+	    continueButton.onclick = function() {
+		var text_func = getSelectedSceneFunction();
+		recordChoiceText(text_func[0]);
+		viewScene(text_func[1]); };
 	} else {
 	    // no choices, so hide button
 	    continueButton.setAttribute ("style", "display: none");
@@ -154,7 +221,7 @@
     };
 
     fs.initialize = function() {
-	fs.viewScene (start);
+	viewScene (start);
 	fs.choiceHistory = new Array;
     };
 
@@ -171,11 +238,14 @@
 		    var inputVarName = history_item[1];
 		    var ____val = history_item[2];
 		    eval (inputVarName + " = ____val");  // code smell, should ensure inputVarName != "____val" I guess
+		    recordChoiceText (____val);
 		} else {
 		    choice_index = history_item;
 		}
-		var nextScene = fs.choiceFuncs[choice_index];
-		fs.viewScene (nextScene);
+		var theChoice = choiceTexts[choice_index];
+		var nextScene = choiceFuncs[choice_index];
+		recordChoiceText (theChoice);
+		viewScene (nextScene);
 	    }
 	}
 	fs.choiceHistory = history;

@@ -26,7 +26,7 @@ name = "Adventurer"
 #CHOOSE I walk away #FOR wise_choice
 #ONCE #CHOOSE I have a name, you know. #FOR #( OK then, tell me your name. #INPUT Type your name: #TO name #BACK #)
 #SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #BACK #)
-#CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #GOTO #PREVIOUS #)
+#CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #ACHIEVE penance #GOTO #PREVIOUS #)
 #ENDSCENE
 
 #PAGE electrified
@@ -43,3 +43,8 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 #PAGE messy_hair
 #SCENE Your hair is very #$hair.
 #END
+
+#STATS
+Your name is #$name.
+#SHOW You are penitent. #IF #ACHIEVED penance #NOW
+#ENDSTATS

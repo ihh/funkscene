@@ -8,31 +8,64 @@
 </head>
 <body>
 
-<!-- Scene -->
-<div id="scene">
-  After the six-day walk it looms quickly, unmistakable in its grand austerity.
-  You stand before the gates of a 16th-century Trappist monastery.
+
+<!-- Main text panel -->
+<div>
+  <button type="button" id="showStats">
+    Stats
+  </button>
+  <button type="button" id="showHistory">
+    History
+  </button>
+  <button type="button" id="showStory" style="display: none">
+    Back
+  </button>
+  <br>
+
+ <!-- Stats -->
+ <div id="statsParent" style="display: none">
+  <hr>
+  <div id="stats"></div>
+  <hr>
+ </div>
+ <!-- History -->
+ <div id="historyParent" style="display: none">
+  <hr>
+  <div id="history"></div>
+  <hr>
+ </div>
+ <!-- Story -->
+ <div id="storyParent">
+  <br>
+  <!-- Scene -->
+  <div id="scene">
+    After the six-day walk it looms quickly, unmistakable in its grand austerity.
+    You stand before the gates of a 16th-century Trappist monastery.
+  </div>
+  <br/>
+  <br/>
+  <!-- Menu -->
+  <form action="#" class="menu" id="menu">
+    <label class="firstOption">
+      <input type="radio" name="opt" value="0" checked="1"/>
+      First glancing around, I knock on the door <br/>
+    </label>
+    <label>
+      <input type="radio" name="opt" value="1"/>
+      I kick the door open and storm inside <br/>
+    </label>
+    <label class="lastOption">
+      <input type="radio" name="opt" value="2"/>
+      I pause for a swig of mead and a bite of liverwurst <br/>
+    </label>
+  </form>
+  <br/>
+  <!-- Continue button -->
+  <button type="button" class="continue" id="continue">
+    Continue
+  </button>
+ </div>
 </div>
-<br/>
-<br/>
-<form action="#" class="menu" id="menu">
-  <label class="firstOption">
-    <input type="radio" name="opt" value="0" checked="1"/>
-    First glancing around, I knock on the door <br/>
-  </label>
-  <label>
-    <input type="radio" name="opt" value="1"/>
-    I kick the door open and storm inside <br/>
-  </label>
-  <label class="lastOption">
-    <input type="radio" name="opt" value="2"/>
-    I pause for a swig of mead and a bite of liverwurst <br/>
-  </label>
-</form>
-<br/>
-<button type="button" class="continue" id="continue">
-  Continue
-</button>
 
 
 <!-- Scripts -->

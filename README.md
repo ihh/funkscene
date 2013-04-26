@@ -105,25 +105,13 @@ Playing the game
 ----------------
 
 To play the Temple of Belsidore "game", you will need to save it with a filename like
-`mygame.scene` and then edit the supplied `index.html` file as follows:
+`mygame.scene` and then edit the supplied `index.html` file to contain the following
+(after all other `script` and `link` blocks):
 
 	<script type="text/javascript">
 	  loadSceneFile ("mygame.scene");
 	  initialize();
 	</script>
-
-The `index.html` file will also include a couple other scripts
-
-	<script type="text/javascript" src="scene.js"></script>
-	<script type="text/javascript" src="grammar.js"></script>
-
-and must contain some minimal DOM structure
-
-	<div id="scene"> </div> ...
-	<form action="#" id="menu"> </form> ...
-	<button type="button" id="continue">
-	 Continue
-	</button>
 
 You'll then need to open `index.html` over a web connection (i.e. an
 `http` URL, not a `file` URL, because the `loadSceneFile` function

@@ -2,7 +2,7 @@
   function sceneFunction(continuation,scene_desc,choices,appends) {
       var define_continuation = "";
       if (typeof(continuation) != 'undefined') {
-          define_continuation = "\tvar defaultContinuation = " + continuation + ";\n";
+          define_continuation = "\tvar defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
       }
       if (appends.length == 0) {
           if (typeof choices === 'string') {
@@ -21,7 +21,7 @@
   }
 
   function gotoIfDefined(x) {
-   return "((typeof(" + x + ") === 'undefined' || " + x + " === funkscene.currentScene || " + x + " === funkscene.previousScene) ? [] : [\"\", " + x + "])";
+   return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
   }
 
   var oneTimeCount = 0;

@@ -268,7 +268,8 @@ The keyword `#PREVIOUS` yields the previous scene function, while
 Scheduling scenes for later
 ---------------------------
 
-You can schedule scenes for later display using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
+FunkScene includes a rudimentary scene queue, that you can use to schedule scenes for later.
+You do this using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
 Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
 

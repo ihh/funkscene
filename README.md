@@ -372,7 +372,10 @@ Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" be
 	#CHOOSE A final choice. #FOR #( GAME OVER! #)
 	#END
 	
-	#PAGE are_you_ready #( Are you ready? #CHOOSE Yes. #FOR #( Great! #CONTINUE #) #CHOOSE No. #FOR #( That's too bad! #CONTINUE #) #)
+	#PAGE are_you_ready #( Are you ready?
+	  #CHOOSE Yes. #FOR #( Great! #CONTINUE #)
+	  #CHOOSE No. #FOR #( That's too bad! #CONTINUE #) #)
+
 	#PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
 
 

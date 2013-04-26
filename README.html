@@ -436,8 +436,9 @@ only appears when the text about feeling a chill has been shown.</p>
 
 <h2>Programmatically generated choice lists</h2>
 
-<p>As well as just generating them directly in JavaScript, you can build
-scene functions using a mix of JS and FunkScene:</p>
+<p>As well as just generating scene functions directly in JavaScript or FunkScene,
+you can build them with a mix of the two,
+using <code>#CHOICES</code> to specify the choice list directly</p>
 
 <pre><code>#PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
@@ -447,7 +448,7 @@ scene functions using a mix of JS and FunkScene:</p>
 #ENDSCENE
 </code></pre>
 
-<p>or even</p>
+<p>and mixing <code>#CHOOSE...#FOR...</code> blocks with JavaScript code</p>
 
 <pre><code>#PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
@@ -458,8 +459,9 @@ scene functions using a mix of JS and FunkScene:</p>
 #ENDSCENE
 </code></pre>
 
-<p>Note that in a <code>#CHOICES</code> block, you need to specify commas and <code>[...]</code>
-array delimiters explicitly, even when using <code>#CHOOSE...#FOR</code> blocks.</p>
+<p>Note that in a <code>#CHOICES</code> block (and unlike in the usual choice list environment),
+you need to specify choice-separating commas and <code>[...]</code> array delimiters explicitly,
+even when using <code>#CHOOSE...#FOR</code> blocks to describe individual choices.</p>
 
 <h2>Embedding and interpolating code in text</h2>
 

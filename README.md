@@ -436,8 +436,9 @@ Note that there cannot be any whitespace between the `#CYCLE` and the opening br
 Programmatically generated choice lists
 ---------------------------------------
 
-As well as just generating them directly in JavaScript, you can build
-scene functions using a mix of JS and FunkScene:
+As well as just generating scene functions directly in JavaScript or FunkScene,
+you can build them with a mix of the two,
+using `#CHOICES` to specify the choice list directly
 
 	#PAGE start
 	#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
@@ -446,7 +447,7 @@ scene functions using a mix of JS and FunkScene:
 	  ["I walk away", wise_choice]]
 	#ENDSCENE
 
-or even
+and mixing `#CHOOSE...#FOR...` blocks with JavaScript code
 
 	#PAGE start
 	#SCENE You stand before the gates of the Temple of Belsidore. A sign reads "BEWARE!"
@@ -456,8 +457,9 @@ or even
 	 ]
 	#ENDSCENE
 
-Note that in a `#CHOICES` block, you need to specify commas and `[...]`
-array delimiters explicitly, even when using `#CHOOSE...#FOR` blocks.
+Note that in a `#CHOICES` block (and unlike in the usual choice list environment),
+you need to specify choice-separating commas and `[...]` array delimiters explicitly,
+even when using `#CHOOSE...#FOR` blocks to describe individual choices.
 
 
 Embedding and interpolating code in text

@@ -244,9 +244,9 @@ no detectable interruption, use <code>#APPEND</code>, like so:</p>
 
 #PAGE start
 #SCENE You stand before the gates of the Temple of Belsidore.
+#APPEND messy_hair
 #CHOOSE I smash the gates! #FOR electrified
 #CHOOSE I walk away #FOR wise_choice
-#APPEND messy_hair
 #ENDSCENE
 
 #PAGE messy_hair
@@ -262,7 +262,7 @@ no detectable interruption, use <code>#APPEND</code>, like so:</p>
 
 <p>You can schedule scenes for later using <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
 <code>#STACK</code> puts the scene on the front of the scene queue, whereas <code>#QUEUE</code> puts it at the back.
-Both will postpone the delayed scene until a <code>#CONTINUE</code> statement is reached.</p>
+Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</code> is reached.</p>
 
 <p>As an alternative to <code>#STACK</code>, at the end of a scene you can use <code>#GOSUB</code> followed by <code>#GOTO</code>, like so:</p>
 

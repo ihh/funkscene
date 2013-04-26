@@ -1,5 +1,7 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
+all: grammar.js README.html
+
 grammar.js: grammar.pegjs
 # Uncomment for node version, vs browser version
 #	$(PEGJS) $< $@

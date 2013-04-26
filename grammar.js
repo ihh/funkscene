@@ -40,6 +40,7 @@ funkscene.parser = (function(){
         "body": parse_body,
         "named_scene": parse_named_scene,
         "scene": parse_scene,
+        "scene_body": parse_scene_body,
         "append": parse_append,
         "choice_list": parse_choice_list,
         "goto_clause": parse_goto_clause,
@@ -306,7 +307,7 @@ funkscene.parser = (function(){
       }
       
       function parse_scene() {
-        var result0, result1, result2, result3, result4, result5;
+        var result0, result1, result2, result3;
         var pos0, pos1;
         
         pos0 = clone(pos);
@@ -321,30 +322,13 @@ funkscene.parser = (function(){
           }
         }
         if (result0 !== null) {
-          result1 = parse_spc();
+          result1 = parse_single_spc();
           if (result1 !== null) {
-            result2 = parse_quoted_text();
+            result2 = parse_scene_body();
             if (result2 !== null) {
-              result3 = parse_choice_list();
+              result3 = parse_endscene();
               if (result3 !== null) {
-                result4 = [];
-                result5 = parse_append();
-                while (result5 !== null) {
-                  result4.push(result5);
-                  result5 = parse_append();
-                }
-                if (result4 !== null) {
-                  result5 = parse_endscene();
-                  if (result5 !== null) {
-                    result0 = [result0, result1, result2, result3, result4, result5];
-                  } else {
-                    result0 = null;
-                    pos = clone(pos1);
-                  }
-                } else {
-                  result0 = null;
-                  pos = clone(pos1);
-                }
+                result0 = [result0, result1, result2, result3];
               } else {
                 result0 = null;
                 pos = clone(pos1);
@@ -362,7 +346,7 @@ funkscene.parser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, scene_desc, choices, appends) { return sceneFunction (scene_desc, choices, appends); })(pos0.offset, pos0.line, pos0.column, result0[2], result0[3], result0[4]);
+          result0 = (function(offset, line, column, s) { return s; })(pos0.offset, pos0.line, pos0.column, result0[2]);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -380,32 +364,21 @@ funkscene.parser = (function(){
             }
           }
           if (result0 !== null) {
-            result1 = parse_quoted_text();
+            result1 = parse_single_spc();
             if (result1 !== null) {
-              result2 = parse_choice_list();
+              result2 = parse_scene_body();
               if (result2 !== null) {
-                result3 = [];
-                result4 = parse_append();
-                while (result4 !== null) {
-                  result3.push(result4);
-                  result4 = parse_append();
+                if (input.substr(pos.offset, 2) === "#)") {
+                  result3 = "#)";
+                  advance(pos, 2);
+                } else {
+                  result3 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#)\"");
+                  }
                 }
                 if (result3 !== null) {
-                  if (input.substr(pos.offset, 2) === "#)") {
-                    result4 = "#)";
-                    advance(pos, 2);
-                  } else {
-                    result4 = null;
-                    if (reportFailures === 0) {
-                      matchFailed("\"#)\"");
-                    }
-                  }
-                  if (result4 !== null) {
-                    result0 = [result0, result1, result2, result3, result4];
-                  } else {
-                    result0 = null;
-                    pos = clone(pos1);
-                  }
+                  result0 = [result0, result1, result2, result3];
                 } else {
                   result0 = null;
                   pos = clone(pos1);
@@ -423,11 +396,50 @@ funkscene.parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, scene_desc, choices, appends) { return sceneFunction (scene_desc, choices, appends); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[2], result0[3]);
+            result0 = (function(offset, line, column, s) { return s; })(pos0.offset, pos0.line, pos0.column, result0[2]);
           }
           if (result0 === null) {
             pos = clone(pos0);
           }
+        }
+        return result0;
+      }
+      
+      function parse_scene_body() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        result0 = parse_quoted_text();
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_append();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_append();
+          }
+          if (result1 !== null) {
+            result2 = parse_choice_list();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+          } else {
+            result0 = null;
+            pos = clone(pos1);
+          }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, scene_desc, appends, choices) { return sceneFunction (scene_desc, choices, appends); })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1], result0[2]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
         }
         return result0;
       }
@@ -568,11 +580,58 @@ funkscene.parser = (function(){
             pos = clone(pos0);
           }
           if (result0 === null) {
-            result0 = [];
             result1 = parse_qualified_choose_expr();
-            while (result1 !== null) {
-              result0.push(result1);
-              result1 = parse_qualified_choose_expr();
+            if (result1 !== null) {
+              result0 = [];
+              while (result1 !== null) {
+                result0.push(result1);
+                result1 = parse_qualified_choose_expr();
+              }
+            } else {
+              result0 = null;
+            }
+            if (result0 === null) {
+              pos0 = clone(pos);
+              pos1 = clone(pos);
+              if (input.substr(pos.offset, 5) === "#OVER") {
+                result0 = "#OVER";
+                advance(pos, 5);
+              } else {
+                result0 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"#OVER\"");
+                }
+              }
+              if (result0 !== null) {
+                result1 = parse_spc();
+                if (result1 !== null) {
+                  result0 = [result0, result1];
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+              if (result0 !== null) {
+                result0 = (function(offset, line, column) { return []; })(pos0.offset, pos0.line, pos0.column);
+              }
+              if (result0 === null) {
+                pos = clone(pos0);
+              }
+              if (result0 === null) {
+                pos0 = clone(pos);
+                pos1 = clone(pos);
+                result0 = [];
+                if (result0 !== null) {
+                  result0 = (function(offset, line, column) { if (defaultContinuation.length == 0) { console.log ("Warning: empty choice list without implicit continuation"); return []; }
+                     return ["[\"\", " + defaultContinuation[defaultContinuation.length-1] + "]"]; })(pos0.offset, pos0.line, pos0.column);
+                }
+                if (result0 === null) {
+                  pos = clone(pos0);
+                }
+              }
             }
           }
         }
@@ -2247,6 +2306,7 @@ funkscene.parser = (function(){
         var oneTimeEventPrefix = "once";
         var cycleCount = 0;
         var cyclePrefix = "cycle";
+        var defaultContinuationStack = [];
       
       
       var result = parseFunctions[startRule]();

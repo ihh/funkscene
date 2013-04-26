@@ -247,9 +247,9 @@ no detectable interruption, use `#APPEND`, like so:
 	
 	#PAGE start
 	#SCENE You stand before the gates of the Temple of Belsidore.
+	#APPEND messy_hair
 	#CHOOSE I smash the gates! #FOR electrified
 	#CHOOSE I walk away #FOR wise_choice
-	#APPEND messy_hair
 	#ENDSCENE
 
 	#PAGE messy_hair
@@ -265,7 +265,7 @@ Scheduling scenes
 
 You can schedule scenes for later using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
-Both will postpone the delayed scene until a `#CONTINUE` statement is reached.
+Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
 
 As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` followed by `#GOTO`, like so:
 

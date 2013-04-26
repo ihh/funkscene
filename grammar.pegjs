@@ -19,6 +19,7 @@
   var oneTimeEventPrefix = "once";
   var cycleCount = 0;
   var cyclePrefix = "cycle";
+  var defaultContinuationStack = [];
 }
 
 start
@@ -35,9 +36,11 @@ named_scene
  { return name + " = " + scene + ";\n"; }
 
 scene
-  = "#SCENE" spc scene_desc:quoted_text choices:choice_list appends:append* endscene
- { return sceneFunction (scene_desc, choices, appends); }
-  / "#(" scene_desc:quoted_text choices:choice_list appends:append* "#)"
+ = "#SCENE" single_spc s:scene_body endscene  { return s; }
+  / "#(" single_spc s:scene_body "#)"         { return s; }
+
+scene_body
+ = scene_desc:quoted_text appends:append* choices:choice_list
  { return sceneFunction (scene_desc, choices, appends); }
 
 append
@@ -47,7 +50,10 @@ choice_list
  = "#INPUT" single_spc prompt:quoted_text? "#TO" single_spc var_name:symbol spc target:goto_clause
     { return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"]; }
  / target:goto_clause { return ["[\"\", " + target + "]"]; }
- / qualified_choose_expr*
+ / qualified_choose_expr+
+ / "#OVER" spc { return []; }
+ / { if (defaultContinuation.length == 0) { console.log ("Warning: empty choice list without implicit continuation"); return []; }
+     return ["[\"\", " + defaultContinuation[defaultContinuation.length-1] + "]"]; }
 
 goto_clause
  = "#GOTO" spc target:symbol_or_scene spc { return target; }

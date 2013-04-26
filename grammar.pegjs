@@ -168,6 +168,7 @@ quoted_text
 
 text
   = "##" tail:text? { return "#" + tail; }
+  / "#" number:[0-9] tail:text? { return "#" + number + tail; }
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#{" code:code "#}" tail:text? { return "\" + (function(){return\"\"})((function(){" + code + "})()) + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }

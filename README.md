@@ -70,9 +70,10 @@ vanilla scene functions, with one choice-point:
 	#ENDSCENE
 
 That doesn't look much like JavaScript, because it isn't: this program
-uses only the constructs added by FunkScene (all FunkScene keywords
+uses only the constructs added by FunkScene. Incidentally, all FunkScene keywords
 begin with a `#`; if you need to use an actual hash symbol in your
-JavaScript or your text, escape it as a double hash `##`).
+JavaScript or your text, escape it as a double hash `##`. Hash signs followed by numbers,
+like `#1`, do not need to be escaped.
 
 JavaScript object code
 ----------------------

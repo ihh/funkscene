@@ -101,27 +101,13 @@ JavaScript.</p>
 <h2>Playing the game</h2>
 
 <p>To play the Temple of Belsidore "game", you will need to save it with a filename like
-<code>mygame.scene</code> and then edit the supplied <code>index.html</code> file as follows:</p>
+<code>mygame.scene</code> and then edit the supplied <code>index.html</code> file to contain the following
+(after all other <code>script</code> and <code>link</code> blocks):</p>
 
 <pre><code>&lt;script type="text/javascript"&gt;
   loadSceneFile ("mygame.scene");
   initialize();
 &lt;/script&gt;
-</code></pre>
-
-<p>The <code>index.html</code> file will also include a couple other scripts</p>
-
-<pre><code>&lt;script type="text/javascript" src="scene.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="grammar.js"&gt;&lt;/script&gt;
-</code></pre>
-
-<p>and must contain some minimal DOM structure</p>
-
-<pre><code>&lt;div id="scene"&gt; &lt;/div&gt; ...
-&lt;form action="#" id="menu"&gt; &lt;/form&gt; ...
-&lt;button type="button" id="continue"&gt;
- Continue
-&lt;/button&gt;
 </code></pre>
 
 <p>You'll then need to open <code>index.html</code> over a web connection (i.e. an

@@ -268,8 +268,13 @@ The keyword `#PREVIOUS` yields the previous scene function, while
 Scheduling scenes for later
 ---------------------------
 
-FunkScene includes a rudimentary scene queue, that you can use to schedule scenes for later.
-You do this using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
+FunkScene includes a rudimentary scene queue, that you can use to schedule scenes for a later stage.
+You don't have to use this queue; as long as you stay away from the keywords `#GOSUB`, `#STACK`, `#QUEUE` and `#CONTINUE`,
+you need never worry about it.
+(The queue is useful for some common scheduling patterns, such as side-quests; but to rely too heavily on `#GOSUB` is to miss
+other interesting applications of functional programming patterns to narrative, such as coroutines for parallel plots.)
+
+To make use of the queue, the keywords are `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
 Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
 
@@ -285,7 +290,8 @@ As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` follow
 	
 	#PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
 
-The following version of the `battle` scene is exactly equivalent, and shows how `#GOSUB` pushes its return continuation onto the stack:
+The following version of the `battle` scene is exactly equivalent, if a bit cryptic ---
+it shows explicitly how `#GOSUB` pushes its return continuation onto the stack:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
@@ -297,10 +303,14 @@ In fact, the following version is also equivalent:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
+	#FLUSH
 	#QUEUE death_blow
 	#QUEUE afterlife
 	#CONTINUE
 	#ENDSCENE
+
+The `#FLUSH` is only necessary if there might be other scenes on the queue already
+(its effect is to clear the queue).
 
 Note that you can chain `#GOSUB` clauses together:
 
@@ -310,8 +320,6 @@ Note that you can chain `#GOSUB` clauses together:
 	#GOSUB in_limbo
 	#GOTO afterlife
 	#ENDSCENE
-
-If you want to flush (i.e. clear) the scene queue, use `#FLUSH`.
 
 
 Implicit continuation

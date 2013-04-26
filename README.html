@@ -265,8 +265,13 @@ no detectable interruption, use <code>#INCLUDE</code>, like so:</p>
 
 <h2>Scheduling scenes for later</h2>
 
-<p>FunkScene includes a rudimentary scene queue, that you can use to schedule scenes for later.
-You do this using <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
+<p>FunkScene includes a rudimentary scene queue, that you can use to schedule scenes for a later stage.
+You don't have to use this queue; as long as you stay away from the keywords <code>#GOSUB</code>, <code>#STACK</code>, <code>#QUEUE</code> and <code>#CONTINUE</code>,
+you need never worry about it.
+(The queue is useful for some common scheduling patterns, such as side-quests; but to rely too heavily on <code>#GOSUB</code> is to miss
+other interesting applications of functional programming patterns to narrative, such as coroutines for parallel plots.)</p>
+
+<p>To make use of the queue, the keywords are <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
 <code>#STACK</code> puts the scene on the front of the scene queue, whereas <code>#QUEUE</code> puts it at the back.
 Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</code> is reached.</p>
 
@@ -283,7 +288,8 @@ Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</
 #PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
 </code></pre>
 
-<p>The following version of the <code>battle</code> scene is exactly equivalent, and shows how <code>#GOSUB</code> pushes its return continuation onto the stack:</p>
+<p>The following version of the <code>battle</code> scene is exactly equivalent, if a bit cryptic ---
+it shows explicitly how <code>#GOSUB</code> pushes its return continuation onto the stack:</p>
 
 <pre><code>#PAGE battle
 #SCENE You fight valiantly against the stronger opponent.
@@ -296,11 +302,15 @@ Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</
 
 <pre><code>#PAGE battle
 #SCENE You fight valiantly against the stronger opponent.
+#FLUSH
 #QUEUE death_blow
 #QUEUE afterlife
 #CONTINUE
 #ENDSCENE
 </code></pre>
+
+<p>The <code>#FLUSH</code> is only necessary if there might be other scenes on the queue already
+(its effect is to clear the queue).</p>
 
 <p>Note that you can chain <code>#GOSUB</code> clauses together:</p>
 
@@ -311,8 +321,6 @@ Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</
 #GOTO afterlife
 #ENDSCENE
 </code></pre>
-
-<p>If you want to flush (i.e. clear) the scene queue, use <code>#FLUSH</code>.</p>
 
 <h2>Implicit continuation</h2>
 

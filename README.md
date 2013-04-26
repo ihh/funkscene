@@ -209,10 +209,12 @@ where it is declared in the program, this will always be the first
 scene the player sees.
 
 The other two scenes (page variables `electrified` and `wise_choice`) are
-dead ends: they have zero choices available to the player, and are therefore
-interpreted as game-ending scenes. You can optionally add the keyword `#OVER`
-at the end of the scene, to indicate that this was a deliberate dead-end and
-the game is over at that point.
+_dead-ends:_ they have zero choices available to the player, and are therefore
+interpreted as game-ending scenes (unless there is an implicit continuation;
+see below). You can optionally add the keyword `#OVER` at the end of
+a dead-end scene, to indicate that this was a deliberate dead-end and
+the game is over at that point (this will overrule the implicit continuation,
+if there is one).
 
 For middle passages, i.e. scenes that have only one choice, you can
 either list a single choice, emphasizing that the player is taking the

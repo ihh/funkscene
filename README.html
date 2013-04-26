@@ -202,9 +202,11 @@ standalone blocks. For example:</p>
 where it is declared in the program, this will always be the first
 scene the player sees.</p>
 
-<p>The other two scenes (page variables <code>electrified</code> and <code>wise_choice</code>) have
-zero choices available to the player, and are therefore interpreted as
-game-ending scenes.</p>
+<p>The other two scenes (page variables <code>electrified</code> and <code>wise_choice</code>) are
+dead ends: they have zero choices available to the player, and are therefore
+interpreted as game-ending scenes. You can optionally add the keyword <code>#OVER</code>
+at the end of the scene, to indicate that this was a deliberate dead-end and
+the game is over at that point.</p>
 
 <p>For middle passages, i.e. scenes that have only one choice, you can
 either list a single choice, emphasizing that the player is taking the
@@ -258,9 +260,9 @@ no detectable interruption, use <code>#APPEND</code>, like so:</p>
 <p>The keyword <code>#PREVIOUS</code> yields the previous scene function, while
 <code>#CURRENT</code> gives the current one. Because <code>#GOTO #PREVIOUS</code> is a common construct, this can be shortened to <code>#BACK</code>.</p>
 
-<h2>Scheduling scenes</h2>
+<h2>Scheduling scenes for later</h2>
 
-<p>You can schedule scenes for later using <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
+<p>You can schedule scenes for later display using <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
 <code>#STACK</code> puts the scene on the front of the scene queue, whereas <code>#QUEUE</code> puts it at the back.
 Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</code> is reached.</p>
 
@@ -307,6 +309,69 @@ Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</
 </code></pre>
 
 <p>If you want to flush (i.e. clear) the scene queue, use <code>#FLUSH</code>.</p>
+
+<h2>Implicit continuation</h2>
+
+<p>Consider the following code:</p>
+
+<pre><code>#PAGE in_plane
+#SCENE Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #GOTO jump #)
+#CHOOSE Just about. #FOR #( Good! #GOTO jump #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #GOTO jump #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+#ENDSCENE
+
+#PAGE jump
+#SCENE You pull the ripcord and jump...
+#GOTO free_fall
+#ENDSCENE
+</code></pre>
+
+<p>The <code>jump</code> scene clearly follows on from the <code>in_plane</code> scene, and most of the choices from <code>in_plane</code> go straight to <code>jump</code>.
+There is a simpler way to write passages like this:
+you can omit the <code>#ENDSCENE</code> at the end of the first block (<code>in_plane</code>),
+along with the <code>#PAGE</code> and <code>#SCENE</code> at the start of the second (<code>jump</code>), so that the two scenes flow together.
+Any dead-end choices from the first block will implicitly <code>#GOTO</code> the second block, unless they're explicitly flagged as game-over scenes with <code>#OVER</code>.</p>
+
+<pre><code>#PAGE in_plane
+#SCENE
+Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #)
+#CHOOSE Just about. #FOR #( Good! #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+You pull the ripcord and jump...
+#GOTO free_fall
+#ENDSCENE
+</code></pre>
+
+<p>Here is a longer code excerpt, wherein several scenes are run together.
+Note how you can also use <code>#GOSUB</code> and <code>#INPUT</code> as "hinges" or "conjunctions" between scenes.</p>
+
+<pre><code>#PAGE start
+#SCENE
+Here we go.
+#GOSUB are_you_ready
+#GOSUB i_hope_so
+Better tell me your name.
+#INPUT Type your name: #TO name
+Hi, #$name.
+Time for some choices.
+#CHOOSE An irrelevant choice. #FOR #( Hope you're pleased with yourself. #)
+#CHOOSE Another irrelevant choice. #FOR #( Completely pointless. #)
+#CHOOSE Kill myself. #FOR #( First sensible thing you've said. #OVER #)
+Some more scene text.
+#CHOOSE A ditzy choice. #FOR #( Squee! #)
+#CHOOSE A dumb choice. #FOR #( Woohoo! #)
+Even more scene text.
+#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
+#CHOOSE A final choice. #FOR #( GAME OVER! #)
+#END
+
+#PAGE are_you_ready #( Are you ready? #CHOOSE Yes. #FOR #( Great! #CONTINUE #) #CHOOSE No. #FOR #( That's too bad! #CONTINUE #) #)
+#PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
+</code></pre>
 
 <h2>One-time choices</h2>
 

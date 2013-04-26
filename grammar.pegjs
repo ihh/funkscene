@@ -1,13 +1,17 @@
 {
-  function sceneFunction(scene_desc,choices,appends) {
+  function sceneFunction(continuation,scene_desc,choices,appends) {
+      var define_continuation = "";
+      if (typeof(continuation) != 'undefined') {
+          define_continuation = "\tvar defaultContinuation = " + continuation + ";\n";
+      }
       if (appends.length == 0) {
           if (typeof choices === 'string') {
-              return "(function() {\n\treturn [" + scene_desc + ", " + choices + "]; })";
+              return "(function() {\n" + define_continuation + "\treturn [" + scene_desc + ", " + choices + "]; })";
           } else {
-              return "(function() {\n\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
+              return "(function() {\n" + define_continuation + "\treturn [" + scene_desc + ",\n\t[" + choices.join(",\n\t") + "]]; })";
           }
       } else {
-	  var func =  "(function() {\n\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
+	  var func =  "(function() {\n" + define_continuation + "\tvar _text = " + scene_desc + ";\n\tvar _opts = [" + choices.join(",\n\t") + "];\n\tvar _appendix_text_opts;\n\t";
 	  for (var i = 0; i < appends.length; ++i) {
 	      func += "_appendix_text_opts = " + appends[i] + "();\n\t_text += _appendix_text_opts[0];\n\t_opts = _opts.concat (_appendix_text_opts[1]);\n\t";
 	  }
@@ -15,11 +19,15 @@
       }
       return func;
   }
+
+  function gotoIfDefined(x) {
+   return "((typeof(" + x + ") === 'undefined' || " + x + " === funkscene.currentScene || " + x + " === funkscene.previousScene) ? [] : [\"\", " + x + "])";
+  }
+
   var oneTimeCount = 0;
   var oneTimeEventPrefix = "once";
   var cycleCount = 0;
   var cyclePrefix = "cycle";
-  var defaultContinuationStack = [];
 }
 
 start
@@ -40,27 +48,35 @@ scene
   / "#(" single_spc s:scene_body "#)"         { return s; }
 
 scene_body
- = scene_desc:quoted_text appends:append* choices:choice_list
- { return sceneFunction (scene_desc, choices, appends); }
+ = scene_desc:nonempty_quoted_text appends:append* choices:conjunctive_choice_list cont:scene_body
+  { return sceneFunction (cont, scene_desc, choices, appends); }
+ / scene_desc:nonempty_quoted_text appends:append* choices:choice_list
+  { return sceneFunction (undefined, scene_desc, choices, appends); }
 
 append
  = "#APPEND" spc appendix:symbol_or_scene spc { return appendix; }
 
-choice_list
- = "#INPUT" single_spc prompt:quoted_text? "#TO" single_spc var_name:symbol spc target:goto_clause
+conjunctive_choice_list
+ = "#INPUT" single_spc prompt:quoted_text "#TO" single_spc var_name:symbol spc target:goto_clause_or_continuation
     { return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"]; }
- / target:goto_clause { return ["[\"\", " + target + "]"]; }
  / qualified_choose_expr+
+
+choice_list
+ = conjunctive_choice_list
+ / target:goto_clause { return ["[\"\", " + target + "]"]; }
  / "#OVER" spc { return []; }
- / { if (defaultContinuation.length == 0) { console.log ("Warning: empty choice list without implicit continuation"); return []; }
-     return ["[\"\", " + defaultContinuation[defaultContinuation.length-1] + "]"]; }
+ / { return [gotoIfDefined("defaultContinuation")]; }
 
 goto_clause
  = "#GOTO" spc target:symbol_or_scene spc { return target; }
- / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause
+ / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause_or_continuation
    { return "(function(){funkscene.sceneDeque.push(" + target + ");return(" + gosub + ")();})"; }
  / "#CONTINUE" spc { return "funkscene.continuationScene()"; }
  / "#BACK" spc { return "funkscene.previousScene"; }
+
+goto_clause_or_continuation
+ = goto_clause
+ / scene_body
 
 symbol_or_scene
   = "#CURRENT" { return "funkscene.currentScene"; }
@@ -70,7 +86,7 @@ symbol_or_scene
   / scene
 
 choice
- = "#CHOOSE" spc choice_desc:quoted_text "#FOR" spc target:symbol_or_scene spc
+ = "#CHOOSE" spc choice_desc:nonempty_quoted_text "#FOR" spc target:symbol_or_scene spc
  { return [choice_desc, target]; }
 
 choose_expr
@@ -143,8 +159,12 @@ code_chars
 postponed_quoted_text
  = text:quoted_text { return "(function(){return" + text + ";})()"; }
 
+nonempty_quoted_text
+ = text:text { return '"' + text + '"'; }
+
 quoted_text
-  = text:text? { return '"' + text + '"'; }
+ = nonempty_quoted_text
+ / { return '""'; }
 
 text
   = "##" tail:text? { return "#" + tail; }

@@ -207,9 +207,11 @@ Note that one of the scene functions is called `start`; regardless of
 where it is declared in the program, this will always be the first
 scene the player sees.
 
-The other two scenes (page variables `electrified` and `wise_choice`) have
-zero choices available to the player, and are therefore interpreted as
-game-ending scenes.
+The other two scenes (page variables `electrified` and `wise_choice`) are
+dead ends: they have zero choices available to the player, and are therefore
+interpreted as game-ending scenes. You can optionally add the keyword `#OVER`
+at the end of the scene, to indicate that this was a deliberate dead-end and
+the game is over at that point.
 
 For middle passages, i.e. scenes that have only one choice, you can
 either list a single choice, emphasizing that the player is taking the
@@ -260,10 +262,10 @@ no detectable interruption, use `#APPEND`, like so:
 The keyword `#PREVIOUS` yields the previous scene function, while
 `#CURRENT` gives the current one. Because `#GOTO #PREVIOUS` is a common construct, this can be shortened to `#BACK`.
 
-Scheduling scenes
------------------
+Scheduling scenes for later
+---------------------------
 
-You can schedule scenes for later using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
+You can schedule scenes for later display using `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
 Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
 
@@ -306,6 +308,69 @@ Note that you can chain `#GOSUB` clauses together:
 	#ENDSCENE
 
 If you want to flush (i.e. clear) the scene queue, use `#FLUSH`.
+
+
+Implicit continuation
+---------------------
+
+Consider the following code:
+
+	#PAGE in_plane
+	#SCENE Are you ready?
+	#CHOOSE Definitely! #FOR #( That's the spirit! #GOTO jump #)
+	#CHOOSE Just about. #FOR #( Good! #GOTO jump #)
+	#CHOOSE Maybe... #FOR #( I'll take that as a yes! #GOTO jump #)
+	#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+	#ENDSCENE
+	
+	#PAGE jump
+	#SCENE You pull the ripcord and jump...
+	#GOTO free_fall
+	#ENDSCENE
+
+The `jump` scene clearly follows on from the `in_plane` scene, and most of the choices from `in_plane` go straight to `jump`.
+There is a simpler way to write passages like this:
+you can omit the `#ENDSCENE` at the end of the first block (`in_plane`),
+along with the `#PAGE` and `#SCENE` at the start of the second (`jump`), so that the two scenes flow together.
+Any dead-end choices from the first block will implicitly `#GOTO` the second block, unless they're explicitly flagged as game-over scenes with `#OVER`.
+
+	#PAGE in_plane
+	#SCENE
+	Are you ready?
+	#CHOOSE Definitely! #FOR #( That's the spirit! #)
+	#CHOOSE Just about. #FOR #( Good! #)
+	#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+	#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+	You pull the ripcord and jump...
+	#GOTO free_fall
+	#ENDSCENE
+
+Here is a longer code excerpt, wherein several scenes are run together.
+Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" between scenes.
+
+	#PAGE start
+	#SCENE
+	Here we go.
+	#GOSUB are_you_ready
+	#GOSUB i_hope_so
+	Better tell me your name.
+	#INPUT Type your name: #TO name
+	Hi, #$name.
+	Time for some choices.
+	#CHOOSE An irrelevant choice. #FOR #( Hope you're pleased with yourself. #)
+	#CHOOSE Another irrelevant choice. #FOR #( Completely pointless. #)
+	#CHOOSE Kill myself. #FOR #( First sensible thing you've said. #OVER #)
+	Some more scene text.
+	#CHOOSE A ditzy choice. #FOR #( Squee! #)
+	#CHOOSE A dumb choice. #FOR #( Woohoo! #)
+	Even more scene text.
+	#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
+	#CHOOSE A final choice. #FOR #( GAME OVER! #)
+	#END
+	
+	#PAGE are_you_ready #( Are you ready? #CHOOSE Yes. #FOR #( Great! #CONTINUE #) #CHOOSE No. #FOR #( That's too bad! #CONTINUE #) #)
+	#PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
+
 
 
 One-time choices

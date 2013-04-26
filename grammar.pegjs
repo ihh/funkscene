@@ -31,12 +31,24 @@
       return "(function(){return funkscene.joinScenes([" + scenes.join(",") + "]);})";	
   }
 
+  function makeGoto (target) {
+      return "[\"\", " + target + "]";
+  }
+
   function gotoIfDefined(x) {
       return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
   }
 
   function gosubWithContinuation(subroutine,continuation) {
       return "(function(){funkscene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
+  }
+
+  function makeAssignment(name,scene) {
+      return name + " = " + scene + ";\n";
+  }
+
+  function makeInput(prompt,target,var_name) {
+      return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"];
   }
 
   var oneTimeCount = 0;
@@ -49,14 +61,35 @@ start
   = body
 
 body
-  = page:named_scene rest:body? { return page + rest; }
+  = page:named_scene_assignment rest:body? { return page + rest; }
   / scene:scene rest:body? { return scene + rest; }
   / c:qualified_choose_expr rest:body? { return c + rest; }
   / code:code rest:body? { return code + rest; }
 
+named_scene_assignment
+  = "#PAGE" spc name:symbol spc scene:named_scene
+   { return makeAssignment (name, scene); }
+
 named_scene
-  = "#PAGE" spc name:symbol spc scene:scene
-   { return name + " = " + scene + ";\n"; }
+ = "#SCENE" single_spc s:named_scene_body endscene  { return s; }
+ / "#("     single_spc s:named_scene_body "#)"      { return s; }
+
+inline_named_scene_assignment
+ = "#PAGE" spc name:symbol spc scene:named_scene_body
+   { return [name, makeAssignment (name, scene)]; }
+
+named_scene_body
+ = incl:include* scene_desc:nonempty_quoted_text choices:conjunctive_choice_list cont:inline_named_scene_assignment
+  { return sceneFunction (cont[0], incl, scene_desc, choices) + ";\n" + cont[1]; }
+ / incl:include* scene_desc:nonempty_quoted_text gosubs:gosub_chain cont:inline_named_scene_assignment
+  { return sceneFunction (cont[0], incl, scene_desc, gosubs) + ";\n" + cont[1]; }
+ / incl:include* scene_desc:nonempty_quoted_text cont:inline_named_scene_assignment
+  { return sceneFunction (cont[0], incl, scene_desc, [makeGoto("defaultContinuation")]) + ";\n" + cont[1]; }
+ / scene_body
+
+gosub_chain
+ = subr:gosub_clause chain:gosub_chain  { return gosubWithContinuation(subr,chain); }
+ / subr:gosub_clause                    { return gosubWithContinuation(subr,"defaultContinuation"); }
 
 scene
  = "#SCENE" single_spc s:scene_body endscene  { return s; }
@@ -73,14 +106,14 @@ include
 
 conjunctive_choice_list
  = "#INPUT" single_spc prompt:quoted_text "#TO" single_spc var_name:symbol spc target:goto_clause_or_continuation
-    { return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"]; }
+    { return makeInput (prompt, target, var_name); }
  / qualified_choose_expr+
 
 choice_list
  = conjunctive_choice_list
- / target:goto_clause { return ["[\"\", " + target + "]"]; }
+ / target:goto_clause { return [makeGoto (target)]; }
  / "#OVER" spc { return []; }
- / { return [gotoIfDefined("defaultContinuation")]; }
+ / { return [gotoIfDefined ("defaultContinuation")]; }
 
 explicit_or_implicit_continuation
  = basic_goto_clause
@@ -91,14 +124,17 @@ basic_goto_clause
 
 goto_clause
  = basic_goto_clause
- / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause_or_continuation
+ / gosub:gosub_clause target:goto_clause_or_continuation
    { return gosubWithContinuation(gosub,target); }
- / "#GOSUB" spc gosub:symbol_or_scene spc
+ / gosub:gosub_clause
    { return gosubWithContinuation(gosub,"defaultContinuation"); }
  / "#CONTINUE" spc
    { return "funkscene.continuationScene()"; }
  / "#BACK" spc
    { return "funkscene.previousScene"; }
+
+gosub_clause
+ = "#GOSUB" spc subr:symbol_or_scene spc { return subr; }
 
 goto_clause_or_continuation
  = goto_clause

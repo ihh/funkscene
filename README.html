@@ -376,6 +376,29 @@ explicitly, with a <code>#GOTO</code> at the end of the first scene.</p>
 #ENDSCENE
 </code></pre>
 
+<p>At the top level (i.e. not within recursively nested <code>#SCENE</code> blocks),
+yet another option is to have the scenes flow together (implicit continuation)
+but explicitly keep the <code>#PAGE</code> label as well, so you can still <code>#GOTO jump</code>
+from elsewhere in the story:</p>
+
+<pre><code>#PAGE in_plane
+#SCENE Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #)
+#CHOOSE Just about. #FOR #( Good! #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+#PAGE jump
+You pull the ripcord and jump...
+#PAGE free_fall
+    You are in free fall.
+...
+#ENDSCENE
+</code></pre>
+
+<p>This does not work within recursively declared blocks, i.e. you cannot combine
+<code>#PAGE</code> and implicit continuation except at the top level; in fact, you can't
+use <code>#PAGE</code> at all except at the top level.</p>
+
 <p>Here is a longer code excerpt, wherein several scenes are run together using implicit continuations.
 Note how you can also use <code>#GOSUB</code> and <code>#INPUT</code> as "hinges" or "conjunctions" between scenes.</p>
 

@@ -775,7 +775,7 @@ funkscene.parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, gosub, target) { return "(function(){funkscene.sceneDeque.push(" + target + ");return(" + gosub + ")();})"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[4]);
+            result0 = (function(offset, line, column, gosub, target) { return gosubWithContinuation(gosub,target); })(pos0.offset, pos0.line, pos0.column, result0[2], result0[4]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -783,19 +783,31 @@ funkscene.parser = (function(){
           if (result0 === null) {
             pos0 = clone(pos);
             pos1 = clone(pos);
-            if (input.substr(pos.offset, 9) === "#CONTINUE") {
-              result0 = "#CONTINUE";
-              advance(pos, 9);
+            if (input.substr(pos.offset, 6) === "#GOSUB") {
+              result0 = "#GOSUB";
+              advance(pos, 6);
             } else {
               result0 = null;
               if (reportFailures === 0) {
-                matchFailed("\"#CONTINUE\"");
+                matchFailed("\"#GOSUB\"");
               }
             }
             if (result0 !== null) {
               result1 = parse_spc();
               if (result1 !== null) {
-                result0 = [result0, result1];
+                result2 = parse_symbol_or_scene();
+                if (result2 !== null) {
+                  result3 = parse_spc();
+                  if (result3 !== null) {
+                    result0 = [result0, result1, result2, result3];
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
               } else {
                 result0 = null;
                 pos = clone(pos1);
@@ -805,7 +817,7 @@ funkscene.parser = (function(){
               pos = clone(pos1);
             }
             if (result0 !== null) {
-              result0 = (function(offset, line, column) { return "funkscene.continuationScene()"; })(pos0.offset, pos0.line, pos0.column);
+              result0 = (function(offset, line, column, gosub) { return gosubWithContinuation(gosub,"defaultContinuation"); })(pos0.offset, pos0.line, pos0.column, result0[2]);
             }
             if (result0 === null) {
               pos = clone(pos0);
@@ -813,13 +825,13 @@ funkscene.parser = (function(){
             if (result0 === null) {
               pos0 = clone(pos);
               pos1 = clone(pos);
-              if (input.substr(pos.offset, 5) === "#BACK") {
-                result0 = "#BACK";
-                advance(pos, 5);
+              if (input.substr(pos.offset, 9) === "#CONTINUE") {
+                result0 = "#CONTINUE";
+                advance(pos, 9);
               } else {
                 result0 = null;
                 if (reportFailures === 0) {
-                  matchFailed("\"#BACK\"");
+                  matchFailed("\"#CONTINUE\"");
                 }
               }
               if (result0 !== null) {
@@ -835,10 +847,41 @@ funkscene.parser = (function(){
                 pos = clone(pos1);
               }
               if (result0 !== null) {
-                result0 = (function(offset, line, column) { return "funkscene.previousScene"; })(pos0.offset, pos0.line, pos0.column);
+                result0 = (function(offset, line, column) { return "funkscene.continuationScene()"; })(pos0.offset, pos0.line, pos0.column);
               }
               if (result0 === null) {
                 pos = clone(pos0);
+              }
+              if (result0 === null) {
+                pos0 = clone(pos);
+                pos1 = clone(pos);
+                if (input.substr(pos.offset, 5) === "#BACK") {
+                  result0 = "#BACK";
+                  advance(pos, 5);
+                } else {
+                  result0 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#BACK\"");
+                  }
+                }
+                if (result0 !== null) {
+                  result1 = parse_spc();
+                  if (result1 !== null) {
+                    result0 = [result0, result1];
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+                if (result0 !== null) {
+                  result0 = (function(offset, line, column) { return "funkscene.previousScene"; })(pos0.offset, pos0.line, pos0.column);
+                }
+                if (result0 === null) {
+                  pos = clone(pos0);
+                }
               }
             }
           }
@@ -2431,7 +2474,11 @@ funkscene.parser = (function(){
         }
       
         function gotoIfDefined(x) {
-         return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
+            return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
+        }
+      
+        function gosubWithContinuation(subroutine,continuation) {
+            return "(function(){funkscene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
         }
       
         var oneTimeCount = 0;

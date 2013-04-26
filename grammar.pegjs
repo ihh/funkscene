@@ -21,7 +21,11 @@
   }
 
   function gotoIfDefined(x) {
-   return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
+      return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
+  }
+
+  function gosubWithContinuation(subroutine,continuation) {
+      return "(function(){funkscene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
   }
 
   var oneTimeCount = 0;
@@ -68,11 +72,16 @@ choice_list
  / { return [gotoIfDefined("defaultContinuation")]; }
 
 goto_clause
- = "#GOTO" spc target:symbol_or_scene spc { return target; }
+ = "#GOTO" spc target:symbol_or_scene spc
+   { return target; }
  / "#GOSUB" spc gosub:symbol_or_scene spc target:goto_clause_or_continuation
-   { return "(function(){funkscene.sceneDeque.push(" + target + ");return(" + gosub + ")();})"; }
- / "#CONTINUE" spc { return "funkscene.continuationScene()"; }
- / "#BACK" spc { return "funkscene.previousScene"; }
+   { return gosubWithContinuation(gosub,target); }
+ / "#GOSUB" spc gosub:symbol_or_scene spc
+   { return gosubWithContinuation(gosub,"defaultContinuation"); }
+ / "#CONTINUE" spc
+   { return "funkscene.continuationScene()"; }
+ / "#BACK" spc
+   { return "funkscene.previousScene"; }
 
 goto_clause_or_continuation
  = goto_clause

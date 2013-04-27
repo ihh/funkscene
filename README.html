@@ -474,7 +474,7 @@ to tag them all as belonging to the same group:</p>
 </code></pre>
 
 <p>This will allow only one of the two "As penance, I..." choices to be taken.
-You can explicitly set these flags using <code>#ACHIEVE penance</code>, you can clear them using <code>#UNACHIEVE penance</code>,
+You can explicitly set these flags using <code>#ACHIEVE penance</code>, you can clear them using <code>#FAIL penance</code>,
 and you can test if they're set using the expression <code>#ACHIEVED penance</code>.</p>
 
 <h2>Scenes that cycle through several different descriptions</h2>
@@ -574,6 +574,9 @@ use this form:</p>
 
 <p>...although they are implemented slightly differently:
 statements inside a <code>#{...#}</code> block are run inside an anonymous closure.</p>
+
+<p>You can also use <code>#IF...#THEN...#ELSIF...#ELSIF...#ELSE...#ENDIF</code>
+to conditionally display certain pieces of text.</p>
 
 <h2>Text input direct to variables</h2>
 

@@ -55,6 +55,10 @@
       return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"];
   }
 
+  function makeConditional(cond,true_val,false_val) {
+      return "((" + cond + ") ? (" + true_val + ") : (" + false_val + "))";
+  }
+
   function makeDummy(s) {
       return "(function(){" + s + ";return\"\";})()";
   }
@@ -234,7 +238,7 @@ inc_event_count
  = "#ACHIEVE" spc tag:symbol { return incEventCount (tag); }
 
 reset_event_count
- = "#UNACHIEVE" spc tag:symbol { return resetEventCount (tag); }
+ = "#FAIL" spc tag:symbol { return resetEventCount (tag); }
 
 query_event_count
  = "#ACHIEVED" spc tag:symbol { return valueOrZero (eventCounter (tag)); }
@@ -279,6 +283,22 @@ status_condition
 
 if_expr
  = "#IF" spc expr:balanced_code { return expr; }
+
+if_then_else
+ = "#IF" spc cond:balanced_code then_else:if_body "#ENDIF" single_spc
+   { return makeConditional(cond,then_else[0],then_else[1]); }
+
+if_body
+ = "#THEN" single_spc true_val:nonempty_quoted_text false_val:else_clause
+   { return [true_val, false_val]; }
+ / "#THEN" single_spc true_val:nonempty_quoted_text
+   { return [true_val, "\"\""]; }
+
+else_clause
+ = "#ELSE" single_spc text:nonempty_quoted_text
+   { return text; }
+ / "#ELSIF" spc cond:balanced_code then_else:if_body
+   { return makeConditional(cond,then_else[0],then_else[1]); }
 
 endscene
   = "#ENDSCENE"
@@ -353,6 +373,7 @@ text
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#{" code:code "#}" tail:text? { return "\" + " + evalOrNull(code) + " + \"" + tail; }
   / "#[" expr:code "#]" tail:text? { return "\" + (" + expr + ") + \"" + tail; }
+  / cond:if_then_else tail:text? { return "\" + " + cond + " + \"" + tail; }
   / "#EVAL" spc expr:code "#TEXT" single_spc tail:text? { return "\" + (" + expr + ") + \"" + tail; }
   / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / s:scene_scheduling_statement tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }

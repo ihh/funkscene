@@ -470,7 +470,7 @@ to tag them all as belonging to the same group:
 	#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
 
 This will allow only one of the two "As penance, I..." choices to be taken.
-You can explicitly set these flags using `#ACHIEVE penance`, you can clear them using `#UNACHIEVE penance`,
+You can explicitly set these flags using `#ACHIEVE penance`, you can clear them using `#FAIL penance`,
 and you can test if they're set using the expression `#ACHIEVED penance`.
 
 
@@ -565,6 +565,9 @@ This...
 
 ...although they are implemented slightly differently:
 statements inside a `#{...#}` block are run inside an anonymous closure.
+
+You can also use `#IF...#THEN...#ELSIF...#ELSIF...#ELSE...#ENDIF`
+to conditionally display certain pieces of text.
 
 
 Text input direct to variables

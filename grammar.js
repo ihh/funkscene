@@ -65,6 +65,8 @@ funkscene.parser = (function(){
         "status_badge": parse_status_badge,
         "meter_bars": parse_meter_bars,
         "meter_bar": parse_meter_bar,
+        "meter_bar_max_clause": parse_meter_bar_max_clause,
+        "meter_bar_color_clause": parse_meter_bar_color_clause,
         "meter_bar_color": parse_meter_bar_color,
         "status_condition": parse_status_condition,
         "if_expr": parse_if_expr,
@@ -1963,7 +1965,7 @@ funkscene.parser = (function(){
       }
       
       function parse_meter_bar() {
-        var result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10;
+        var result0, result1, result2, result3, result4, result5, result6, result7, result8;
         var pos0, pos1;
         
         pos0 = clone(pos);
@@ -1994,43 +1996,25 @@ funkscene.parser = (function(){
               if (result3 !== null) {
                 result4 = parse_code();
                 if (result4 !== null) {
-                  if (input.substr(pos.offset, 6) === "#COLOR") {
-                    result5 = "#COLOR";
-                    advance(pos, 6);
-                  } else {
-                    result5 = null;
-                    if (reportFailures === 0) {
-                      matchFailed("\"#COLOR\"");
-                    }
-                  }
+                  result5 = parse_meter_bar_max_clause();
+                  result5 = result5 !== null ? result5 : "";
                   if (result5 !== null) {
-                    result6 = parse_spc();
+                    result6 = parse_meter_bar_color_clause();
+                    result6 = result6 !== null ? result6 : "";
                     if (result6 !== null) {
-                      result7 = parse_meter_bar_color();
+                      if (input.substr(pos.offset, 7) === "#ENDBAR") {
+                        result7 = "#ENDBAR";
+                        advance(pos, 7);
+                      } else {
+                        result7 = null;
+                        if (reportFailures === 0) {
+                          matchFailed("\"#ENDBAR\"");
+                        }
+                      }
                       if (result7 !== null) {
-                        result8 = parse_spc();
+                        result8 = parse_single_spc();
                         if (result8 !== null) {
-                          if (input.substr(pos.offset, 7) === "#ENDBAR") {
-                            result9 = "#ENDBAR";
-                            advance(pos, 7);
-                          } else {
-                            result9 = null;
-                            if (reportFailures === 0) {
-                              matchFailed("\"#ENDBAR\"");
-                            }
-                          }
-                          if (result9 !== null) {
-                            result10 = parse_single_spc();
-                            if (result10 !== null) {
-                              result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10];
-                            } else {
-                              result0 = null;
-                              pos = clone(pos1);
-                            }
-                          } else {
-                            result0 = null;
-                            pos = clone(pos1);
-                          }
+                          result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8];
                         } else {
                           result0 = null;
                           pos = clone(pos1);
@@ -2068,69 +2052,79 @@ funkscene.parser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, label, expr, color) { return makeMeterBar(label,expr,"\"" + color + "\""); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4], result0[7]);
+          result0 = (function(offset, line, column, label, expr, max, color) { return makeMeterBar (label, expr, max, typeof(color) == 'undefined' ? "undefined" : ("\"" + color + "\"")); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4], result0[5], result0[6]);
         }
         if (result0 === null) {
           pos = clone(pos0);
         }
-        if (result0 === null) {
-          pos0 = clone(pos);
-          pos1 = clone(pos);
-          if (input.substr(pos.offset, 4) === "#BAR") {
-            result0 = "#BAR";
-            advance(pos, 4);
+        return result0;
+      }
+      
+      function parse_meter_bar_max_clause() {
+        var result0, result1, result2;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        if (input.substr(pos.offset, 4) === "#MAX") {
+          result0 = "#MAX";
+          advance(pos, 4);
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"#MAX\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_spc();
+          if (result1 !== null) {
+            result2 = parse_code();
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
           } else {
             result0 = null;
-            if (reportFailures === 0) {
-              matchFailed("\"#BAR\"");
-            }
+            pos = clone(pos1);
           }
-          if (result0 !== null) {
-            result1 = parse_quoted_text();
-            if (result1 !== null) {
-              if (input.substr(pos.offset, 6) === "#VALUE") {
-                result2 = "#VALUE";
-                advance(pos, 6);
-              } else {
-                result2 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"#VALUE\"");
-                }
-              }
-              if (result2 !== null) {
-                result3 = parse_spc();
-                if (result3 !== null) {
-                  result4 = parse_code();
-                  if (result4 !== null) {
-                    if (input.substr(pos.offset, 7) === "#ENDBAR") {
-                      result5 = "#ENDBAR";
-                      advance(pos, 7);
-                    } else {
-                      result5 = null;
-                      if (reportFailures === 0) {
-                        matchFailed("\"#ENDBAR\"");
-                      }
-                    }
-                    if (result5 !== null) {
-                      result6 = parse_single_spc();
-                      if (result6 !== null) {
-                        result0 = [result0, result1, result2, result3, result4, result5, result6];
-                      } else {
-                        result0 = null;
-                        pos = clone(pos1);
-                      }
-                    } else {
-                      result0 = null;
-                      pos = clone(pos1);
-                    }
-                  } else {
-                    result0 = null;
-                    pos = clone(pos1);
-                  }
-                } else {
-                  result0 = null;
-                  pos = clone(pos1);
-                }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, expr) { return expr; })(pos0.offset, pos0.line, pos0.column, result0[2]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        return result0;
+      }
+      
+      function parse_meter_bar_color_clause() {
+        var result0, result1, result2, result3;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        if (input.substr(pos.offset, 6) === "#COLOR") {
+          result0 = "#COLOR";
+          advance(pos, 6);
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"#COLOR\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_spc();
+          if (result1 !== null) {
+            result2 = parse_meter_bar_color();
+            if (result2 !== null) {
+              result3 = parse_spc();
+              if (result3 !== null) {
+                result0 = [result0, result1, result2, result3];
               } else {
                 result0 = null;
                 pos = clone(pos1);
@@ -2143,12 +2137,15 @@ funkscene.parser = (function(){
             result0 = null;
             pos = clone(pos1);
           }
-          if (result0 !== null) {
-            result0 = (function(offset, line, column, label, expr) { return makeMeterBar(label,expr,"undefined"); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4]);
-          }
-          if (result0 === null) {
-            pos = clone(pos0);
-          }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, color) { return color; })(pos0.offset, pos0.line, pos0.column, result0[2]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
         }
         return result0;
       }
@@ -3791,8 +3788,16 @@ funkscene.parser = (function(){
             return "(" + v + " = " + valueOrZero(v) + " + 1)";
         }
       
-        function makeMeterBar(label,expr,color) {
-            return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + "," + color + ") + \"</td></tr>\\n\"";
+        function makeMeterBar(label,expr,max,color) {
+            var func = "(function(){var level = " + expr + ";var max = ";
+            if (typeof(max) == 'undefined' || max == "") {
+            	  max = 1;
+                func += "1";
+            } else {
+                func += max;
+                label += " + \"<br><small>(\" + level + \"/\" + max + \")</small>\"";
+            }
+            return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
         }
       
         function makeTable(classname,rows) {

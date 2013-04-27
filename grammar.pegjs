@@ -72,8 +72,16 @@
       return "(" + v + " = " + valueOrZero(v) + " + 1)";
   }
 
-  function makeMeterBar(label,expr,color) {
-      return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + "," + color + ") + \"</td></tr>\\n\"";
+  function makeMeterBar(label,expr,max,color) {
+      var func = "(function(){var level = " + expr + ";var max = ";
+      if (typeof(max) == 'undefined' || max == "") {
+      	  max = 1;
+          func += "1";
+      } else {
+          func += max;
+          label += " + \"<br><small>(\" + level + \"/\" + max + \")</small>\"";
+      }
+      return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
   }
 
   function makeTable(classname,rows) {
@@ -234,10 +242,14 @@ meter_bars
    { return makeTable ("meterTable", bars); }
 
 meter_bar
- = "#BAR" label:quoted_text "#VALUE" spc expr:code "#COLOR" spc color:meter_bar_color spc "#ENDBAR" single_spc
-   { return makeMeterBar(label,expr,"\"" + color + "\""); }
- / "#BAR" label:quoted_text "#VALUE" spc expr:code "#ENDBAR" single_spc
-   { return makeMeterBar(label,expr,"undefined"); }
+ = "#BAR" label:quoted_text "#VALUE" spc expr:code max:meter_bar_max_clause? color:meter_bar_color_clause? "#ENDBAR" single_spc
+   { return makeMeterBar (label, expr, max, typeof(color) == 'undefined' ? "undefined" : ("\"" + color + "\"")); }
+
+meter_bar_max_clause
+ = "#MAX" spc expr:code { return expr; }
+
+meter_bar_color_clause
+ = "#COLOR" spc color:meter_bar_color spc { return color; }
 
 meter_bar_color = "green" / "orange" / "red" / "purple" / "blue" / "yellow" / "pink" / "gray"
 

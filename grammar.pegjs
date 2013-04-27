@@ -327,7 +327,14 @@ single_spc
   = [ \t\n\r]
 
 symbol
-  = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
+  = first:[A-Za-z_] rest:symbol_tail? { return first + rest; }
+
+symbol_tail
+ = parent:symbol_chars "." child:symbol { return parent + "." + child; }
+ / symbol_chars
+
+symbol_chars
+ = chars:[0-9A-Za-z_]* { return chars.join(""); }
 
 balanced_code
   = "##" tail:balanced_code? { return "#" + tail; }
@@ -375,7 +382,11 @@ text
   / c:inc_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
   / c:reset_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
   / s:status_badges tail:text? { return "\" + " + s + " + \"" + tail; }
-  / s:meter_bars tail:text? { return "\" + " + s + " + \"" + tail; }
+  / m:meter_bars tail:text? { return "\" + " + m + " + \"" + tail; }
+  / "#TITLE" spc t:nonempty_quoted_text "#ENDTITLE" tail:text?
+     { return "\" + " + makeDummy("document.title = " + t + ";") + " + \"" + tail; }
+  / "#BUTTON" spc b:nonempty_quoted_text "#ENDBUTTON" tail:text?
+     { return "\" + " + makeDummy("funkscene.setContinueText(" + b + ");") + " + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }

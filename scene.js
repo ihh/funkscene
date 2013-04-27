@@ -27,6 +27,14 @@
     fs.sceneTextToHistoryHtml = function(t) { return fs.sceneTextToHtml(t) + "<br>"; };
     fs.choiceTextToHistoryHtml = function(t) { return "<i>" + t + "</i><br>"; };
 
+    var defaultContinueText = continueButton.innerHTML;
+    fs.setContinueText = function(t) {
+	continueButton.innerHTML = t;
+    };
+    var resetContinueText = function() {
+	continueButton.innerHTML = defaultContinueText;
+    };
+
     // distinguished scenes are 'stats' and 'start'
     var getStartPage = function() { return start; }
     var makeStatusPage = function() { return statusPage()[0]; };
@@ -94,6 +102,8 @@
 	menuDiv.innerHTML = "";
 	choiceFuncs = [];
 	choiceTexts = [];
+
+	resetContinueText();
 
 	fs.previousScene = fs.currentScene;
 	fs.currentScene = f;
@@ -265,5 +275,6 @@
 	meterBarDiv.appendChild (meterBarSegment);
 	return meterBarDiv.outerHTML;
     };
+
 
 })(funkscene = {});

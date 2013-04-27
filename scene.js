@@ -27,7 +27,9 @@
     fs.sceneTextToHistoryHtml = function(t) { return fs.sceneTextToHtml(t) + "<br>"; };
     fs.choiceTextToHistoryHtml = function(t) { return "<i>" + t + "</i><br>"; };
 
-    fs.makeStatusPage = function() { return "Your status is \"Mostly Harmless\"."; };
+    // distinguished scenes are 'stats' and 'start'
+    var getStartPage = function() { return start; }
+    var makeStatusPage = function() { return statusPage()[0]; };
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -103,7 +105,7 @@
 	sceneDiv.innerHTML = sceneHtml;
 	recordSceneText (sceneText);
 
-	statsDiv.innerHTML = fs.makeStatusPage();
+	statsDiv.innerHTML = makeStatusPage();
 
 	var validOptions = new Array();
 	for (var i = 0; i < options.length; ++i) {
@@ -221,7 +223,7 @@
     };
 
     fs.initialize = function() {
-	viewScene (start);
+	viewScene (getStartPage());
 	fs.choiceHistory = new Array;
     };
 

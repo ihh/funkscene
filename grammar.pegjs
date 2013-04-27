@@ -124,7 +124,6 @@ body
   = page:named_scene_assignment rest:body? { return page + rest; }
   / scene:scene rest:body? { return scene + rest; }
   / c:qualified_choose_expr rest:body? { return c + rest; }
-  / s:status_page rest:body? { return s + rest; }
   / code:code rest:body? { return code + rest; }
 
 named_scene_assignment
@@ -242,10 +241,6 @@ reset_event_count
 
 query_event_count
  = "#ACHIEVED" spc tag:symbol { return valueOrZero (eventCounter (tag)); }
-
-status_page
- = "#STATS" single_spc contents:quoted_text "#ENDSTATS"
-   { return "funkscene.makeStatusPage = function() { return " + contents + "; };\n"; }
 
 status_badges
  = badges:status_badge+

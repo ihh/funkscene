@@ -61,7 +61,6 @@ funkscene.parser = (function(){
         "inc_event_count": parse_inc_event_count,
         "reset_event_count": parse_reset_event_count,
         "query_event_count": parse_query_event_count,
-        "status_page": parse_status_page,
         "status_badges": parse_status_badges,
         "status_badge": parse_status_badge,
         "meter_bars": parse_meter_bars,
@@ -254,7 +253,7 @@ funkscene.parser = (function(){
             if (result0 === null) {
               pos0 = clone(pos);
               pos1 = clone(pos);
-              result0 = parse_status_page();
+              result0 = parse_code();
               if (result0 !== null) {
                 result1 = parse_body();
                 result1 = result1 !== null ? result1 : "";
@@ -269,34 +268,10 @@ funkscene.parser = (function(){
                 pos = clone(pos1);
               }
               if (result0 !== null) {
-                result0 = (function(offset, line, column, s, rest) { return s + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                result0 = (function(offset, line, column, code, rest) { return code + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
               }
               if (result0 === null) {
                 pos = clone(pos0);
-              }
-              if (result0 === null) {
-                pos0 = clone(pos);
-                pos1 = clone(pos);
-                result0 = parse_code();
-                if (result0 !== null) {
-                  result1 = parse_body();
-                  result1 = result1 !== null ? result1 : "";
-                  if (result1 !== null) {
-                    result0 = [result0, result1];
-                  } else {
-                    result0 = null;
-                    pos = clone(pos1);
-                  }
-                } else {
-                  result0 = null;
-                  pos = clone(pos1);
-                }
-                if (result0 !== null) {
-                  result0 = (function(offset, line, column, code, rest) { return code + rest; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
-                }
-                if (result0 === null) {
-                  pos = clone(pos0);
-                }
               }
             }
           }
@@ -1778,62 +1753,6 @@ funkscene.parser = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, line, column, tag) { return valueOrZero (eventCounter (tag)); })(pos0.offset, pos0.line, pos0.column, result0[2]);
-        }
-        if (result0 === null) {
-          pos = clone(pos0);
-        }
-        return result0;
-      }
-      
-      function parse_status_page() {
-        var result0, result1, result2, result3;
-        var pos0, pos1;
-        
-        pos0 = clone(pos);
-        pos1 = clone(pos);
-        if (input.substr(pos.offset, 6) === "#STATS") {
-          result0 = "#STATS";
-          advance(pos, 6);
-        } else {
-          result0 = null;
-          if (reportFailures === 0) {
-            matchFailed("\"#STATS\"");
-          }
-        }
-        if (result0 !== null) {
-          result1 = parse_single_spc();
-          if (result1 !== null) {
-            result2 = parse_quoted_text();
-            if (result2 !== null) {
-              if (input.substr(pos.offset, 9) === "#ENDSTATS") {
-                result3 = "#ENDSTATS";
-                advance(pos, 9);
-              } else {
-                result3 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"#ENDSTATS\"");
-                }
-              }
-              if (result3 !== null) {
-                result0 = [result0, result1, result2, result3];
-              } else {
-                result0 = null;
-                pos = clone(pos1);
-              }
-            } else {
-              result0 = null;
-              pos = clone(pos1);
-            }
-          } else {
-            result0 = null;
-            pos = clone(pos1);
-          }
-        } else {
-          result0 = null;
-          pos = clone(pos1);
-        }
-        if (result0 !== null) {
-          result0 = (function(offset, line, column, contents) { return "funkscene.makeStatusPage = function() { return " + contents + "; };\n"; })(pos0.offset, pos0.line, pos0.column, result0[2]);
         }
         if (result0 === null) {
           pos = clone(pos0);

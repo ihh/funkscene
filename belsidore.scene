@@ -46,7 +46,8 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 #SCENE Your hair is very #$hair.
 #END
 
-#STATS
+#PAGE statusPage
+#SCENE
 Your name is #$name.
 #BAR Skill #VALUE 0 #MAX 10 #COLOR gray #ENDBAR
 #BAR Experience #VALUE .1 #COLOR pink #ENDBAR
@@ -57,4 +58,4 @@ Your name is #$name.
 #BAR Amps #VALUE amps=="Several" ? 3 : 11 #MAX 11 #COLOR purple #ENDBAR
 #SHOW despair #BADGE You are penitent. #IF #ACHIEVED penance #NOW
 #SHOW raining #BADGE You are damp. #IF wind==1 #EVER
-#ENDSTATS
+#ENDSCENE

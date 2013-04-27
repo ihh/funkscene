@@ -61,6 +61,7 @@ funkscene.parser = (function(){
         "inc_event_count": parse_inc_event_count,
         "query_event_count": parse_query_event_count,
         "status_page": parse_status_page,
+        "status_badges": parse_status_badges,
         "status_badge": parse_status_badge,
         "meter_bars": parse_meter_bars,
         "meter_bar": parse_meter_bar,
@@ -83,7 +84,8 @@ funkscene.parser = (function(){
         "quoted_text": parse_quoted_text,
         "text": parse_text,
         "hash_rank": parse_hash_rank,
-        "text_chars": parse_text_chars
+        "text_chars": parse_text_chars,
+        "icon_filename": parse_icon_filename
       };
       
       if (startRule !== undefined) {
@@ -1806,8 +1808,32 @@ funkscene.parser = (function(){
         return result0;
       }
       
+      function parse_status_badges() {
+        var result0, result1;
+        var pos0;
+        
+        pos0 = clone(pos);
+        result1 = parse_status_badge();
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_status_badge();
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, badges) { return makeTable ("badgeTable", badges); })(pos0.offset, pos0.line, pos0.column, result0);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        return result0;
+      }
+      
       function parse_status_badge() {
-        var result0, result1, result2, result3, result4, result5, result6;
+        var result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10;
         var pos0, pos1;
         
         pos0 = clone(pos);
@@ -1822,27 +1848,59 @@ funkscene.parser = (function(){
           }
         }
         if (result0 !== null) {
-          result1 = parse_single_spc();
+          result1 = parse_spc();
           if (result1 !== null) {
-            result2 = parse_nonempty_quoted_text();
+            result2 = parse_icon_filename();
             if (result2 !== null) {
-              if (input.substr(pos.offset, 3) === "#IF") {
-                result3 = "#IF";
-                advance(pos, 3);
-              } else {
-                result3 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"#IF\"");
-                }
-              }
+              result3 = parse_spc();
               if (result3 !== null) {
-                result4 = parse_single_spc();
+                if (input.substr(pos.offset, 6) === "#BADGE") {
+                  result4 = "#BADGE";
+                  advance(pos, 6);
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#BADGE\"");
+                  }
+                }
                 if (result4 !== null) {
-                  result5 = parse_status_condition();
+                  result5 = parse_single_spc();
                   if (result5 !== null) {
-                    result6 = parse_spc();
+                    result6 = parse_nonempty_quoted_text();
                     if (result6 !== null) {
-                      result0 = [result0, result1, result2, result3, result4, result5, result6];
+                      if (input.substr(pos.offset, 3) === "#IF") {
+                        result7 = "#IF";
+                        advance(pos, 3);
+                      } else {
+                        result7 = null;
+                        if (reportFailures === 0) {
+                          matchFailed("\"#IF\"");
+                        }
+                      }
+                      if (result7 !== null) {
+                        result8 = parse_single_spc();
+                        if (result8 !== null) {
+                          result9 = parse_status_condition();
+                          if (result9 !== null) {
+                            result10 = parse_spc();
+                            if (result10 !== null) {
+                              result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10];
+                            } else {
+                              result0 = null;
+                              pos = clone(pos1);
+                            }
+                          } else {
+                            result0 = null;
+                            pos = clone(pos1);
+                          }
+                        } else {
+                          result0 = null;
+                          pos = clone(pos1);
+                        }
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
                     } else {
                       result0 = null;
                       pos = clone(pos1);
@@ -1872,7 +1930,7 @@ funkscene.parser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, badge, expr) { return "((" + expr + ") ? (" + badge + ") : \"\")"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
+          result0 = (function(offset, line, column, icon, text, expr) { return "((" + expr + ") ? (" + makeIconText(icon,text) + ") : \"\")"; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[6], result0[9]);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -1896,7 +1954,7 @@ funkscene.parser = (function(){
           result0 = null;
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, bars) { return "\"<table class=\\\"meterTable\\\">\\n\" + " + bars.join(" + ") + " + \"</table>\""; })(pos0.offset, pos0.line, pos0.column, result0);
+          result0 = (function(offset, line, column, bars) { return makeTable ("meterTable", bars); })(pos0.offset, pos0.line, pos0.column, result0);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -2010,7 +2068,7 @@ funkscene.parser = (function(){
           pos = clone(pos1);
         }
         if (result0 !== null) {
-          result0 = (function(offset, line, column, label, expr, color) { return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + ",\"" + color + "\") + \"</td></tr>\\n\""; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4], result0[7]);
+          result0 = (function(offset, line, column, label, expr, color) { return makeMeterBar(label,expr,"\"" + color + "\""); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4], result0[7]);
         }
         if (result0 === null) {
           pos = clone(pos0);
@@ -2086,7 +2144,7 @@ funkscene.parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, label, expr) { return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + ") + \"</td></tr>\\n\""; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4]);
+            result0 = (function(offset, line, column, label, expr) { return makeMeterBar(label,expr,"undefined"); })(pos0.offset, pos0.line, pos0.column, result0[1], result0[4]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -2125,6 +2183,61 @@ funkscene.parser = (function(){
               result0 = null;
               if (reportFailures === 0) {
                 matchFailed("\"red\"");
+              }
+            }
+            if (result0 === null) {
+              if (input.substr(pos.offset, 6) === "purple") {
+                result0 = "purple";
+                advance(pos, 6);
+              } else {
+                result0 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"purple\"");
+                }
+              }
+              if (result0 === null) {
+                if (input.substr(pos.offset, 4) === "blue") {
+                  result0 = "blue";
+                  advance(pos, 4);
+                } else {
+                  result0 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"blue\"");
+                  }
+                }
+                if (result0 === null) {
+                  if (input.substr(pos.offset, 6) === "yellow") {
+                    result0 = "yellow";
+                    advance(pos, 6);
+                  } else {
+                    result0 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"yellow\"");
+                    }
+                  }
+                  if (result0 === null) {
+                    if (input.substr(pos.offset, 4) === "pink") {
+                      result0 = "pink";
+                      advance(pos, 4);
+                    } else {
+                      result0 = null;
+                      if (reportFailures === 0) {
+                        matchFailed("\"pink\"");
+                      }
+                    }
+                    if (result0 === null) {
+                      if (input.substr(pos.offset, 4) === "gray") {
+                        result0 = "gray";
+                        advance(pos, 4);
+                      } else {
+                        result0 = null;
+                        if (reportFailures === 0) {
+                          matchFailed("\"gray\"");
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }
@@ -3239,7 +3352,7 @@ funkscene.parser = (function(){
                         if (result0 === null) {
                           pos0 = clone(pos);
                           pos1 = clone(pos);
-                          result0 = parse_status_badge();
+                          result0 = parse_status_badges();
                           if (result0 !== null) {
                             result1 = parse_text();
                             result1 = result1 !== null ? result1 : "";
@@ -3548,6 +3661,46 @@ funkscene.parser = (function(){
         return result0;
       }
       
+      function parse_icon_filename() {
+        var result0, result1;
+        var pos0;
+        
+        pos0 = clone(pos);
+        if (/^[A-Za-z0-9\-_]/.test(input.charAt(pos.offset))) {
+          result1 = input.charAt(pos.offset);
+          advance(pos, 1);
+        } else {
+          result1 = null;
+          if (reportFailures === 0) {
+            matchFailed("[A-Za-z0-9\\-_]");
+          }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[A-Za-z0-9\-_]/.test(input.charAt(pos.offset))) {
+              result1 = input.charAt(pos.offset);
+              advance(pos, 1);
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[A-Za-z0-9\\-_]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, chars) { return chars.join(""); })(pos0.offset, pos0.line, pos0.column, result0);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        return result0;
+      }
+      
       
       function cleanupExpected(expected) {
         expected.sort();
@@ -3636,6 +3789,20 @@ funkscene.parser = (function(){
         function incEventCount(tag) {
             var v = eventCounter(tag);
             return "(" + v + " = " + valueOrZero(v) + " + 1)";
+        }
+      
+        function makeMeterBar(label,expr,color) {
+            return "\"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(" + expr + "," + color + ") + \"</td></tr>\\n\"";
+        }
+      
+        function makeTable(classname,rows) {
+            return "\"<p><table class=\\\"" + classname + "\\\">\\n\" + " + rows.join(" + ") + " + \"</table>\"";
+        }
+      
+        var iconPrefix = "img/icon/";
+        var iconSuffix = ".svg";
+        function makeIconText(icon,text) {
+            return "\"<tr><td class=\\\"badge\\\"><img class=\\\"badgeIcon\\\" src=\\\"" + iconPrefix + icon + iconSuffix + "\\\"></td><td class=\\\"badgeText\\\">\" + " + text + " + \"</td></tr>\\n\"";
         }
       
         var oneTimeCount = 0;

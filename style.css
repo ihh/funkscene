@@ -156,6 +156,51 @@ body {
         background-image: -o-linear-gradient(top, #f0a3a3, #f42323);
 }
 
+.purple > span {
+	background-color: #a165f1;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #a165f1),color-stop(1, #6d0af3));
+	background-image: -webkit-linear-gradient(top, #a165f1, #6d0af3); 
+        background-image: -moz-linear-gradient(top, #a165f1, #6d0af3);
+        background-image: -ms-linear-gradient(top, #a165f1, #6d0af3);
+        background-image: -o-linear-gradient(top, #a165f1, #6d0af3);
+}
+
+.blue > span {
+	background-color: #a3a3f0;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #a3a3f0),color-stop(1, #2323f4));
+	background-image: -webkit-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -moz-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -ms-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -o-linear-gradient(top, #a3a3f0, #2323f4);
+}
+
+.gray > span {
+	background-color: #e0e0f0;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e0e0f0),color-stop(1, #909098));
+	background-image: -webkit-linear-gradient(top, #e0e0f0, #909098); 
+        background-image: -moz-linear-gradient(top, #e0e0f0, #909098);
+        background-image: -ms-linear-gradient(top, #e0e0f0, #909098);
+        background-image: -o-linear-gradient(top, #e0e0f0, #909098);
+}
+
+.yellow > span {
+	background-color: #d1e165;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #d1e165),color-stop(1, #bdc30a));
+	background-image: -webkit-linear-gradient(top, #d1e165, #bdc30a); 
+        background-image: -moz-linear-gradient(top, #d1e165, #bdc30a);
+        background-image: -ms-linear-gradient(top, #d1e165, #bdc30a);
+        background-image: -o-linear-gradient(top, #d1e165, #bdc30a);
+}
+
+.pink > span {
+	background-color: #e165c1;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e165c1),color-stop(1, #e30a8d));
+	background-image: -webkit-linear-gradient(top, #e165c1, #e30a8d); 
+        background-image: -moz-linear-gradient(top, #e165c1, #e30a8d);
+        background-image: -ms-linear-gradient(top, #e165c1, #e30a8d);
+        background-image: -o-linear-gradient(top, #e165c1, #e30a8d);
+}
+
 .meterTable {
     width: 100%;
 }
@@ -166,5 +211,23 @@ body {
 }
 
 .meterTableBar {
+    width: 100%;
+}
+
+.badgeTable {
+    width: 100%;
+}
+
+.badge {
+    white-space: nowrap;
+}
+
+.badgeIcon {
+    width: 3em;
+    height: 3em;
+}
+
+.badgeText {
+    text-align: left;
     width: 100%;
 }

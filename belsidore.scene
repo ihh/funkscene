@@ -46,12 +46,13 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 
 #STATS
 Your name is #$name.
-#SHOW You are penitent. #IF #ACHIEVED penance #NOW
-#BAR Skill #VALUE 0 #COLOR green #ENDBAR
-#BAR Experience #VALUE .1 #COLOR orange #ENDBAR
+#BAR Skill #VALUE 0 #COLOR gray #ENDBAR
+#BAR Experience #VALUE .1 #COLOR pink #ENDBAR
 #BAR Luck #VALUE .5 #COLOR red #ENDBAR
-#BAR Charisma #VALUE .7 #ENDBAR
-#BAR Dexterity #VALUE .9 #ENDBAR
-#BAR Health #VALUE 1 #ENDBAR
-
+#BAR Charisma #VALUE .7 #COLOR yellow #ENDBAR
+#BAR Dexterity #VALUE .9 #COLOR orange #ENDBAR
+#BAR Health #VALUE 1 #COLOR green #ENDBAR
+#BAR Amps #VALUE amps=="Several" ? 3/11 : 11/11 #COLOR purple #ENDBAR
+#SHOW despair #BADGE You are penitent. #IF #ACHIEVED penance #NOW
+#SHOW raining #BADGE You are damp. #IF wind==1 #EVER
 #ENDSTATS

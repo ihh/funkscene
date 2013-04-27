@@ -1,6 +1,6 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
-all: grammar.js README.html svg
+all: grammar.js README.html img/icon
 
 grammar.js: grammar.pegjs
 # Uncomment for node version, vs browser version
@@ -10,12 +10,14 @@ grammar.js: grammar.pegjs
 README.html: README.md
 	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@
 
-# Icons made by lorc. Available on http://game-icons.net
+# Download icons made by lorc. Available at http://game-icons.net
 # Released under Creative Commons 3.0 BY license
 img/icon:
+	rm -rf game-icons.net
 	mkdir game-icons.net
-	cd game-icons.net \
-	wget http://game-icons.net/archives/svg/zip/all.zip \
-	unzip all.zip \
-	mv icons/lorc/originals/svg ../$@ \
+	cd game-icons.net; \
+	wget http://game-icons.net/archives/svg/zip/all.zip; \
+	unzip all.zip
+	test -e img || mkdir img
+	mv game-icons.net/icons/lorc/originals/svg $@
 	rm -rf game-icons.net

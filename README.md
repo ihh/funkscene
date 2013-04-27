@@ -418,8 +418,12 @@ Another useful form of implicit continuation is the `#IF...#GOTO...` construct:
 	#PAGE inside_temple
 	#SCENE
 	Finally, you are inside the temple. But is your soul pure?
-	#IF #ACHIEVED
-
+	#IF #ACHIEVED penance #GOTO inner_sanctum
+	Your skin begins to prickle and burn. Flames spring from your clothing.
+	The reasons for spontaneous human combustion are unclear; it's not even
+	clear if it is, indeed, a natural phenomenon. However, it's certainly a
+	supernatural one, and it's also pretty clear the Gods don't like you.
+	#ENDSCENE
 
 
 One-time choices

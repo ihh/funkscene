@@ -415,6 +415,14 @@ Even more scene text.
 #PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
 </code></pre>
 
+<p>Another useful form of implicit continuation is the <code>#IF...#GOTO...</code> construct:</p>
+
+<pre><code>#PAGE inside_temple
+#SCENE
+Finally, you are inside the temple. But is your soul pure?
+#IF #ACHIEVED
+</code></pre>
+
 <h2>One-time choices</h2>
 
 <p>Prefix a choice with <code>#ONCE</code> to indicate that it can only be selected once (after which it will disappear)</p>
@@ -435,7 +443,9 @@ to tag them all as belonging to the same group:</p>
 #AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
 </code></pre>
 
-<p>This will allow only one of the two "As penance, I..." choices to be taken.</p>
+<p>This will allow only one of the two "As penance, I..." choices to be taken.
+You can explicitly set these flags using <code>#ACHIEVE penance</code>, you can clear them using <code>#UNACHIEVE penance</code>,
+and you can test if they're set using the expression <code>#ACHIEVED penance</code>.</p>
 
 <h2>Scenes that cycle through several different descriptions</h2>
 

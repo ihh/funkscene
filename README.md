@@ -413,6 +413,13 @@ Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" be
 
 	#PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
 
+Another useful form of implicit continuation is the `#IF...#GOTO...` construct:
+
+	#PAGE inside_temple
+	#SCENE
+	Finally, you are inside the temple. But is your soul pure?
+	#IF #ACHIEVED
+
 
 
 One-time choices
@@ -435,6 +442,8 @@ to tag them all as belonging to the same group:
 	#AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
 
 This will allow only one of the two "As penance, I..." choices to be taken.
+You can explicitly set these flags using `#ACHIEVE penance`, you can clear them using `#UNACHIEVE penance`,
+and you can test if they're set using the expression `#ACHIEVED penance`.
 
 
 Scenes that cycle through several different descriptions

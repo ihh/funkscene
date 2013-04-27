@@ -5,9 +5,11 @@ amps = "Several"
 dial = "dial"
 hair = "messy"
 name = "Adventurer"
+wind = -1
 
 #PAGE start
-#SCENE You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate is a #[dial#].
+#SCENE
+You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate is a #[dial#].
 #INCLUDE messy_hair
 #CYCLE(wind) The wind sighs.
 #NEXT A light rain spatters.

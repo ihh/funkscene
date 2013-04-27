@@ -39,6 +39,10 @@
       return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
   }
 
+  function continueIfDefined() {
+      return gotoIfDefined ("defaultContinuation");
+  }
+
   function gosubWithContinuation(subroutine,continuation) {
       return "(function(){funkscene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
   }
@@ -70,6 +74,11 @@
   function incEventCount(tag) {
       var v = eventCounter(tag);
       return "(" + v + " = " + valueOrZero(v) + " + 1)";
+  }
+
+  function resetEventCount(tag) {
+      var v = eventCounter(tag);
+      return "(" + v + " = 0)";
   }
 
   function makeMeterBar(label,expr,max,color) {
@@ -155,13 +164,15 @@ include
 conjunctive_choice_list
  = "#INPUT" single_spc prompt:quoted_text "#TO" single_spc var_name:symbol spc target:goto_clause_or_continuation
     { return makeInput (prompt, target, var_name); }
+ / cond:if_expr target:basic_goto_clause
+    { return ["((" + cond + ") ? (" + makeGoto(target) + ") : (" + continueIfDefined() + "))"]; }
  / qualified_choose_expr+
 
 choice_list
  = conjunctive_choice_list
  / target:goto_clause { return [makeGoto (target)]; }
  / "#OVER" spc { return []; }
- / { return [gotoIfDefined ("defaultContinuation")]; }
+ / { return [continueIfDefined()]; }
 
 explicit_or_implicit_continuation
  = basic_goto_clause
@@ -191,7 +202,7 @@ goto_clause_or_continuation
 symbol_or_scene
   = "#CURRENT" { return "funkscene.currentScene"; }
   / "#PREVIOUS" { return "funkscene.previousScene"; }
-  / '(' expr:code ')' { return expr; }
+  / '(' expr:balanced_code ')' { return expr; }
   / symbol
   / scene
 
@@ -202,9 +213,9 @@ choice
 choose_expr
  = c:choice
   { return "[" + c + "]"; }
- / "#SECRETLY" spc "#IF" spc expr:code c:choice
+ / "#SECRETLY" spc expr:if_expr c:choice
   { return "((" + expr + ") ? [" + c + "] : [])"; }
- /  "#IF" spc expr:code c:choice
+ /  expr:if_expr c:choice
   { return "((" + expr + ") ? [" + c + "] : [" + c[0] + "])"; }
 
 qualified_choose_expr
@@ -221,6 +232,9 @@ onetime_tag_expr
 
 inc_event_count
  = "#ACHIEVE" spc tag:symbol { return incEventCount (tag); }
+
+reset_event_count
+ = "#UNACHIEVE" spc tag:symbol { return resetEventCount (tag); }
 
 query_event_count
  = "#ACHIEVED" spc tag:symbol { return valueOrZero (eventCounter (tag)); }
@@ -242,11 +256,11 @@ meter_bars
    { return makeTable ("meterTable", bars); }
 
 meter_bar
- = "#BAR" label:quoted_text "#VALUE" spc expr:code max:meter_bar_max_clause? color:meter_bar_color_clause? "#ENDBAR" single_spc
+ = "#BAR" label:quoted_text "#VALUE" spc expr:balanced_code max:meter_bar_max_clause? color:meter_bar_color_clause? "#ENDBAR" single_spc
    { return makeMeterBar (label, expr, max, typeof(color) == 'undefined' ? "undefined" : ("\"" + color + "\"")); }
 
 meter_bar_max_clause
- = "#MAX" spc expr:code { return expr; }
+ = "#MAX" spc expr:balanced_code { return expr; }
 
 meter_bar_color_clause
  = "#COLOR" spc color:meter_bar_color spc { return color; }
@@ -254,17 +268,17 @@ meter_bar_color_clause
 meter_bar_color = "green" / "orange" / "red" / "purple" / "blue" / "yellow" / "pink" / "gray"
 
 status_condition
- = expr:code "#NOW"
+ = expr:balanced_code "#NOW"
    { return expr; }
- / expr:code "#EVER"
+ / expr:balanced_code "#EVER"
    { var tag = badgeEventPrefix + (++badgeCount);
      var counter = eventCounter (tag);
      return "(" + counter + " = " + valueOrZero(counter) + " || " + expr + ")"; }
- / expr:code
+ / expr:balanced_code
    { return expr; }
 
 if_expr
- = "#IF" spc expr:code { return expr; }
+ = "#IF" spc expr:balanced_code { return expr; }
 
 endscene
   = "#ENDSCENE"
@@ -300,9 +314,23 @@ single_spc
 symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
+balanced_code
+  = "##" tail:balanced_code? { return "#" + tail; }
+  / c:inc_event_count tail:balanced_code? { return c + tail; }
+  / c:reset_event_count tail:balanced_code? { return c + tail; }
+  / c:query_event_count tail:balanced_code? { return c + tail; }
+  / "(" inside:balanced_code ")" tail:balanced_code? { return "(" + inside + ")" + tail; }
+  / "{" inside:balanced_code "}" tail:balanced_code? { return "{" + inside + "}" + tail; }
+  / "[" inside:balanced_code "]" tail:balanced_code? { return "{" + inside + "}" + tail; }
+  / head:balanced_code_chars tail:balanced_code? { return head + tail; }
+
+balanced_code_chars
+  = chars:[^#(){}\[\]]+ { return chars.join(""); }
+
 code
   = "##" tail:code? { return "#" + tail; }
   / c:inc_event_count tail:code? { return c + tail; }
+  / c:reset_event_count tail:code? { return c + tail; }
   / c:query_event_count tail:code? { return c + tail; }
   / head:code_chars tail:code? { return head + tail; }
 
@@ -329,6 +357,7 @@ text
   / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / s:scene_scheduling_statement tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
   / c:inc_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
+  / c:reset_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
   / s:status_badges tail:text? { return "\" + " + s + " + \"" + tail; }
   / s:meter_bars tail:text? { return "\" + " + s + " + \"" + tail; }
   / '"' tail:text? { return '\\"' + tail; }

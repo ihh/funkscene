@@ -310,3 +310,6 @@ hash_rank
 
 text_chars
   = chars:[^#\"\n]+ { return chars.join(""); }
+
+icon_name
+  = chars:[A-Za-z0-9\-_]+ { return chars.join(""); }

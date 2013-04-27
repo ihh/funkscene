@@ -425,6 +425,30 @@ Another useful form of implicit continuation is the `#IF...#GOTO...` construct:
 	supernatural one, and it's also pretty clear the Gods don't like you.
 	#ENDSCENE
 
+	#PAGE inner_sanctum
+	#SCENE
+	...
+
+This is simply the implicit form of the following continuation
+
+	#PAGE inside_temple
+	#SCENE
+	Finally, you are inside the temple. But is your soul pure?
+	#GOTO (#ACHIEVED penance ? inner_sanctum : combustion)
+	#ENDSCENE
+
+	#PAGE combustion
+	#SCENE
+	Your skin begins to prickle and burn. Flames spring from your clothing.
+	The reasons for spontaneous human combustion are unclear; it's not even
+	clear if it is, indeed, a natural phenomenon. However, it's certainly a
+	supernatural one, and it's also pretty clear the Gods don't like you.
+	#ENDSCENE
+
+	#PAGE inner_sanctum
+	#SCENE
+	...
+
 
 One-time choices
 ----------------

@@ -92,6 +92,9 @@ funkscene.parser = (function(){
         "nonempty_quoted_text": parse_nonempty_quoted_text,
         "quoted_text": parse_quoted_text,
         "text": parse_text,
+        "nonempty_quoted_scene_text": parse_nonempty_quoted_scene_text,
+        "quoted_scene_text": parse_quoted_scene_text,
+        "scene_text": parse_scene_text,
         "hash_rank": parse_hash_rank,
         "text_chars": parse_text_chars,
         "icon_filename": parse_icon_filename
@@ -501,7 +504,7 @@ funkscene.parser = (function(){
           result1 = parse_include();
         }
         if (result0 !== null) {
-          result1 = parse_quoted_text();
+          result1 = parse_quoted_scene_text();
           if (result1 !== null) {
             result2 = parse_conjunctive_choice_list();
             if (result2 !== null) {
@@ -540,7 +543,7 @@ funkscene.parser = (function(){
             result1 = parse_include();
           }
           if (result0 !== null) {
-            result1 = parse_quoted_text();
+            result1 = parse_quoted_scene_text();
             if (result1 !== null) {
               result2 = parse_gosub_chain();
               if (result2 !== null) {
@@ -579,7 +582,7 @@ funkscene.parser = (function(){
               result1 = parse_include();
             }
             if (result0 !== null) {
-              result1 = parse_quoted_text();
+              result1 = parse_quoted_scene_text();
               if (result1 !== null) {
                 result2 = parse_inline_named_scene_assignment();
                 if (result2 !== null) {
@@ -760,7 +763,7 @@ funkscene.parser = (function(){
           result1 = parse_include();
         }
         if (result0 !== null) {
-          result1 = parse_quoted_text();
+          result1 = parse_quoted_scene_text();
           if (result1 !== null) {
             result2 = parse_conjunctive_choice_list();
             if (result2 !== null) {
@@ -799,7 +802,7 @@ funkscene.parser = (function(){
             result1 = parse_include();
           }
           if (result0 !== null) {
-            result1 = parse_quoted_text();
+            result1 = parse_quoted_scene_text();
             if (result1 !== null) {
               result2 = parse_choice_list();
               if (result2 !== null) {
@@ -832,7 +835,7 @@ funkscene.parser = (function(){
         
         pos0 = clone(pos);
         pos1 = clone(pos);
-        result0 = parse_quoted_text();
+        result0 = parse_quoted_scene_text();
         result0 = result0 !== null ? result0 : "";
         if (result0 !== null) {
           if (input.substr(pos.offset, 8) === "#INCLUDE") {
@@ -4224,6 +4227,679 @@ funkscene.parser = (function(){
                                           result0 = parse_text_chars();
                                           if (result0 !== null) {
                                             result1 = parse_text();
+                                            result1 = result1 !== null ? result1 : "";
+                                            if (result1 !== null) {
+                                              result0 = [result0, result1];
+                                            } else {
+                                              result0 = null;
+                                              pos = clone(pos1);
+                                            }
+                                          } else {
+                                            result0 = null;
+                                            pos = clone(pos1);
+                                          }
+                                          if (result0 !== null) {
+                                            result0 = (function(offset, line, column, head, tail) { return head + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                                          }
+                                          if (result0 === null) {
+                                            pos = clone(pos0);
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        return result0;
+      }
+      
+      function parse_nonempty_quoted_scene_text() {
+        var result0;
+        var pos0;
+        
+        pos0 = clone(pos);
+        result0 = parse_scene_text();
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, text) { return '"' + text + '"'; })(pos0.offset, pos0.line, pos0.column, result0);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        return result0;
+      }
+      
+      function parse_quoted_scene_text() {
+        var result0;
+        var pos0, pos1;
+        
+        result0 = parse_nonempty_quoted_scene_text();
+        if (result0 === null) {
+          pos0 = clone(pos);
+          pos1 = clone(pos);
+          result0 = [];
+          if (result0 !== null) {
+            result0 = (function(offset, line, column) { return '""'; })(pos0.offset, pos0.line, pos0.column);
+          }
+          if (result0 === null) {
+            pos = clone(pos0);
+          }
+        }
+        return result0;
+      }
+      
+      function parse_scene_text() {
+        var result0, result1, result2, result3, result4, result5;
+        var pos0, pos1;
+        
+        pos0 = clone(pos);
+        pos1 = clone(pos);
+        if (input.substr(pos.offset, 2) === "##") {
+          result0 = "##";
+          advance(pos, 2);
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"##\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_scene_text();
+          result1 = result1 !== null ? result1 : "";
+          if (result1 !== null) {
+            result0 = [result0, result1];
+          } else {
+            result0 = null;
+            pos = clone(pos1);
+          }
+        } else {
+          result0 = null;
+          pos = clone(pos1);
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, line, column, tail) { return "#" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+        }
+        if (result0 === null) {
+          pos = clone(pos0);
+        }
+        if (result0 === null) {
+          pos0 = clone(pos);
+          pos1 = clone(pos);
+          result0 = parse_hash_rank();
+          if (result0 !== null) {
+            result1 = parse_scene_text();
+            result1 = result1 !== null ? result1 : "";
+            if (result1 !== null) {
+              result0 = [result0, result1];
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+          } else {
+            result0 = null;
+            pos = clone(pos1);
+          }
+          if (result0 !== null) {
+            result0 = (function(offset, line, column, rank, tail) { return rank + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+          }
+          if (result0 === null) {
+            pos = clone(pos0);
+          }
+          if (result0 === null) {
+            pos0 = clone(pos);
+            pos1 = clone(pos);
+            if (input.substr(pos.offset, 2) === "#$") {
+              result0 = "#$";
+              advance(pos, 2);
+            } else {
+              result0 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"#$\"");
+              }
+            }
+            if (result0 !== null) {
+              result1 = parse_symbol();
+              if (result1 !== null) {
+                result2 = parse_scene_text();
+                result2 = result2 !== null ? result2 : "";
+                if (result2 !== null) {
+                  result0 = [result0, result1, result2];
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+            } else {
+              result0 = null;
+              pos = clone(pos1);
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, line, column, v, tail) { return "\" + " + v + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[2]);
+            }
+            if (result0 === null) {
+              pos = clone(pos0);
+            }
+            if (result0 === null) {
+              pos0 = clone(pos);
+              pos1 = clone(pos);
+              if (input.substr(pos.offset, 2) === "#{") {
+                result0 = "#{";
+                advance(pos, 2);
+              } else {
+                result0 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"#{\"");
+                }
+              }
+              if (result0 !== null) {
+                result1 = parse_code();
+                if (result1 !== null) {
+                  if (input.substr(pos.offset, 2) === "#}") {
+                    result2 = "#}";
+                    advance(pos, 2);
+                  } else {
+                    result2 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"#}\"");
+                    }
+                  }
+                  if (result2 !== null) {
+                    result3 = parse_scene_text();
+                    result3 = result3 !== null ? result3 : "";
+                    if (result3 !== null) {
+                      result0 = [result0, result1, result2, result3];
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+              } else {
+                result0 = null;
+                pos = clone(pos1);
+              }
+              if (result0 !== null) {
+                result0 = (function(offset, line, column, code, tail) { return "\" + " + evalOrNull(code) + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
+              }
+              if (result0 === null) {
+                pos = clone(pos0);
+              }
+              if (result0 === null) {
+                pos0 = clone(pos);
+                pos1 = clone(pos);
+                if (input.substr(pos.offset, 2) === "#[") {
+                  result0 = "#[";
+                  advance(pos, 2);
+                } else {
+                  result0 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#[\"");
+                  }
+                }
+                if (result0 !== null) {
+                  result1 = parse_code();
+                  if (result1 !== null) {
+                    if (input.substr(pos.offset, 2) === "#]") {
+                      result2 = "#]";
+                      advance(pos, 2);
+                    } else {
+                      result2 = null;
+                      if (reportFailures === 0) {
+                        matchFailed("\"#]\"");
+                      }
+                    }
+                    if (result2 !== null) {
+                      result3 = parse_scene_text();
+                      result3 = result3 !== null ? result3 : "";
+                      if (result3 !== null) {
+                        result0 = [result0, result1, result2, result3];
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                } else {
+                  result0 = null;
+                  pos = clone(pos1);
+                }
+                if (result0 !== null) {
+                  result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1], result0[3]);
+                }
+                if (result0 === null) {
+                  pos = clone(pos0);
+                }
+                if (result0 === null) {
+                  pos0 = clone(pos);
+                  pos1 = clone(pos);
+                  result0 = parse_if_then_else();
+                  if (result0 !== null) {
+                    result1 = parse_scene_text();
+                    result1 = result1 !== null ? result1 : "";
+                    if (result1 !== null) {
+                      result0 = [result0, result1];
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                  } else {
+                    result0 = null;
+                    pos = clone(pos1);
+                  }
+                  if (result0 !== null) {
+                    result0 = (function(offset, line, column, cond, tail) { return "\" + " + cond + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                  }
+                  if (result0 === null) {
+                    pos = clone(pos0);
+                  }
+                  if (result0 === null) {
+                    pos0 = clone(pos);
+                    pos1 = clone(pos);
+                    if (input.substr(pos.offset, 5) === "#EVAL") {
+                      result0 = "#EVAL";
+                      advance(pos, 5);
+                    } else {
+                      result0 = null;
+                      if (reportFailures === 0) {
+                        matchFailed("\"#EVAL\"");
+                      }
+                    }
+                    if (result0 !== null) {
+                      result1 = parse_spc();
+                      if (result1 !== null) {
+                        result2 = parse_code();
+                        if (result2 !== null) {
+                          if (input.substr(pos.offset, 5) === "#TEXT") {
+                            result3 = "#TEXT";
+                            advance(pos, 5);
+                          } else {
+                            result3 = null;
+                            if (reportFailures === 0) {
+                              matchFailed("\"#TEXT\"");
+                            }
+                          }
+                          if (result3 !== null) {
+                            result4 = parse_single_spc();
+                            if (result4 !== null) {
+                              result5 = parse_scene_text();
+                              result5 = result5 !== null ? result5 : "";
+                              if (result5 !== null) {
+                                result0 = [result0, result1, result2, result3, result4, result5];
+                              } else {
+                                result0 = null;
+                                pos = clone(pos1);
+                              }
+                            } else {
+                              result0 = null;
+                              pos = clone(pos1);
+                            }
+                          } else {
+                            result0 = null;
+                            pos = clone(pos1);
+                          }
+                        } else {
+                          result0 = null;
+                          pos = clone(pos1);
+                        }
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
+                    } else {
+                      result0 = null;
+                      pos = clone(pos1);
+                    }
+                    if (result0 !== null) {
+                      result0 = (function(offset, line, column, expr, tail) { return "\" + (" + expr + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[5]);
+                    }
+                    if (result0 === null) {
+                      pos = clone(pos0);
+                    }
+                    if (result0 === null) {
+                      pos0 = clone(pos);
+                      pos1 = clone(pos);
+                      result0 = parse_cycle();
+                      if (result0 !== null) {
+                        result1 = parse_scene_text();
+                        result1 = result1 !== null ? result1 : "";
+                        if (result1 !== null) {
+                          result0 = [result0, result1];
+                        } else {
+                          result0 = null;
+                          pos = clone(pos1);
+                        }
+                      } else {
+                        result0 = null;
+                        pos = clone(pos1);
+                      }
+                      if (result0 !== null) {
+                        result0 = (function(offset, line, column, c, tail) { return "\" + (" + c + ") + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                      }
+                      if (result0 === null) {
+                        pos = clone(pos0);
+                      }
+                      if (result0 === null) {
+                        pos0 = clone(pos);
+                        pos1 = clone(pos);
+                        result0 = parse_scene_scheduling_statement();
+                        if (result0 !== null) {
+                          result1 = parse_scene_text();
+                          result1 = result1 !== null ? result1 : "";
+                          if (result1 !== null) {
+                            result0 = [result0, result1];
+                          } else {
+                            result0 = null;
+                            pos = clone(pos1);
+                          }
+                        } else {
+                          result0 = null;
+                          pos = clone(pos1);
+                        }
+                        if (result0 !== null) {
+                          result0 = (function(offset, line, column, s, tail) { return "\" + " + makeDummy(c) + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                        }
+                        if (result0 === null) {
+                          pos = clone(pos0);
+                        }
+                        if (result0 === null) {
+                          pos0 = clone(pos);
+                          pos1 = clone(pos);
+                          result0 = parse_inc_event_count();
+                          if (result0 !== null) {
+                            result1 = parse_scene_text();
+                            result1 = result1 !== null ? result1 : "";
+                            if (result1 !== null) {
+                              result0 = [result0, result1];
+                            } else {
+                              result0 = null;
+                              pos = clone(pos1);
+                            }
+                          } else {
+                            result0 = null;
+                            pos = clone(pos1);
+                          }
+                          if (result0 !== null) {
+                            result0 = (function(offset, line, column, c, tail) { return "\" + " + makeDummy(c) + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                          }
+                          if (result0 === null) {
+                            pos = clone(pos0);
+                          }
+                          if (result0 === null) {
+                            pos0 = clone(pos);
+                            pos1 = clone(pos);
+                            result0 = parse_reset_event_count();
+                            if (result0 !== null) {
+                              result1 = parse_scene_text();
+                              result1 = result1 !== null ? result1 : "";
+                              if (result1 !== null) {
+                                result0 = [result0, result1];
+                              } else {
+                                result0 = null;
+                                pos = clone(pos1);
+                              }
+                            } else {
+                              result0 = null;
+                              pos = clone(pos1);
+                            }
+                            if (result0 !== null) {
+                              result0 = (function(offset, line, column, c, tail) { return "\" + " + makeDummy(c) + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                            }
+                            if (result0 === null) {
+                              pos = clone(pos0);
+                            }
+                            if (result0 === null) {
+                              pos0 = clone(pos);
+                              pos1 = clone(pos);
+                              result0 = parse_status_badges();
+                              if (result0 !== null) {
+                                result1 = parse_scene_text();
+                                result1 = result1 !== null ? result1 : "";
+                                if (result1 !== null) {
+                                  result0 = [result0, result1];
+                                } else {
+                                  result0 = null;
+                                  pos = clone(pos1);
+                                }
+                              } else {
+                                result0 = null;
+                                pos = clone(pos1);
+                              }
+                              if (result0 !== null) {
+                                result0 = (function(offset, line, column, s, tail) { return "\" + " + s + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                              }
+                              if (result0 === null) {
+                                pos = clone(pos0);
+                              }
+                              if (result0 === null) {
+                                pos0 = clone(pos);
+                                pos1 = clone(pos);
+                                result0 = parse_meter_bars();
+                                if (result0 !== null) {
+                                  result1 = parse_scene_text();
+                                  result1 = result1 !== null ? result1 : "";
+                                  if (result1 !== null) {
+                                    result0 = [result0, result1];
+                                  } else {
+                                    result0 = null;
+                                    pos = clone(pos1);
+                                  }
+                                } else {
+                                  result0 = null;
+                                  pos = clone(pos1);
+                                }
+                                if (result0 !== null) {
+                                  result0 = (function(offset, line, column, m, tail) { return "\" + " + m + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1]);
+                                }
+                                if (result0 === null) {
+                                  pos = clone(pos0);
+                                }
+                                if (result0 === null) {
+                                  pos0 = clone(pos);
+                                  pos1 = clone(pos);
+                                  if (input.substr(pos.offset, 6) === "#TITLE") {
+                                    result0 = "#TITLE";
+                                    advance(pos, 6);
+                                  } else {
+                                    result0 = null;
+                                    if (reportFailures === 0) {
+                                      matchFailed("\"#TITLE\"");
+                                    }
+                                  }
+                                  if (result0 !== null) {
+                                    result1 = parse_spc();
+                                    if (result1 !== null) {
+                                      result2 = parse_nonempty_quoted_text();
+                                      if (result2 !== null) {
+                                        if (input.substr(pos.offset, 9) === "#ENDTITLE") {
+                                          result3 = "#ENDTITLE";
+                                          advance(pos, 9);
+                                        } else {
+                                          result3 = null;
+                                          if (reportFailures === 0) {
+                                            matchFailed("\"#ENDTITLE\"");
+                                          }
+                                        }
+                                        if (result3 !== null) {
+                                          result4 = parse_scene_text();
+                                          result4 = result4 !== null ? result4 : "";
+                                          if (result4 !== null) {
+                                            result0 = [result0, result1, result2, result3, result4];
+                                          } else {
+                                            result0 = null;
+                                            pos = clone(pos1);
+                                          }
+                                        } else {
+                                          result0 = null;
+                                          pos = clone(pos1);
+                                        }
+                                      } else {
+                                        result0 = null;
+                                        pos = clone(pos1);
+                                      }
+                                    } else {
+                                      result0 = null;
+                                      pos = clone(pos1);
+                                    }
+                                  } else {
+                                    result0 = null;
+                                    pos = clone(pos1);
+                                  }
+                                  if (result0 !== null) {
+                                    result0 = (function(offset, line, column, t, tail) { return "\" + " + makeDummy("document.title = " + t + ";") + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[4]);
+                                  }
+                                  if (result0 === null) {
+                                    pos = clone(pos0);
+                                  }
+                                  if (result0 === null) {
+                                    pos0 = clone(pos);
+                                    pos1 = clone(pos);
+                                    if (input.substr(pos.offset, 7) === "#BUTTON") {
+                                      result0 = "#BUTTON";
+                                      advance(pos, 7);
+                                    } else {
+                                      result0 = null;
+                                      if (reportFailures === 0) {
+                                        matchFailed("\"#BUTTON\"");
+                                      }
+                                    }
+                                    if (result0 !== null) {
+                                      result1 = parse_spc();
+                                      if (result1 !== null) {
+                                        result2 = parse_nonempty_quoted_text();
+                                        if (result2 !== null) {
+                                          if (input.substr(pos.offset, 10) === "#ENDBUTTON") {
+                                            result3 = "#ENDBUTTON";
+                                            advance(pos, 10);
+                                          } else {
+                                            result3 = null;
+                                            if (reportFailures === 0) {
+                                              matchFailed("\"#ENDBUTTON\"");
+                                            }
+                                          }
+                                          if (result3 !== null) {
+                                            result4 = parse_scene_text();
+                                            result4 = result4 !== null ? result4 : "";
+                                            if (result4 !== null) {
+                                              result0 = [result0, result1, result2, result3, result4];
+                                            } else {
+                                              result0 = null;
+                                              pos = clone(pos1);
+                                            }
+                                          } else {
+                                            result0 = null;
+                                            pos = clone(pos1);
+                                          }
+                                        } else {
+                                          result0 = null;
+                                          pos = clone(pos1);
+                                        }
+                                      } else {
+                                        result0 = null;
+                                        pos = clone(pos1);
+                                      }
+                                    } else {
+                                      result0 = null;
+                                      pos = clone(pos1);
+                                    }
+                                    if (result0 !== null) {
+                                      result0 = (function(offset, line, column, b, tail) { return "\" + " + makeDummy("funkscene.setContinueText(" + b + ");") + " + \"" + tail; })(pos0.offset, pos0.line, pos0.column, result0[2], result0[4]);
+                                    }
+                                    if (result0 === null) {
+                                      pos = clone(pos0);
+                                    }
+                                    if (result0 === null) {
+                                      pos0 = clone(pos);
+                                      pos1 = clone(pos);
+                                      if (input.charCodeAt(pos.offset) === 34) {
+                                        result0 = "\"";
+                                        advance(pos, 1);
+                                      } else {
+                                        result0 = null;
+                                        if (reportFailures === 0) {
+                                          matchFailed("\"\\\"\"");
+                                        }
+                                      }
+                                      if (result0 !== null) {
+                                        result1 = parse_scene_text();
+                                        result1 = result1 !== null ? result1 : "";
+                                        if (result1 !== null) {
+                                          result0 = [result0, result1];
+                                        } else {
+                                          result0 = null;
+                                          pos = clone(pos1);
+                                        }
+                                      } else {
+                                        result0 = null;
+                                        pos = clone(pos1);
+                                      }
+                                      if (result0 !== null) {
+                                        result0 = (function(offset, line, column, tail) { return '\\"' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+                                      }
+                                      if (result0 === null) {
+                                        pos = clone(pos0);
+                                      }
+                                      if (result0 === null) {
+                                        pos0 = clone(pos);
+                                        pos1 = clone(pos);
+                                        if (input.charCodeAt(pos.offset) === 10) {
+                                          result0 = "\n";
+                                          advance(pos, 1);
+                                        } else {
+                                          result0 = null;
+                                          if (reportFailures === 0) {
+                                            matchFailed("\"\\n\"");
+                                          }
+                                        }
+                                        if (result0 !== null) {
+                                          result1 = parse_scene_text();
+                                          result1 = result1 !== null ? result1 : "";
+                                          if (result1 !== null) {
+                                            result0 = [result0, result1];
+                                          } else {
+                                            result0 = null;
+                                            pos = clone(pos1);
+                                          }
+                                        } else {
+                                          result0 = null;
+                                          pos = clone(pos1);
+                                        }
+                                        if (result0 !== null) {
+                                          result0 = (function(offset, line, column, tail) { return '\\n' + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+                                        }
+                                        if (result0 === null) {
+                                          pos = clone(pos0);
+                                        }
+                                        if (result0 === null) {
+                                          pos0 = clone(pos);
+                                          pos1 = clone(pos);
+                                          result0 = parse_text_chars();
+                                          if (result0 !== null) {
+                                            result1 = parse_scene_text();
                                             result1 = result1 !== null ? result1 : "";
                                             if (result1 !== null) {
                                               result0 = [result0, result1];

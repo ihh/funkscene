@@ -139,11 +139,11 @@ inline_named_scene_assignment
    { return [name, makeAssignment (name, scene)]; }
 
 named_scene_body
- = incl:include* scene_desc:quoted_text choices:conjunctive_choice_list cont:inline_named_scene_assignment
+ = incl:include* scene_desc:quoted_scene_text choices:conjunctive_choice_list cont:inline_named_scene_assignment
   { return sceneFunction (cont[0], incl, scene_desc, choices) + ";\n" + cont[1]; }
- / incl:include* scene_desc:quoted_text gosubs:gosub_chain cont:inline_named_scene_assignment
+ / incl:include* scene_desc:quoted_scene_text gosubs:gosub_chain cont:inline_named_scene_assignment
   { return sceneFunction (cont[0], incl, scene_desc, gosubs) + ";\n" + cont[1]; }
- / incl:include* scene_desc:quoted_text cont:inline_named_scene_assignment
+ / incl:include* scene_desc:quoted_scene_text cont:inline_named_scene_assignment
   { return sceneFunction (cont[0], incl, scene_desc, [makeGoto("defaultContinuation")]) + ";\n" + cont[1]; }
  / scene_body
 
@@ -156,13 +156,13 @@ scene
  / "#("     single_spc s:scene_body "#)"      { return s; }
 
 scene_body
- = incl:include* scene_desc:quoted_text choices:conjunctive_choice_list cont:explicit_or_implicit_continuation
+ = incl:include* scene_desc:quoted_scene_text choices:conjunctive_choice_list cont:explicit_or_implicit_continuation
   { return sceneFunction (cont, incl, scene_desc, choices); }
- / incl:include* scene_desc:quoted_text choices:choice_list
+ / incl:include* scene_desc:quoted_scene_text choices:choice_list
   { return sceneFunction (undefined, incl, scene_desc, choices); }
 
 include
- = scene_desc:quoted_text? "#INCLUDE" spc included:symbol_or_scene { return [scene_desc,included]; }
+ = scene_desc:quoted_scene_text? "#INCLUDE" spc included:symbol_or_scene { return [scene_desc,included]; }
 
 conjunctive_choice_list
  = "#INPUT" single_spc prompt:quoted_text "#TO" single_spc var_name:symbol spc target:goto_clause_or_continuation
@@ -390,6 +390,35 @@ text
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }
+
+nonempty_quoted_scene_text
+ = text:scene_text { return '"' + text + '"'; }
+
+quoted_scene_text
+ = nonempty_quoted_scene_text
+ / { return '""'; }
+
+scene_text
+  = "##" tail:scene_text? { return "#" + tail; }
+  / rank:hash_rank tail:scene_text? { return rank + tail; }
+  / "#$" v:symbol tail:scene_text? { return "\" + " + v + " + \"" + tail; }
+  / "#{" code:code "#}" tail:scene_text? { return "\" + " + evalOrNull(code) + " + \"" + tail; }
+  / "#[" expr:code "#]" tail:scene_text? { return "\" + (" + expr + ") + \"" + tail; }
+  / cond:if_then_else tail:scene_text? { return "\" + " + cond + " + \"" + tail; }
+  / "#EVAL" spc expr:code "#TEXT" single_spc tail:scene_text? { return "\" + (" + expr + ") + \"" + tail; }
+  / c:cycle tail:scene_text? { return "\" + (" + c + ") + \"" + tail; }
+  / s:scene_scheduling_statement tail:scene_text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
+  / c:inc_event_count tail:scene_text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
+  / c:reset_event_count tail:scene_text? { return "\" + " + makeDummy(c) + " + \"" + tail; }
+  / s:status_badges tail:scene_text? { return "\" + " + s + " + \"" + tail; }
+  / m:meter_bars tail:scene_text? { return "\" + " + m + " + \"" + tail; }
+  / "#TITLE" spc t:nonempty_quoted_text "#ENDTITLE" tail:scene_text?
+     { return "\" + " + makeDummy("document.title = " + t + ";") + " + \"" + tail; }
+  / "#BUTTON" spc b:nonempty_quoted_text "#ENDBUTTON" tail:scene_text?
+     { return "\" + " + makeDummy("funkscene.setContinueText(" + b + ");") + " + \"" + tail; }
+  / '"' tail:scene_text? { return '\\"' + tail; }
+  / "\n" tail:scene_text? { return '\\n' + tail; }
+  / head:text_chars tail:scene_text? { return head + tail; }
 
 hash_rank
  = "#!" / "#0" / "#1" / "#2" / "#3" / "#4" / "#5" / "#6" / "#7" / "#8" / "#9"

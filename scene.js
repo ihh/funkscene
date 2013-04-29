@@ -23,8 +23,9 @@
     fs.sceneDeque = [];
     fs.continuationScene = function() { return fs.sceneDeque.pop(); };
 
-    fs.sceneTextToHtml = function(t) { return t; };
-    fs.sceneTextToHistoryHtml = function(t) { return fs.sceneTextToHtml(t) + "<br>"; };
+    var converter = new Markdown.Converter();
+    fs.sceneTextToHtml = converter.makeHtml;
+    fs.sceneTextToHistoryHtml = function(t) { return converter.makeHtml(t) + "<br>"; };
     fs.choiceTextToHistoryHtml = function(t) { return "<i>" + t + "</i><br>"; };
 
     var defaultContinueText = continueButton.innerHTML;

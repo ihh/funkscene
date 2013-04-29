@@ -1,6 +1,6 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
-all: grammar.js README.html img/icon
+all: grammar.js README.html img/icon pagedown
 
 grammar.js: grammar.pegjs
 # Uncomment for node version, vs browser version
@@ -21,3 +21,7 @@ img/icon:
 	test -e img || mkdir img
 	mv game-icons.net/icons/lorc/originals/svg $@
 	rm -rf game-icons.net
+
+# Download Markdown parser
+pagedown:
+	hg clone https://code.google.com/p/pagedown/

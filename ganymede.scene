@@ -1,6 +1,7 @@
 #PAGE start
 #SCENE
-Investigate the stolen floss of Ganymede!
+The stolen floss of Ganymede!
+=============================
 
 Ganymede is the second-largest moon of Jupiter.
 It has three inhabitants.
@@ -17,16 +18,28 @@ You and Robot Sergeant XK-17 have a choice. Where to investigate first?
 #SCENE
 #TITLE Cedric the Fisherman's Space Jetty #ENDTITLE
 Cedric the Fisherman's Space Jetty.
+===================================
+
 #ENDSCENE
 
 #PAGE bella
 #SCENE
 #TITLE Bella the Robot Repair Girl's Workshop #ENDTITLE
 Bella the Robot Repair Girl's Workshop.
+=======================================
 #ENDSCENE
 
 #PAGE claire
 #SCENE
 #TITLE Dr Claire's Surgery #ENDTITLE
 Dr Claire's Surgery.
+====================
+#ENDSCENE
+
+#PAGE statusPage
+#SCENE
+Your name is Gertie McGurty.
+#BAR Health #VALUE 100 #MAX 100 #UNITS/ percent #COLOR green #ENDBAR
+#SHOW charm #BADGE You are happy. #NOW
+#SHOW vintage-robot #BADGE You are accompanied by Robot Sergeant XK-17. #NOW
 #ENDSCENE

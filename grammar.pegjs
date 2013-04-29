@@ -85,14 +85,19 @@
       return "(" + v + " = 0)";
   }
 
-  function makeMeterBar(label,expr,max,color) {
+  function makeMeterBar(label,expr,max,units,color) {
       var func = "(function(){var level = " + expr + ";var max = ";
       if (typeof(max) == 'undefined' || max == "") {
       	  max = 1;
           func += "1";
       } else {
           func += max;
-          label += " + \"<br><small>(\" + level + \"/\" + max + \")</small>\"";
+	  if (units.length > 0 && units.substring(0,1) == " ") {
+	      units = units.replace(/^\s?|\s*$/g,'')
+              label += " + \"<br><small>(\" + level + \"" + units + ")</small>\"";
+	  } else {
+              label += " + \"<br><small>(\" + level + \"/\" + max + \"" + ")</small>\"";
+  	  }
       }
       return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
   }
@@ -257,19 +262,28 @@ status_badges
    { return makeTable ("badgeTable", badges); }
 
 status_badge
- = "#SHOW" spc icon:icon_filename spc "#BADGE" single_spc text:nonempty_quoted_text "#IF" single_spc expr:status_condition spc
+ = "#SHOW" spc icon:icon_filename spc "#BADGE" single_spc text:nonempty_quoted_text expr:status_if_expr spc
    { return "((" + expr + ") ? (" + makeIconText(icon,text) + ") : \"\")"; }
+
+status_if_expr
+ = "#IF" single_spc expr:status_condition { return expr; }
+ / "#NOW" { return 1; }
 
 meter_bars
  = bars:meter_bar+
    { return makeTable ("meterTable", bars); }
 
 meter_bar
- = "#BAR" label:quoted_text "#VALUE" spc expr:balanced_code max:meter_bar_max_clause? color:meter_bar_color_clause? "#ENDBAR" single_spc
-   { return makeMeterBar (label, expr, max, typeof(color) == 'undefined' ? "undefined" : ("\"" + color + "\"")); }
+ = "#BAR" label:quoted_text "#VALUE" spc expr:balanced_code max:meter_bar_max_clause? units:meter_bar_unit_clause color:meter_bar_color_clause? "#ENDBAR" single_spc
+   { return makeMeterBar (label, expr, max, units, typeof(color) == 'undefined' ? "undefined" : ("\"" + color + "\"")); }
 
 meter_bar_max_clause
  = "#MAX" spc expr:balanced_code { return expr; }
+
+meter_bar_unit_clause
+ = "#UNITS/" units:text { return " " + units; }
+ / "#UNITS" spc units:text { return units; }
+ / { return "\"\""; }
 
 meter_bar_color_clause
  = "#COLOR" spc color:meter_bar_color spc { return color; }
@@ -408,7 +422,8 @@ quoted_text
  / { return '""'; }
 
 text
-  = "##" tail:text? { return "#" + tail; }
+  = "\\#" tail:text? { return "#" + tail; }
+  / "\\\\" tail:text? { return "\\" + tail; }
   / rank:hash_rank tail:text? { return rank + tail; }
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#[" expr:balanced_code "#]" tail:text? { return "\" + " + expr + " + \"" + tail; }
@@ -422,9 +437,11 @@ text
   / '"' tail:text? { return '\\"' + tail; }
   / "\n" tail:text? { return '\\n' + tail; }
   / head:text_chars tail:text? { return head + tail; }
+  / h:hash_run tail:text? { return h + tail; }
 
 scene_text
-  = "##" tail:scene_text? { return accumulateQuoted("#",tail); }
+  = "\\#" tail:scene_text? { return accumulateQuoted("#",tail); }
+  / "\\\\" tail:scene_text? { return accumulateQuoted("\\",tail); }
   / rank:hash_rank tail:scene_text? { return accumulateQuoted(rank,tail); }
   / "#$" v:symbol tail:scene_text? { return accumulate(v,tail); }
   / "#[" expr:balanced_code "#]" tail:scene_text? { return accumulate(expr,tail); }
@@ -444,6 +461,16 @@ scene_text
   / "\"" tail:scene_text? { return accumulateQuoted ("\\\"", tail); }
   / "\n" tail:scene_text? { return accumulateQuoted ("\\n", tail); }
   / head:text_chars tail:scene_text? { return accumulateQuoted (head, tail); }
+  / h:hash_run tail:scene_text? { return accumulateQuoted(h,tail); }
+
+hash_run
+ = h:[#]+ s:encoded_single_spc { return h.join("") + s; }
+
+encoded_single_spc
+ = " "
+ / [\t] { return "\\t"; }
+ / [\n] { return "\\n"; }
+ / [\r] { return "\\r"; }
 
 hash_rank
  = "#!" / "#0" / "#1" / "#2" / "#3" / "#4" / "#5" / "#6" / "#7" / "#8" / "#9"

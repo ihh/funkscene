@@ -63,12 +63,12 @@ vanilla scene functions, with one choice-point:
 	#ENDSCENE
 
 That doesn't look much like JavaScript, because it isn't: this program
-uses only the constructs added by FunkScene. Incidentally, all FunkScene keywords
+uses only the constructs added by FunkScene.Incidentally, all FunkScene keywords
 begin with a `#`; if you need to use an actual hash symbol in your
-JavaScript or your text, escape it as `\#` (a backslash itself is `\\').
+JavaScript or your text, escape it as `\#`. A backslash itself is `\\`.
 Hash signs followed by numbers, like `#1`, do not need to be escaped;
-nor do isolated hashes (or runs of hashes) that are followed by a whitespace or newline character.
-This means you can do Markdown, which is handy, because Markdown is the default preprocessor for scene text.
+nor do isolated hashes followed by whitespace, or runs of hashes.
+This means you can use Markdown, which is handy, because Markdown is the default preprocessor for scene text.
 
 JavaScript object code
 ----------------------

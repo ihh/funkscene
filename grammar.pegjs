@@ -464,7 +464,8 @@ scene_text
   / h:hash_run tail:scene_text? { return accumulateQuoted(h,tail); }
 
 hash_run
- = h:[#]+ s:encoded_single_spc { return h.join("") + s; }
+ = h:[#] s:encoded_single_spc { return h + s; }
+ / h1:[#] h2:[#]+ { return h1 + h2.join(""); }
 
 encoded_single_spc
  = " "

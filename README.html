@@ -555,25 +555,10 @@ even when using <code>#CHOOSE...#FOR</code> blocks to describe individual choice
 <pre><code>#$&lt;varname&gt;
 </code></pre>
 
-<p>To execute JavaScript statements inside a function context with private scope,
-whose return value (if any) will be interpolated into the text,
-use this form:</p>
+<p>To execute JavaScript statements, use this construct:</p>
 
 <pre><code>#{ &lt;...statements...&gt; #}
 </code></pre>
-
-<p>This...</p>
-
-<pre><code>#{ return "Hi there" #}
-</code></pre>
-
-<p>...gives the same result as this...</p>
-
-<pre><code>#[ "Hi there" #]
-</code></pre>
-
-<p>...although they are implemented slightly differently:
-statements inside a <code>#{...#}</code> block are run inside an anonymous closure.</p>
 
 <p>You can also use <code>#IF...#THEN...#ELSIF...#ELSIF...#ELSE...#ENDIF</code>
 to conditionally display certain pieces of text.</p>

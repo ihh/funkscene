@@ -549,22 +549,9 @@ If all you want is the contents of a JavaScript `var` then use
 
 	#$<varname>
 
-To execute JavaScript statements inside a function context with private scope,
-whose return value (if any) will be interpolated into the text,
-use this form:
+To execute JavaScript statements, use this construct:
 
 	#{ <...statements...> #}
-
-This...
-
-	#{ return "Hi there" #}
-
-...gives the same result as this...
-
-	#[ "Hi there" #]
-
-...although they are implemented slightly differently:
-statements inside a `#{...#}` block are run inside an anonymous closure.
 
 You can also use `#IF...#THEN...#ELSIF...#ELSIF...#ELSE...#ENDIF`
 to conditionally display certain pieces of text.

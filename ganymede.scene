@@ -38,7 +38,7 @@ Dr Claire's Surgery.
 
 #PAGE statusPage
 #SCENE
-Your name is Gertie McGurty.
+Your name is Space Detective Gertie McGurty.
 #BAR Health #VALUE 100 #MAX 100 #UNITS/ percent #COLOR green #ENDBAR
 #SHOW charm #BADGE You are happy. #NOW
 #SHOW vintage-robot #BADGE You are accompanied by Robot Sergeant XK-17. #NOW

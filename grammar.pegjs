@@ -423,7 +423,7 @@ quoted_text
 
 text
   = "\\#" tail:text? { return "#" + tail; }
-  / "\\\\" tail:text? { return "\\" + tail; }
+  / "\\\\" tail:text? { return "\\\\" + tail; }
   / rank:hash_rank tail:text? { return rank + tail; }
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#[" expr:balanced_code "#]" tail:text? { return "\" + " + expr + " + \"" + tail; }
@@ -441,7 +441,7 @@ text
 
 scene_text
   = "\\#" tail:scene_text? { return accumulateQuoted("#",tail); }
-  / "\\\\" tail:scene_text? { return accumulateQuoted("\\",tail); }
+  / "\\\\" tail:scene_text? { return accumulateQuoted("\\\\",tail); }
   / rank:hash_rank tail:scene_text? { return accumulateQuoted(rank,tail); }
   / "#$" v:symbol tail:scene_text? { return accumulate(v,tail); }
   / "#[" expr:balanced_code "#]" tail:scene_text? { return accumulate(expr,tail); }
@@ -477,7 +477,7 @@ hash_rank
  = "#!" / "#0" / "#1" / "#2" / "#3" / "#4" / "#5" / "#6" / "#7" / "#8" / "#9"
 
 text_chars
-  = chars:[^#\"\n]+ { return chars.join(""); }
+  = chars:[^#\\\"\n]+ { return chars.join(""); }
 
 icon_filename
   = chars:[A-Za-z0-9\-_]+ { return chars.join(""); }

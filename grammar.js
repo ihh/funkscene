@@ -4238,7 +4238,7 @@ funkscene.parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, tail) { return "\\" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
+            result0 = (function(offset, line, column, tail) { return "\\\\" + tail; })(pos0.offset, pos0.line, pos0.column, result0[1]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -4757,7 +4757,7 @@ funkscene.parser = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, tail) { return accumulateQuoted("\\",tail); })(pos0.offset, pos0.line, pos0.column, result0[1]);
+            result0 = (function(offset, line, column, tail) { return accumulateQuoted("\\\\",tail); })(pos0.offset, pos0.line, pos0.column, result0[1]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -5672,26 +5672,26 @@ funkscene.parser = (function(){
         var pos0;
         
         pos0 = clone(pos);
-        if (/^[^#"\n]/.test(input.charAt(pos.offset))) {
+        if (/^[^#\\"\n]/.test(input.charAt(pos.offset))) {
           result1 = input.charAt(pos.offset);
           advance(pos, 1);
         } else {
           result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[^#\"\\n]");
+            matchFailed("[^#\\\\\"\\n]");
           }
         }
         if (result1 !== null) {
           result0 = [];
           while (result1 !== null) {
             result0.push(result1);
-            if (/^[^#"\n]/.test(input.charAt(pos.offset))) {
+            if (/^[^#\\"\n]/.test(input.charAt(pos.offset))) {
               result1 = input.charAt(pos.offset);
               advance(pos, 1);
             } else {
               result1 = null;
               if (reportFailures === 0) {
-                matchFailed("[^#\"\\n]");
+                matchFailed("[^#\\\\\"\\n]");
               }
             }
           }

@@ -41,9 +41,16 @@
 
     if (typeof start === 'undefined') {
 	start = function() {
-	    return ["You are in a vortex.",  // no newline after return
+	    return ["You are in a vortex.",
  		    [["Escape", function(){return ["You can't.",[]]}],
  		     ["Fall in", function(){return ["A fitting end.",[]]}]]];
+	};
+    }
+
+    if (typeof statusPage === 'undefined') {
+	statusPage = function() {
+	    return ["Your situation is perfectly normal.",
+ 		    []];
 	};
     }
 

@@ -1,0 +1,32 @@
+#PAGE start
+#SCENE
+Investigate the stolen floss of Ganymede!
+
+Ganymede is the second-largest moon of Jupiter.
+It has three inhabitants.
+It's also where the solar system's whole supply of dental floss is stored --- and now it's been stolen!
+
+You and Robot Sergeant XK-17 have a choice. Where first?
+
+#CHOOSE Cedric the Fisherman's space jetty #FOR cedric
+#CHOOSE Bella the repair girl's workshop #FOR bella
+#CHOOSE Dr Claire's surgery #FOR claire
+#ENDSCENE
+
+#PAGE cedric
+#SCENE
+#TITLE Cedric the Fisherman's Workshop #ENDTITLE
+Cedric the Fisherman's Workshop.
+#ENDSCENE
+
+#PAGE bella
+#SCENE
+#TITLE Bella the Robot Repair Girl #ENDTITLE
+Bella the Robot Repair Girl.
+#ENDSCENE
+
+#PAGE claire
+#SCENE
+#TITLE Dr Claire's Surgery #ENDTITLE
+Dr Claire's Surgery.
+#ENDSCENE

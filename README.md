@@ -15,18 +15,11 @@ Scene functions
 
 The fundamental concept in the FunkScene JavaScript API is the _"scene function"._
 A scene function returns a piece of _scene text_
-(typically a statement, made by the narrator to the player, describing their character's experience: "You are in Melchior's Dungeon.")
+(e.g. "You are in Melchior's Dungeon.")
 along with a list of _choices_, each of which consists of a _choice text_
-(a first-person statement in-character by the player to the narrator: "I pick up the mottled axe.")
+(e.g. "I pick up the mottled axe.")
 and another _scene function_
 (the next scene that's going to be displayed if the player makes that choice).
-
-As a stylistic aside:
-A common abbreviation of the player's first person statements ("I pick up the axe")
-involves dropping the "I", yielding something a bit like a command ("Pick up the axe").
-Each has their merits: first-person sentences invite the player to identify with the character,
-while commands are shorter and evoke the tone of RPGs and parser-based IF.
-It's usually a good idea to stick consistently to one style or the other.
 
 
 Aesthetics

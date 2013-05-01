@@ -163,10 +163,14 @@
 	    var textboxDiv;
 	    if (options[i].length == 3) {
 		inputDiv.setAttribute ("type", "text");
+		inputDiv.setAttribute ("autofocus", "autofocus");
 		inputDiv.onkeypress = function (e) {
 		    if (e.keyCode == 13)
 			continueButton.click();
 		};
+		if (eval("typeof " + inputVarName) != 'undefined') {
+		    inputDiv.value = eval (inputVarName);
+		}
 		textboxDiv = inputDiv;
 		labelDiv.appendChild (textDiv);
 		labelDiv.appendChild (inputDiv);

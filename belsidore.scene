@@ -29,8 +29,8 @@ You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate 
 #SECRETLY #IF 0 #CHOOSE I do nothing #FOR wise_choice
 #CHOOSE I walk away #FOR wise_choice
 #ONCE #CHOOSE I have a name, you know. #FOR #( #TITLE Getting acquainted... #ENDTITLE OK then, tell me your name. #INPUT Type your name: #TO name #BACK #)
-#SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #BACK #)
-#CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #ACHIEVE penance #GOTO #PREVIOUS #)
+#SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #ACHIEVE penance #CHOOSE Sorry. #FOR #PREVIOUS #)
+#CHOOSE I brush my hair. #FOR #( You preen. #{ hair = "neat" #} #GOTO #PREVIOUS #)
 #ENDSCENE
 
 #PAGE electrified
@@ -60,4 +60,5 @@ Your name is #$name.
 #BAR Amps #VALUE amps=="Several" ? 3 : 11 #MAX 11 #COLOR purple #ENDBAR
 #SHOW despair #BADGE You are penitent. #IF #ACHIEVED penance #NOW
 #SHOW raining #BADGE You are damp. #IF wind==1 #EVER
+#SHOW frankenstein-creature #BADGE #INCLUDE messy_hair #NOW
 #ENDSCENE

@@ -430,6 +430,7 @@ text
   / "#{" code:statements "#}" tail:text? { return "\" + " + makeDummy(code) + " + \"" + tail; }
   / cond:inline_if_then_else tail:text? { return "\" + " + cond + " + \"" + tail; }
   / "#EVAL" expr:balanced_code "#TEXT" tail:text? { return "\" + " + expr + " + \"" + tail; }
+  / "#INCLUDE" spc s:symbol tail:text? { return "\" + (" + s + "())[0] + \"" + tail; }
   / c:cycle tail:text? { return "\" + (" + c + ") + \"" + tail; }
   / s:scene_scheduling_statement tail:text? { return "\" + " + makeDummy(s) + " + \"" + tail; }
   / c:inc_event_count tail:text? { return "\" + " + makeDummy(c) + " + \"" + tail; }

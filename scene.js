@@ -3,6 +3,7 @@
     var menuDiv = document.getElementById("menu");
     var historyDiv = document.getElementById("history");
     var statsDiv = document.getElementById("stats");
+    var codaDiv = document.getElementById("coda");
     var continueButton = document.getElementById("continue");
     var storyParentDiv = document.getElementById("storyParent");
     var statsParentDiv = document.getElementById("statsParent");
@@ -51,6 +52,13 @@
     if (typeof statusPage === 'undefined') {
 	statusPage = function() {
 	    return ["Your situation is perfectly normal.",
+ 		    []];
+	};
+    }
+
+    if (typeof codaPage === 'undefined') {
+	codaPage = function() {
+	    return ["# THE END",
  		    []];
 	};
     }
@@ -212,8 +220,10 @@
 		recordChoiceText(text_func[0]);
 		viewScene(text_func[1]); };
 	} else {
-	    // no choices, so hide button
+	    // no choices, so hide button and show coda
 	    continueButton.setAttribute ("style", "display: none");
+	    codaDiv.innerHTML = fs.sceneTextToHtml (codaPage()[0]);
+	    codaDiv.setAttribute ("style", "display: block");
 	}
     };
 

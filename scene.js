@@ -4,7 +4,9 @@
     var historyDiv = document.getElementById("history");
     var statsDiv = document.getElementById("stats");
     var codaDiv = document.getElementById("coda");
+    var codaParentDiv = document.getElementById("codaParent");
     var continueButton = document.getElementById("continue");
+    var restartButton = document.getElementById("restart");
     var storyParentDiv = document.getElementById("storyParent");
     var statsParentDiv = document.getElementById("statsParent");
     var historyParentDiv = document.getElementById("historyParent");
@@ -231,7 +233,9 @@
 	    var codaText = codaPage()[0];
 	    recordSceneText (codaText);
 	    codaDiv.innerHTML = fs.sceneTextToHtml (codaText);
-	    codaDiv.setAttribute ("style", "display: block");
+	    codaParent.setAttribute ("style", "display: block");
+	    restartButton.onclick = function() { location.reload(); };
+	    window.onbeforeunload = undefined;
 	}
     };
 

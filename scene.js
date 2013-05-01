@@ -222,7 +222,9 @@
 	} else {
 	    // no choices, so hide button and show coda
 	    continueButton.setAttribute ("style", "display: none");
-	    codaDiv.innerHTML = fs.sceneTextToHtml (codaPage()[0]);
+	    var codaText = codaPage()[0];
+	    recordSceneText (codaText);
+	    codaDiv.innerHTML = fs.sceneTextToHtml (codaText);
 	    codaDiv.setAttribute ("style", "display: block");
 	}
     };

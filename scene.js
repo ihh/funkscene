@@ -12,6 +12,8 @@
     var historyButton = document.getElementById("showHistory");
     var storyButton = document.getElementById("showStory");
 
+    window.onbeforeunload = function() { return "Your position will be lost."; };
+
     var choiceFuncs = undefined;
     var choiceTexts = undefined;
     fs.choiceHistory = undefined;

@@ -1,11 +1,11 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
-all: grammar/fs.js grammar/caz.js README.html img/icon pagedown
+all: grammar/fs.js grammar/cz.js README.html img/icon pagedown
 
 grammar/fs.js: grammar/fs.pegjs
 	$(PEGJS) -e funkscene.parser --track-line-and-column $< $@
 
-grammar/caz.js: grammar/caz.pegjs
+grammar/cz.js: grammar/cz.pegjs
 	$(PEGJS) -e funkscene.cazooParser --track-line-and-column $< $@
 
 README.html: README.md

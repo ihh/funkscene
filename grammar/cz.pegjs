@@ -1,9 +1,42 @@
+{
+    function Zoo() {
+	this.type = {};
+	this.rule = {};
+	this.param = {};
+	this.tool = [];
+	this.goal = [];
+	this.size = [0,0];
+	this.init = [];
+    };
+
+    function defineSymbol(desc,hash,sym,def) {
+	if (sym in hash) {
+	    throw desc + " " + sym + " already defined";
+	}
+	hash[sym] = def;
+    };
+
+    function extend(destination, source) {
+	for (var property in source) {
+            if (source.hasOwnProperty(property)) {
+		destination[property] = source[property];
+            }
+	}
+	return destination;
+    };
+
+    var neumannHood = [[0,-1], [1,0], [0,1], [-1,0]];
+    var bishopHood = [[1,-1], [1,1], [-1,1], [-1,-1]];
+    var mooreHood = mooreHood.concat (bishopHood);
+
+}
+
 start
- = spc* body
+ = spc* z:body { return z; }
 
 body
- = statement spc* body
- / statement
+ = s:statement spc* z:body         { s(z); return z; }
+ / s:statement  { var z = new Zoo(); s(z); return z; }
 
 statement
  = particle_decl
@@ -18,38 +51,44 @@ spc
   = [ \t\n\r]
 
 particle_decl
- = "type" spc+ symbol spc* "{" spc* particle_property_list spc* "}" spc* ";" spc*
+ = "type" spc+ n:symbol spc* "{" spc* p:particle_property_list spc* "}" spc* ";" spc*
+ { return function(z){ defineSymbol("Particle name",z.type,n,p); }; }
 
 symbol
- = [A-Za-z_] [0-9A-Za-z_]*
+ = h:[A-Za-z_] t:[0-9A-Za-z_]* { return h + t.join(""); }
 
 particle_property_list
- = particle_property spc* "," spc* particle_property_list
+ = h:particle_property spc* "," spc* t:particle_property_list { return extend(h,t); }
  / particle_property
 
 particle_property
- = icon_property
- / neighborhood_property
- / isometric_property
- / sync_property
+ = p:icon_property          { return { icon: p }; }
+ / p:neighborhood_property  { return { neighborhood: p }; }
+ / p:isometric_property     { return { isometric: p }; }
+ / p:sync_property          { return { sync: p }; }
 
 icon_property
- = "icon" spc* ":" spc* image_path
+ = "icon" spc* ":" spc* p:image_path { return p; }
 
 image_path
- = [A-Za-z0-9] [A-Za-z0-9/\-_]*
+ = h:[A-Za-z0-9] t:[A-Za-z0-9/\-_]* { return h + t.join(""); }
 
 neighborhood_property
- = "moore" / "neumann" / "bishop"
+ = "moore"   { return mooreHood; }
+ / "neumann" { return neumannHood; }
+ / "bishop"  { return bishopHood; }
 
 isometric_property
- = "isometric" / "directed"
+ = "isometric" {return 1;}
+ / "directed"  {return 0;}
 
 sync_property
- = "sync" / "async"
+ = "sync"  {return 1;}
+ / "async" {return 0;}
 
 rule
  = lhs_source spc+ lhs_target spc* "->" spc* rhs_source spc+ rhs_target spc* rate_clause? spc* ";"
+ { return function(z){}; }
 
 lhs_source
  = symbol dir?
@@ -111,13 +150,15 @@ string_value
 
 param_decl
  = symbol spc* "=" spc* sum_expr spc* ";"
+ { return function(z){}; }
 
 tool_decl
- = "tool" spc* "{" spc* tool_property_list spc* "}" spc* ";" spc*
+ = "tool" spc* "{" spc* p:tool_property_list spc* "}" spc* ";" spc*
+ { return function(z){z.tool.push(p);}; }
 
 tool_property_list
- = tool_property spc* "," spc* tool_property_list
- / tool_property
+ = p:tool_property spc* "," spc* h:tool_property_list { h[p[0]] = p[1]; return h; }
+ / p:tool_property                          { var h={}; h[p[0]] = p[1]; return h; }
 
 tool_property
  = "type" symbol_value
@@ -128,32 +169,41 @@ tool_property
  / "overwrite" symbol_or_wild_value
 
 numeric_value
- = spc* ":" spc* positive_integer
+ = spc* ":" spc* n:positive_integer  { return n; }
 
 symbol_value
- = spc* ":" spc* symbol
+ = spc* ":" spc* s:symbol            { return s; }
 
 symbol_or_wild_value
- = spc* ":" spc* symbol_or_wild
+ = spc* ":" spc* s:symbol_or_wild    { return s; }
 
 positive_integer
- = [1-9] [0-9]*
+ = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
-nonnegative_integer = "0" / positive_integer
+nonnegative_integer
+ = "0" { return 0; }
+ / positive_integer
 
 init_block
- = "init" spc* "{" spc* init_list spc* "}" spc* ";" spc*
+ = "init" spc* "{" spc* l:init_list spc* "}" spc* ";" spc*
+ { return function(z){z.init=z.init.concat(l);}; }
 
 init_list
- = init spc* "," spc* init_list
- / init
+ = i:init spc* "," spc* l:init_list  { return l.push(i); }
+ / i:init { return [i]; }
 
 init
- = "[" spc* nonnegative_integer spc* "," spc* nonnegative_integer spc* "," spc* symbol spc* "]"
+ = "[" spc* x:nonnegative_integer spc* "," spc* y:nonnegative_integer spc* "," spc* s:optionally_directed_symbol spc* "]"
+ { return [x,y,s]; } 
+
+optionally_directed_symbol = s:symbol d:dir?
 
 goal_decl
  = "timeout" spc+ positive_integer symbol_value spc* ";" spc*
+ { return function(z){}; }
  / "extinct" spc+ symbol symbol_value spc* ";" spc*
+ { return function(z){}; }
 
 size_decl
  = "size" spc* "[" spc* positive_integer spc* "," spc* positive_integer spc* "]" spc* ";" spc*
+ { return function(z){}; }

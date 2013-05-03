@@ -68,11 +68,11 @@
 	xhr.send();
 	var raw = xhr.responseText;
 	var processed;
-	try {
+//	try {
 	    processed = cazoo.parser.parse (raw);
-	} catch (e) {
-	    console.log (buildErrorMessage(e));
-	}
+//	} catch (e) {
+//	    console.log (buildErrorMessage(e));
+//	}
 	return processed;
     }
 

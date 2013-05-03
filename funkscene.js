@@ -240,15 +240,29 @@
 	}
     };
 
+    function buildErrorMessage(e) {
+	return e.line !== undefined && e.column !== undefined
+	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
+	    : e.message;
+    }
+
     fs.loadSceneFile = function (url) {
 	var xhr = new XMLHttpRequest();
 	xhr.open ("GET", url, false);
 	xhr.send();
 	var raw = xhr.responseText;
-	//    console.log (raw);
-	var processed = funkscene.parser.parse (raw);
-	//    console.log (processed);
-	eval (processed);
+	var processed;
+	try {
+	    processed = funkscene.parser.parse (raw);
+	} catch (e) {
+	    console.log (buildErrorMessage(e));
+	}
+	try {
+	    eval (processed);
+	} catch (e) {
+	    console.log (processed);
+	    console.log (e.message);
+	}
     }
 
     fs.joinScenes = function (scenes) {

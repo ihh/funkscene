@@ -59,7 +59,7 @@ body {
     font-family: Verdana, Geneva, sans-serif;
     font-size:30px;
     font-weight:bold;
-    color: #f0f0f0; /* Match body background color */ 
+    color: #f0f0f0; /* Same as body background color */ 
     background-color: #606060; /* Darker than body background color */ 
     border: none;
     border-radius: 1em;
@@ -67,7 +67,7 @@ body {
 }
 
 .continue:hover {
-    color: #e0e0e0;  /* Match menu option hover color, darker than usual foreground color */
+    color: #e0e0e0;  /* Same as menu option hover color, darker than usual foreground color */
     background-color: #505050; /* Darker than usual background color */ 
 }
 

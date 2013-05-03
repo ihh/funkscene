@@ -231,3 +231,33 @@ body {
     text-align: left;
     width: 100%;
 }
+
+.board {
+}
+
+.cell {
+    background: #000;
+    float: left;
+}
+
+.cell:nth-child(3n){
+    background: #222;
+}
+
+.toolbar {
+    height: 3em;
+}
+
+.tool {
+    padding: .5em;
+    float: left;
+}
+
+.toolIcon {
+    width: 3em;
+    height: 3em;
+}
+
+.tool:hover {
+    background-color: #e0e0e0;
+}

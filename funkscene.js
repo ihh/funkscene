@@ -14,7 +14,8 @@
     var historyButton = document.getElementById("showHistory");
     var storyButton = document.getElementById("showStory");
 
-    window.onbeforeunload = function() { return "Your position will be lost."; };
+    // Uncomment to guard against accidental navigation away from page:
+    //    window.onbeforeunload = function() { return "Your position will be lost."; };
 
     var choiceFuncs = undefined;
     var choiceTexts = undefined;

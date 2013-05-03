@@ -6,7 +6,7 @@ grammar/fs.js: grammar/fs.pegjs
 	$(PEGJS) -e funkscene.parser --track-line-and-column $< $@
 
 grammar/cz.js: grammar/cz.pegjs
-	$(PEGJS) -e funkscene.cazooParser --track-line-and-column $< $@
+	$(PEGJS) -e cazoo.parser --track-line-and-column $< $@
 
 README.html: README.md
 	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@

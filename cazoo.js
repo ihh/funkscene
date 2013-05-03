@@ -56,5 +56,25 @@
 	}
     };
 
+    function buildErrorMessage(e) {
+	return e.line !== undefined && e.column !== undefined
+	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
+	    : e.message;
+    }
+
+    caz.loadZooFile = function (url) {
+	var xhr = new XMLHttpRequest();
+	xhr.open ("GET", url, false);
+	xhr.send();
+	var raw = xhr.responseText;
+	var processed;
+	try {
+	    processed = cazoo.parser.parse (raw);
+	} catch (e) {
+	    console.log (buildErrorMessage(e));
+	}
+	return processed;
+    }
+
 })(cazoo = {});
 

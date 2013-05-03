@@ -1,11 +1,12 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
-all: grammar.js README.html img/icon pagedown
+all: grammar/fs.js grammar/caz.js README.html img/icon pagedown
 
-grammar.js: grammar.pegjs
-# Uncomment for node version, vs browser version
-#	$(PEGJS) $< $@
+grammar/fs.js: grammar/fs.pegjs
 	$(PEGJS) -e funkscene.parser --track-line-and-column $< $@
+
+grammar/caz.js: grammar/caz.pegjs
+	$(PEGJS) -e funkscene.cazooParser --track-line-and-column $< $@
 
 README.html: README.md
 	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@
@@ -25,3 +26,7 @@ img/icon:
 # Download Markdown parser
 pagedown:
 	hg clone https://code.google.com/p/pagedown/
+
+.SECONDARY:
+
+.SUFFIXES:

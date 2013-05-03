@@ -2,7 +2,7 @@
     var boardDiv = document.getElementById("board");
     var toolbarDiv = document.getElementById("toolbar");
 
-    var xSize = 32, ySize = 32;
+    var xSize = 128, ySize = 128;
     var tools = ["flaming-trident", "shark-jaws", "galleon"];
     var toolDivs = [];
     var currentTool = 0;
@@ -54,7 +54,6 @@
 	    toolbarDiv.appendChild (toolDiv);
 	    toolDivs.push (toolDiv);
 	}
-	console.log("created toolDivs");
     };
 
 })(cazoo = {});

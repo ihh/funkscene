@@ -20,13 +20,18 @@
     caz.bishopHood = [1, 3, 5, 7];
     caz.mooreHood = [0, 1, 2, 3, 4, 5, 6, 7];
 
+    caz.evalDirExprIntVal = function (fwdDir, dirExpr) {
+	if (dirExpr == "*" || dirExpr == "")
+	    return undefined;
+	return (fwdDir + caz.relativeToInt[dirExpr]) % 8;
+    }
+
     caz.matchDirExpr = function (fwdDir, dirExpr, dirToMatch) {
 	if (dirExpr == "*" || dirExpr == "")
 	    return true;
 	if (dirExpr in caz.compassToInt && dirToMatch == dirExpr)
 	    return true;
-	var dirExprIntVal = (caz.compassToInt[fwdDir] + caz.relativeToInt[dirExpr]) % 8;
-	return (dirExprIntVal == caz.compassToInt[dirToMatch]);
+	return caz.evalDirExprIntVal(fwdDir,dirExpr) == caz.compassToInt[dirToMatch];
     };
 
     caz.extend = function (destination, source) {  // source overwrites destination
@@ -40,18 +45,35 @@
 	return destination;
     };
 
-    function buildErrorMessage(e) {
+    caz.defineSymbol = function(desc,hash,sym,def) {
+	if (sym in hash) {
+	    throw desc + " " + sym + " already defined";
+	}
+	hash[sym] = def;
+    };
+
+    caz.buildErrorMessage = function(e) {
 	return e.line !== undefined && e.column !== undefined
 	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
 	    : e.message;
-    }
+    };
+
+    caz.selectRandomElement = function(arr) {
+	return arr[Math.floor (Math.random() * arr.length)];
+    };
+
+    caz.randomWaitTime = function() { return -Math.log (Math.random()); }
 
     // Cell
-    caz.Cell = function (zoo, div) {
-	this.zoo = zoo;
+    caz.Cell = function (game, div, x, y) {
+	this.game = game;
+	this.zoo = game.zoo;
 	this.state = zoo.empty;
 	this.dir = 0;
 	this.div = div;
+	this.x = x;
+	this.y = y;
+	this.timer = undefined;
     };
 
     caz.Cell.prototype.icon = function() {
@@ -61,6 +83,7 @@
     caz.Cell.prototype.setState = function(newState,newDir) {
 	var oldState = this.state;
 	var oldDir = this.dir;
+
 	this.state = newState;
 	this.dir = newDir;
 
@@ -68,8 +91,21 @@
 	    var html = this.zoo.makeIconHtml(newState,newDir);
 	    this.div.innerHTML = this.zoo.makeIconHtml(newState,newDir);
 	}
+
+	if (this.timer) {
+	    window.clearTimeout (this.timer);
+	    this.timer = undefined;
+	}
+	var info = zoo.particle[newState];
+	if (info.rate) {
+	    var callback = (function(cell){return function(){cell.update();}}) (this);
+	    var delayInSecs = (info.sync ? 1 : caz.randomWaitTime()) / info.rate;  // exponentially distributed wait if async
+	    var delayInMillisecs = Math.floor (delayInSecs * 1000);
+	    this.timer = window.setTimeout (callback, delayInMillisecs);
+	}
     };
 
+    caz.Cell.prototype.update = function() { this.game.update (this.x, this.y); }
 
     // Game
     caz.Game = function (zoo) {
@@ -82,7 +118,7 @@
 	if (x < 0 || x >= this.zoo.size[0] || y < 0 || y >= this.zoo.size[1]) {
 	    return this.dummyCell;
 	}
-	return this.cell[x][y];
+	return this.cell[y][x];
     };
 
     caz.Game.prototype.getState = function(x,y) {
@@ -102,6 +138,45 @@
 
     caz.Game.prototype.setState = function(x,y,state,dir) {
 	this.getCell(x,y).setState (state, dir);
+    };
+
+    caz.Game.prototype.update = function(x,y) {
+	var srcCell = this.getCell (x, y);
+	var srcState = srcCell.state;
+	var srcDir = srcCell.dir;
+	var info = this.zoo.particle[srcState];
+	var fwdDir = info.isometric ? caz.selectRandomElement(info.neighborhood) : srcDir;
+	var targetCell = this.getNeighborCell (x, y, fwdDir);
+	var targetState = targetCell.state;
+	var targetDir = targetCell.dir;
+	var ruleSelector = Math.random() * info.rate;
+	var srcRules = this.zoo.rule[srcState];
+	var targetRules = targetState in srcRules ? srcRules[targetState] : undefined;
+	var wildRules = "*" in srcRules ? srcRules["*"] : undefined;
+	function findMatchingRule (rules) {
+	    if (rules)
+		for (var i = 0; i < rules.length; ++i) {
+		    var rule = rules[i];
+		    if (caz.matchDirExpr (fwdDir, rule[0][1], srcDir)
+			&& caz.matchDirExpr (fwdDir, rule[1][1], targetDir)) {
+			if ((ruleSelector -= rule[4]) <= 0) {
+			    return rule;
+			}
+		    }
+		}
+	    return undefined;
+	};
+	var rule = findMatchingRule(targetRules) || findMatchingRule(wildRules);
+	if (rule) {
+	    var newSrcStateExpr = rule[2][0];
+	    var newSrcDirExpr = rule[2][1];
+	    var newSrcState = zoo.evalStateExpr (newSrcStateExpr, newSrcDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
+	    var newTargetStateExpr = rule[3][0];
+	    var newTargetDirExpr = rule[3][1];
+	    var newTargetState = zoo.evalStateExpr (newTargetStateExpr, newTargetDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
+	    srcCell.setState (newSrcState[0], newSrcState[1]);
+	    targetCell.setState (newTargetState[0], newTargetState[1]);
+	}
     };
 
 
@@ -130,33 +205,55 @@
 
     caz.Zoo.prototype.makeIconHtml = function(type,dir) {
 	var typeInfo = this.particle[type];
+	var icon = typeInfo.icon;
+	if (typeof(icon) == "undefined") return "";
 	var style = "";
-	if (!typeInfo.isometric) {
-	    var angle = (45 * caz.compassToInt[dir]) + "deg";
+	if (typeInfo.rotates) {
+	    var angle = (45 * dir) + "deg";
 	    style = " style=\" -webkit-transform: rotate(" + angle + "); -moz-transform: rotate(" + angle + ")\"";
 	}
-	return "<img src=\"" + this.makeIconPath(typeInfo.icon) + "\"" + style + "/>";
+	return "<img src=\"" + this.makeIconPath(icon) + "\"" + style + "/>";
     };
 
     caz.Zoo.prototype.initRules = function(s,t) {
 	if (typeof (this.rule[s]) == 'undefined')
-	    this.rule[s] = {};
+	    this.rule[s] = { "*": [] };
 	if (typeof(t) != 'undefined' && typeof (this.rule[s][t]) == 'undefined')
 	    this.rule[s][t] = [];
     };
 
-    caz.defineSymbol = function(desc,hash,sym,def) {
-	if (sym in hash) {
-	    throw desc + " " + sym + " already defined";
-	}
-	hash[sym] = def;
-    };
-
-    caz.defaultParticleProperties = {isometric:0, sync:0, neighborhood:caz.mooreHood};
+    caz.defaultParticleProperties = { isometric: 0,
+				      rotates: 0,
+				      sync: 0,
+				      neighborhood: caz.mooreHood,
+				      rate: 0 };
     caz.Zoo.prototype.defineType = function(name,props) {
 	var defaults = caz.extend ({}, caz.defaultParticleProperties);
 	caz.defineSymbol ("Particle name", this.particle, name, caz.extend (defaults, props));
 	this.initRules (name);
+    };
+
+    caz.Zoo.prototype.evalDirExprIntVal = function (fwdDir, dirExpr, state, defaultDir) {
+	if (!dirExpr)
+	    return defaultDir;
+	if (dirExpr == "*") {
+	    var hood = this.particle[state].neighborhood;
+	    return caz.selectRandomElement (hood);
+	}
+	return caz.evalDirExprIntVal (fwdDir, dirExpr);
+    };
+
+    caz.Zoo.prototype.evalStateExpr = function (stateExpr, dirExpr, fwdDir, oldSrcState, oldSrcDir, oldTargetState, oldTargetDir) {
+	var state = stateExpr, defaultDir;
+	if (stateExpr == "$s") {
+	    state = oldSrcState;
+	    defaultDir = oldSrcDir;
+	} else if (stateExpr == "$t") {
+	    state = oldTargetState;
+	    defaultDir = oldTargetDir;
+	}
+	var dir = this.evalDirExprIntVal (fwdDir, dirExpr, state, defaultDir);
+	return [state, dir];
     };
 
     caz.Zoo.prototype.initialize = function() {
@@ -166,6 +263,10 @@
 	for (var t = 0; t < types.length; ++t) {
 	    var typeName = types[t];
 	    var typeInfo = this.particle[typeName];
+
+	    if (!typeName in this.rule)
+		this.rule[typeName] = {};
+
 	    var rules = this.rule[typeName];
 	    var targets = Object.keys (rules);
 
@@ -217,8 +318,8 @@
 	var game = new caz.Game (this);
 	this.game = game;
 
-	game.dummyCell = new caz.Cell (this, undefined);  // for off-board access
-	game.dummyCell.setState = function() { };
+	game.dummyCell = new caz.Cell (game, undefined, undefined, undefined);  // for off-board access
+	game.dummyCell.setState = function() { };  // nullify default write method
 
 	// set up board
 	var xSize = this.size[0], ySize = this.size[1];
@@ -239,7 +340,7 @@
 		    cellDiv.onmousedown = onMouseDown;
 		    cellDiv.onmouseup = onMouseUp;
 		    boardDiv.appendChild (cellDiv);
-		    row.push (new caz.Cell (zoo, cellDiv));
+		    row.push (new caz.Cell (game, cellDiv, x, y));
 		}) (x, y, this);
 	    }
 	}
@@ -247,7 +348,8 @@
 	// do inits
 	for (var i = 0; i < zoo.init.length; ++i) {
 	    var xystate = zoo.init[i];
-	    var x = xystate[0], y = xystate[1], state = xystate[2][0], dir = xystate[2][1];
+	    var x = xystate[0], y = xystate[1], state = xystate[2][0], dirString = xystate[2][1];
+	    var dir = dirString in caz.compassToInt ? caz.compassToInt[dirString] : zoo.randomDir(state);
 	    game.setState (x, y, state, dir);
 	}
 
@@ -292,7 +394,7 @@
 //	try {
 	    processed = Cazoo.parser.parse (raw);
 //	} catch (e) {
-//	    console.log (buildErrorMessage(e));
+//	    console.log (Cazoo.buildErrorMessage(e));
 //	}
 	return processed;
     }

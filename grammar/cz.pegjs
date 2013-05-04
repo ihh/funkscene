@@ -36,6 +36,7 @@ particle_property
  = p:icon_property          { return { icon: p }; }
  / p:neighborhood_property  { return { neighborhood: p }; }
  / p:isometric_property     { return { isometric: p }; }
+ / p:rotates_property       { return { rotates: p }; }
  / p:sync_property          { return { sync: p }; }
 
 icon_property
@@ -52,6 +53,10 @@ neighborhood_property
 isometric_property
  = "isometric" {return 1;}
  / "directed"  {return 0;}
+
+rotates_property
+ = "rotates" {return 1;}
+ / "upright" {return 0;}
 
 sync_property
  = "sync"  {return 1;}
@@ -81,12 +86,12 @@ symbol_or_wild = symbol_or_null / "*"
 
 symbol_or_lhs_macro = symbol_or_null / lhs_macro
 
-lhs_macro = "$" ("s" / "t")
-rhs_macro = "$" ("S" / "T")
+lhs_macro = "$s" / "$t"
 
 dir
  = "." d:compass_dir  {return d;}
  / "." d:relative_dir {return d;}
+ / "." d:"*"          {return d;}
 
 compass_dir = "nw" / "ne" / "se" / "sw" / "n" / "e" / "s" / "w"
 
@@ -166,7 +171,7 @@ init
  = "[" spc* x:nonnegative_integer spc* "," spc* y:nonnegative_integer spc* "," spc* s:optionally_directed_symbol spc* "]"
  { return [x,y,s]; } 
 
-optionally_directed_symbol = s:symbol d:dir?
+optionally_directed_symbol = symbol dir?
 
 goal_decl
  = "timeout" spc+ positive_integer symbol_value spc* ";" spc*

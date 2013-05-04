@@ -2,7 +2,6 @@
     var boardDiv = document.getElementById("board");
     var toolbarDiv = document.getElementById("toolbar");
 
-    var tools = ["flaming-trident", "shark-jaws", "galleon"];
     var toolDivs = [];
     var currentTool = 0;
 
@@ -42,6 +41,9 @@
 	this.init = [];
     };
 
+    var iconPrefix = "img/icon/";
+    var iconSuffix = ".svg";
+
     caz.Zoo.prototype.initialize = function() {
 	var xSize = this.size[0], ySize = this.size[1];
 	for (var x = 0; x < xSize; ++x) {
@@ -61,7 +63,7 @@
 	    }
 	}
 
-	for (var i = 0; i < tools.length; ++i) {
+	for (var i = 0; i < this.tool.length; ++i) {
 	    var toolDiv = document.createElement("DIV");
 	    var selectTool = (function (currentToolIndex, toolDiv) {
 		return function() {
@@ -78,7 +80,12 @@
 	    toolDiv.setAttribute ("class", i == 0 ? "tool selected" : "tool unselected");
 	    toolDiv.setAttribute ("id", "tool" + i);
 	    var toolImg = document.createElement("IMG");
-	    toolImg.src = "img/icon/" + tools[i] + ".svg";
+	    var toolIcon = this.tool[i].icon;
+	    var toolType = this.tool[i].type;
+	    if (typeof toolIcon == 'undefined') {
+		toolIcon = this.type[toolType].icon;
+	    }
+	    toolImg.src = iconPrefix + toolIcon + iconSuffix;
 	    toolImg.setAttribute ("class", "toolIcon");
 	    toolDiv.appendChild (toolImg);
 	    toolbarDiv.appendChild (toolDiv);

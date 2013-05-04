@@ -457,6 +457,16 @@ This is simply the implicit form of the following continuation
 	#SCENE
 	...
 
+If you want to force a continuation (i.e. make the player hit Continue), use `#BREAK`, like so:
+
+	...
+	You fall asleep in a delirious stupor.
+	#BREAK
+	The next day, there is a strange itching around your thighs,
+	accompanied by an ominous rash.
+	...
+
+
 
 One-time choices
 ----------------

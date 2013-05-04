@@ -1,14 +1,4 @@
 {
-    function Zoo() {
-	this.type = {};
-	this.rule = {};
-	this.param = {};
-	this.tool = [];
-	this.goal = [];
-	this.size = [0,0];
-	this.init = [];
-    };
-
     function defineSymbol(desc,hash,sym,def) {
 	if (sym in hash) {
 	    throw desc + " " + sym + " already defined";
@@ -24,19 +14,15 @@
 	}
 	return destination;
     };
-
-    var neumannHood = [[0,-1], [1,0], [0,1], [-1,0]];
-    var bishopHood = [[1,-1], [1,1], [-1,1], [-1,-1]];
-    var mooreHood = mooreHood.concat (bishopHood);
-
 }
 
 start
  = spc* z:body { return z; }
 
 body
- = s:statement spc* z:body         { s(z); return z; }
- / s:statement  { var z = new Zoo(); s(z); return z; }
+ = s:statement spc* z:body { s(z); return z; }
+ / s:statement
+  { var z = new Cazoo.Zoo(); s(z); return z; }
 
 statement
  = particle_decl
@@ -74,9 +60,9 @@ image_path
  = h:[A-Za-z0-9] t:[A-Za-z0-9/\-_]* { return h + t.join(""); }
 
 neighborhood_property
- = "moore"   { return mooreHood; }
- / "neumann" { return neumannHood; }
- / "bishop"  { return bishopHood; }
+ = "moore"   { return Cazoo.mooreHood; }
+ / "neumann" { return Cazoo.neumannHood; }
+ / "bishop"  { return Cazoo.bishopHood; }
 
 isometric_property
  = "isometric" {return 1;}
@@ -205,5 +191,5 @@ goal_decl
  { return function(z){}; }
 
 size_decl
- = "size" spc* "[" spc* positive_integer spc* "," spc* positive_integer spc* "]" spc* ";" spc*
- { return function(z){}; }
+ = "size" spc* "[" spc* x:positive_integer spc* "," spc* y:positive_integer spc* "]" spc* ";" spc*
+ { return function(z){z.size=[x,y];}; }

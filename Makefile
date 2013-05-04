@@ -3,10 +3,10 @@ PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 all: grammar/fs.js grammar/cz.js README.html img/icon pagedown
 
 grammar/fs.js: grammar/fs.pegjs
-	$(PEGJS) -e funkscene.parser --track-line-and-column $< $@
+	$(PEGJS) -e FunkScene.parser --track-line-and-column $< $@
 
 grammar/cz.js: grammar/cz.pegjs
-	$(PEGJS) -e cazoo.parser --track-line-and-column $< $@
+	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
 
 README.html: README.md
 	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@

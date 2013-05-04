@@ -253,7 +253,7 @@
 	var raw = xhr.responseText;
 	var processed;
 	try {
-	    processed = funkscene.parser.parse (raw);
+	    processed = FunkScene.parser.parse (raw);
 	} catch (e) {
 	    console.log (buildErrorMessage(e));
 	}
@@ -322,4 +322,4 @@
     };
 
 
-})(funkscene = {});
+})(FunkScene = {});

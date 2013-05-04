@@ -2,7 +2,6 @@
     var boardDiv = document.getElementById("board");
     var toolbarDiv = document.getElementById("toolbar");
 
-    var xSize = 128, ySize = 128;
     var tools = ["flaming-trident", "shark-jaws", "galleon"];
     var toolDivs = [];
     var currentTool = 0;
@@ -13,7 +12,38 @@
     var onMouseDown = function() { ++mouseDown; }
     var onMouseUp = function() { mouseDown = 0; }
 
-    caz.initialize = function() {
+    function buildErrorMessage(e) {
+	return e.line !== undefined && e.column !== undefined
+	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
+	    : e.message;
+    }
+
+    caz.newFromUrl = function (url) {
+	var xhr = new XMLHttpRequest();
+	xhr.open ("GET", url, false);
+	xhr.send();
+	var raw = xhr.responseText;
+	var processed;
+//	try {
+	    processed = Cazoo.parser.parse (raw);
+//	} catch (e) {
+//	    console.log (buildErrorMessage(e));
+//	}
+	return processed;
+    }
+
+    caz.Zoo = function() {
+	this.type = {};
+	this.rule = {};
+	this.param = {};
+	this.tool = [];
+	this.goal = [];
+	this.size = [0,0];
+	this.init = [];
+    };
+
+    caz.Zoo.prototype.initialize = function() {
+	var xSize = this.size[0], ySize = this.size[1];
 	for (var x = 0; x < xSize; ++x) {
 	    for (var y = 0; y < ySize; ++y) {
 		(function (x, y) {
@@ -56,25 +86,9 @@
 	}
     };
 
-    function buildErrorMessage(e) {
-	return e.line !== undefined && e.column !== undefined
-	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
-	    : e.message;
-    }
+    caz.neumannHood = [[0,-1], [1,0], [0,1], [-1,0]];
+    caz.bishopHood = [[1,-1], [1,1], [-1,1], [-1,-1]];
+    caz.mooreHood = caz.neumannHood.concat (caz.bishopHood);
 
-    caz.loadZooFile = function (url) {
-	var xhr = new XMLHttpRequest();
-	xhr.open ("GET", url, false);
-	xhr.send();
-	var raw = xhr.responseText;
-	var processed;
-//	try {
-	    processed = cazoo.parser.parse (raw);
-//	} catch (e) {
-//	    console.log (buildErrorMessage(e));
-//	}
-	return processed;
-    }
-
-})(cazoo = {});
+})(Cazoo = {});
 

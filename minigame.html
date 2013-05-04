@@ -107,7 +107,7 @@
 
 <!-- load the Belsidore scene file and parse it -->
 <script type="text/javascript">
-  funkscene.loadSceneFile ("belsidore.scene");
+  FunkScene.loadSceneFile ("belsidore.scene");
 </script>
 
 
@@ -115,8 +115,8 @@
 <script type="text/javascript" src="cazoo.js"></script>
 <script type="text/javascript" src="grammar/cz.js"></script>
 <script type="text/javascript">
-  var zoo = cazoo.loadZooFile ("grammar/brownian.cazoo");
-  cazoo.initialize();
+  var zoo = Cazoo.newFromUrl ("grammar/brownian.cazoo");
+  zoo.initialize();
 </script>
 
 </body>

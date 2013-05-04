@@ -28,7 +28,7 @@
   }
 
   function joinScenes(scenes) {
-      return "(function(){return funkscene.joinScenes([" + scenes.join(",") + "]);})";	
+      return "(function(){return FunkScene.joinScenes([" + scenes.join(",") + "]);})";	
   }
 
   function makeGoto (target) {
@@ -44,7 +44,7 @@
   }
 
   function gosubWithContinuation(subroutine,continuation) {
-      return "(function(){funkscene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
+      return "(function(){FunkScene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
   }
 
   function makeAssignment(name,scene) {
@@ -68,7 +68,7 @@
   }
 
   function eventCounter(tag) {
-      return "funkscene.namedEventCount[\"" + tag + "\"]";
+      return "FunkScene.namedEventCount[\"" + tag + "\"]";
   }
 
   function valueOrZero(v) {
@@ -99,7 +99,7 @@
               label += " + \"<br><small>(\" + level + \"/\" + max + \"" + ")</small>\"";
   	  }
       }
-      return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + funkscene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
+      return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + FunkScene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
   }
 
   function makeTable(classname,rows) {
@@ -206,9 +206,9 @@ goto_clause
  / gosub:gosub_clause
    { return gosubWithContinuation(gosub,"defaultContinuation"); }
  / "#CONTINUE" spc
-   { return "funkscene.continuationScene()"; }
+   { return "FunkScene.continuationScene()"; }
  / "#BACK" spc
-   { return "funkscene.previousScene"; }
+   { return "FunkScene.previousScene"; }
 
 gosub_clause
  = "#GOSUB" spc subr:symbol_or_scene spc { return subr; }
@@ -218,8 +218,8 @@ goto_clause_or_continuation
  / scene_body
 
 symbol_or_scene
-  = "#CURRENT" { return "funkscene.currentScene"; }
-  / "#PREVIOUS" { return "funkscene.previousScene"; }
+  = "#CURRENT" { return "FunkScene.currentScene"; }
+  / "#PREVIOUS" { return "FunkScene.previousScene"; }
   / '(' expr:balanced_code ')' { return expr; }
   / symbol
   / scene
@@ -361,9 +361,9 @@ end_cycle
   / "#STOP" { return 0; }
 
 scene_scheduling_statement
-  = "#STACK" spc s:symbol_or_scene spc { return "funkscene.sceneDeque.push(" + s + ");"; }
-  / "#QUEUE" spc s:symbol_or_scene spc { return "funkscene.sceneDeque.unshift(" + s + ");"; }
-  / "#FLUSH" spc                       { return "funkscene.sceneDeque = [];"; }
+  = "#STACK" spc s:symbol_or_scene spc { return "FunkScene.sceneDeque.push(" + s + ");"; }
+  / "#QUEUE" spc s:symbol_or_scene spc { return "FunkScene.sceneDeque.unshift(" + s + ");"; }
+  / "#FLUSH" spc                       { return "FunkScene.sceneDeque = [];"; }
 
 spc
   = single_spc+
@@ -458,7 +458,7 @@ scene_text
   / "#TITLE" spc t:nonempty_quoted_text "#ENDTITLE" tail:scene_text?
      { return "document.title = " + t + ";" + tail; }
   / "#BUTTON" spc b:nonempty_quoted_text "#ENDBUTTON" tail:scene_text?
-     { return "funkscene.setContinueText(" + b + ");" + tail; }
+     { return "FunkScene.setContinueText(" + b + ");" + tail; }
   / "\"" tail:scene_text? { return accumulateQuoted ("\\\"", tail); }
   / "\n" tail:scene_text? { return accumulateQuoted ("\\n", tail); }
   / head:text_chars tail:scene_text? { return accumulateQuoted (head, tail); }

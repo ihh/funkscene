@@ -6,7 +6,7 @@
 	hash[sym] = def;
     };
 
-    function extend(destination, source) {
+    function extend(destination, source) {  // source overwrites destination
 	for (var property in source) {
             if (source.hasOwnProperty(property)) {
 		destination[property] = source[property];
@@ -44,8 +44,8 @@ symbol
  = h:[A-Za-z_] t:[0-9A-Za-z_]* { return h + t.join(""); }
 
 particle_property_list
- = h:particle_property spc* "," spc* t:particle_property_list { return extend(h,t); }
- / particle_property
+ = h:particle_property spc* "," spc* t:particle_property_list { return extend(t,h); }
+ / p:particle_property  { return extend ({isometric:0,sync:0,neighborhood:Cazoo.mooreHood}, p); }
 
 particle_property
  = p:icon_property          { return { icon: p }; }
@@ -98,8 +98,8 @@ lhs_macro = "$" ("s" / "t")
 rhs_macro = "$" ("S" / "T")
 
 dir
- = "." compass_dir
- / "." relative_dir
+ = "." d:compass_dir  {return Cazoo.compassToInt[d];}
+ / "." d:relative_dir {return Cazoo.angleToInt[d];}
 
 compass_dir = "nw" / "ne" / "se" / "sw" / "n" / "e" / "s" / "w"
 

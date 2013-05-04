@@ -20,6 +20,9 @@ FunkScene borrows visual bits and pieces from several open source projects:
 * [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
 * [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
 
+An earlier prototype, [Schooz](https://github.com/ihh/schooz), developed the functional programming framework
+while also exploring some alternative UI ideas (such as dropdown menus) that were eventually omitted from this framework.
+
 Scene functions
 ---------------
 

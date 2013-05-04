@@ -1,19 +1,4 @@
 {
-    function defineSymbol(desc,hash,sym,def) {
-	if (sym in hash) {
-	    throw desc + " " + sym + " already defined";
-	}
-	hash[sym] = def;
-    };
-
-    function extend(destination, source) {  // source overwrites destination
-	for (var property in source) {
-            if (source.hasOwnProperty(property)) {
-		destination[property] = source[property];
-            }
-	}
-	return destination;
-    };
 }
 
 start
@@ -38,14 +23,14 @@ spc
 
 particle_decl
  = "type" spc+ n:symbol spc* "{" spc* p:particle_property_list spc* "}" spc* ";" spc*
- { return function(z){ defineSymbol("Particle name",z.type,n,p); }; }
+ { return function(z){z.defineType(n,p);} }
 
 symbol
  = h:[A-Za-z_] t:[0-9A-Za-z_]* { return h + t.join(""); }
 
 particle_property_list
- = h:particle_property spc* "," spc* t:particle_property_list { return extend(t,h); }
- / p:particle_property  { return extend ({isometric:0,sync:0,neighborhood:Cazoo.mooreHood}, p); }
+ = h:particle_property spc* "," spc* t:particle_property_list { return Cazoo.extend(t,h); }
+ / particle_property
 
 particle_property
  = p:icon_property          { return { icon: p }; }
@@ -73,8 +58,10 @@ sync_property
  / "async" {return 0;}
 
 rule
- = lhs_source spc+ lhs_target spc* "->" spc* rhs_source spc+ rhs_target spc* rate_clause? spc* ";"
- { return function(z){}; }
+ = a:lhs_source spc+ b:lhs_target spc* "->" spc* c:rhs_source spc+ d:rhs_target spc* r:optional_rate_clause spc* ";"
+ { return function(z) {
+     z.initRules (a[0], b[0]);
+     z.rule[a[0]][b[0]].push ([a,b,c,d,r]); }; }
 
 lhs_source
  = symbol dir?
@@ -98,45 +85,42 @@ lhs_macro = "$" ("s" / "t")
 rhs_macro = "$" ("S" / "T")
 
 dir
- = "." d:compass_dir  {return Cazoo.compassToInt[d];}
- / "." d:relative_dir {return Cazoo.angleToInt[d];}
+ = "." d:compass_dir  {return d;}
+ / "." d:relative_dir {return d;}
 
 compass_dir = "nw" / "ne" / "se" / "sw" / "n" / "e" / "s" / "w"
 
 relative_dir = "fl" / "fr" / "bl" / "br" / "f" / "b" / "l" / "r"
 
-rate_clause
- = ":" spc* sum_expr
+optional_rate_clause
+ = ":" spc* r:sum_expr  { return r[0]; }
+ /                      { return 1; }
 
 sum_expr
-  = product_expr spc* "+" spc* sum_expr
+  = l:product_expr spc* "+" spc* r:sum_expr      { return [function(z){return l[0](z) + r[0](z);}, Cazoo.extend(l[1],r[1])]; }
   / product_expr
 
 product_expr
-  = primary_expr spc* ("*" / "/") spc* product_expr
+  = l:primary_expr spc* "*" spc* r:product_expr  { return [function(z){return l[0](z) * r[0](z);}, Cazoo.extend(l[1],r[1])]; }
+  / l:primary_expr spc* "/" spc* r:product_expr  { return [function(z){return l[0](z) / r[0](z);}, Cazoo.extend(l[1],r[1])]; }
   / primary_expr
 
 primary_expr
-  = nonnegative_real
-  / symbol
-  / "(" spc* sum_expr spc* ")"
+  = n:nonnegative_real  { return [function(z){return n;},{}]; }
+  / x:symbol            { var h={}; h[x]=1; return [function(z){return z.param[x](z);},h]; }
+  / "(" spc* e:sum_expr spc* ")"  { return e; }
 
 rate_expr
  = nonnegative_real
 
 nonnegative_real
- = [0-9]+
- / [0-9]* "." [0-9]+
-
-caption
- = "caption" string_value
-
-string_value
- = spc* ":" spc* "[" [^\]] "]"
+ = n:[0-9]+               { return parseFloat (n.join("")); }
+ / h:[0-9]* "." t:[0-9]+  { return parseFloat (h + "." + t.join("")); }
 
 param_decl
- = symbol spc* "=" spc* sum_expr spc* ";"
- { return function(z){}; }
+ = l:symbol spc* "=" spc* r:sum_expr spc* ";"
+ { if (r[1][l]) throw "Definition of parameter " + l + " is circular: it depends on " + l + " itself";
+   return function(z){ Cazoo.defineSymbol ("Parameter", z.param, l, r[0]); }; }
 
 tool_decl
  = "tool" spc* "{" spc* p:tool_property_list spc* "}" spc* ";" spc*
@@ -147,7 +131,7 @@ tool_property_list
  / p:tool_property                          { var h={}; h[p[0]] = p[1]; return h; }
 
 tool_property
- = "type" symbol_value
+ = "type" v:symbol_value  { return ["particle", v]; }  // hack to avoid using "type" as a member field
  / "intensity" numeric_value
  / "radius" numeric_value
  / "reserve" numeric_value

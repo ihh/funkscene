@@ -40,10 +40,10 @@
 	this.size = [0,0];
 	this.init = [];
     };
+    caz.Zoo.prototype.empty = "_";
 
     var iconPrefix = "img/icon/";
     var iconSuffix = ".svg";
-
     caz.Zoo.prototype.initialize = function() {
 	var xSize = this.size[0], ySize = this.size[1];
 	for (var x = 0; x < xSize; ++x) {
@@ -91,6 +91,11 @@
 	    toolbarDiv.appendChild (toolDiv);
 	    toolDivs.push (toolDiv);
 	}
+    };
+
+    caz.Cell = function (zoo, div) {
+	this.state = zoo.empty;
+	this.div = div;
     };
 
     caz.neumannHood = [[0,-1], [1,0], [0,1], [-1,0]];

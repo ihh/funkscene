@@ -10,6 +10,16 @@ passages of text _("scenes")_ with choices that lead to other scenes.
 
 This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.
 
+Acknowledgements
+----------------
+
+FunkScene borrows visual bits and pieces from several open source projects:
+
+* [Dan Fabulich's CSS](http://www.choiceofgames.com/make-your-own-games/choicescript-intro/) at choiceofgames.com
+ * ChoiceScript was a major aesthetic influence in general
+* [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
+* [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
+
 Scene functions
 ---------------
 

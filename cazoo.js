@@ -584,14 +584,14 @@
     };
 
     caz.newZooFromString = function (text) {
-	var processed;
+	var zoo;
 	try {
-	    processed = Cazoo.parser.parse (text);
+	    zoo = Cazoo.parser.parse (text);
 	} catch (e) {
 	    console.log (Cazoo.buildErrorMessage(e,text));
 	}
-	return processed;
-    }
+	return zoo;
+    };
 
 })(Cazoo = {});
 

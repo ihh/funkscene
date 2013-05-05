@@ -131,7 +131,14 @@
 	historyDiv.innerHTML += fs.sceneTextToHistoryHtml(s);
     };
 
-    function viewScene(f) {
+    // viewScene
+    //  f: scene function to view
+    //  fastForward: flag indicating whether to actually render
+    // Return type signifies status of minigame on this page:
+    //  Game object => minigame initialized and running
+    //  Function => minigame was not initialized, initializer returned
+    //  undefined => no minigame on this page
+    function viewScene(f,fastForward) {
 	menuDiv.innerHTML = "";
 	sceneDiv.innerHTML = "";
 	choiceFuncs = [];
@@ -145,11 +152,14 @@
 	// call the scene function
 	var result = f();
 	if (fs.isFunction(result)) {
-	    return result (viewScene);  // yield control to minigame, with this function as a callback
+	    // Yield control to minigame initializer, with this function as a callback.
+	    // The minigame initializer will eventually return a Game object.
+	    // However, if we're running in fast-forward mode, don't bother with the minigame;
+	    // just return the minigame initializer function to the caller, signifying the game did not start.
+	    return fastForward ? result : result(viewScene);
 	}
 
 	// normal scene
-	var resul;t = result;
 	var sceneText = result[0];
 	var options = result[1];
 
@@ -259,6 +269,8 @@
 	    restartButton.onclick = function() { location.reload(); };
 	    window.onbeforeunload = undefined;
 	}
+
+	return undefined;  // a return value of undefined signifies no minigame on this page
     };
 
     function buildErrorMessage(e) {
@@ -325,7 +337,14 @@
 		var theChoice = choiceTexts[choice_index];
 		var nextScene = choiceFuncs[choice_index];
 		recordChoiceText (theChoice);
-		viewScene (nextScene);
+		do {
+		    var minigame = viewScene (nextScene, i < history.length - 1);
+		    var skip = fs.isFunction (minigame);
+		    if (skip) {
+			var nextSceneSymbol = history[++i];
+			nextScene = eval (nextSceneSymbol);
+		    }
+		} while (skip);
 	    }
 	}
 	fs.choiceHistory = history;
@@ -363,8 +382,10 @@
 	    showElement (statsButton);
 	    showElement (historyButton);
 	    showElement (storyParentDiv);
+	    fs.choiceHistory.push (callbackArg);
 	    return callbackFunc (eval (callbackArg));
 	}
+
 	return zoo.initialize (minigameBoardDiv, minigameToolbarDiv, callbackWrapper);
     };
 

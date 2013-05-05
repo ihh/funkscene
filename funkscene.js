@@ -132,8 +132,8 @@
     };
 
     // viewScene
-    //  f: scene function to view
-    //  fastForward: flag indicating whether to actually render
+    //  f: the current scene function
+    //  fastForward: flag indicating whether we are in replay mode, with more scenes coming
     // Return type signifies status of minigame on this page:
     //  Game object => minigame initialized and running
     //  Function => minigame was not initialized, initializer returned
@@ -179,98 +179,110 @@
 	    }
 	}
 
-	var i = 0;
 	var textboxHack;
-	for (var j = 0; j < validOptions.length; ++j) {
+	// loop through options
+	for (var i = 0, j = 0; j < validOptions.length; ++j) {
+
 	    while (i < validOptions[j]) {
-		var emptyDiv = document.createElement("DIV");
-		menuDiv.appendChild (emptyDiv);
+		if (!fastForward) {
+		    var emptyDiv = document.createElement("DIV");
+		    menuDiv.appendChild (emptyDiv);
+		}
 		++i;
 	    }
+
 	    var choiceText = options[i][0];
 	    if (typeof choiceText === 'undefined') { choiceText = 'Enter text:  '; }
 	    var sceneFunction = options[i].length > 1 ? options[i][1] : undefined;
-	    var inputVarName = options[i].length > 2 ? options[i][2] : undefined;
-	    var textDiv = document.createTextNode (choiceText);
-	    var inputDiv = document.createElement("input");
-	    var labelDiv = document.createElement("label");
-	    var textboxDiv;
-	    if (options[i].length == 3) {
-		inputDiv.setAttribute ("type", "text");
-		inputDiv.setAttribute ("autofocus", "autofocus");
-		inputDiv.onkeypress = function (e) {
-		    if (e.keyCode == 13)
-			continueButton.click();
-		};
-		if (eval("typeof " + inputVarName) != 'undefined') {
-		    inputDiv.value = eval (inputVarName);
-		}
-		textboxDiv = inputDiv;
-		labelDiv.appendChild (textDiv);
-		labelDiv.appendChild (inputDiv);
-		textboxHack = function() {
-		    var ____val = textboxDiv.value;
-		    eval (inputVarName + " = ____val;");  // code smell, should ensure inputVarName != "____val" I guess
-		    var choiceIndex = fs.choiceHistory.pop();
-		    fs.choiceHistory.push ([choiceIndex, inputVarName, ____val]);
-		    return ____val;
-		};
-	    } else {
-		inputDiv.setAttribute ("type", "radio");
-		textboxDiv = undefined;
-		if (choiceText === '') {
-		    hideElement (labelDiv);
-		}
-		labelDiv.appendChild (inputDiv);
-		labelDiv.appendChild (textDiv);
-	    }
-	    inputDiv.setAttribute ("name", "opt");
-	    if (j == 0 && validOptions.length == 1) {
-		labelDiv.setAttribute ("class", "onlyOption");
-	    } else if (j == 0) {
-		labelDiv.setAttribute ("class", "firstOption");
-	    } else if (j == validOptions.length - 1) {
-		labelDiv.setAttribute ("class", "lastOption");
-	    }
-	    if (j == 0) {
-		inputDiv.setAttribute ("checked", 1);
-	    }
-	    if (typeof sceneFunction === 'undefined') {
-		inputDiv.setAttribute ("disabled", 1);
-		labelDiv.setAttribute ("disabled", 1);
-	    }
-	    menuDiv.appendChild (labelDiv);
-	    choiceFuncs.push (sceneFunction);
+
 	    choiceTexts.push (choiceText);
+	    choiceFuncs.push (sceneFunction);
+
+	    if (!fastForward) {
+		// decorate the DOM
+		var inputVarName = options[i].length > 2 ? options[i][2] : undefined;
+		var textDiv = document.createTextNode (choiceText);
+		var inputDiv = document.createElement("input");
+		var labelDiv = document.createElement("label");
+		var textboxDiv;
+		if (options[i].length == 3) {
+		    inputDiv.setAttribute ("type", "text");
+		    inputDiv.setAttribute ("autofocus", "autofocus");
+		    inputDiv.onkeypress = function (e) {
+			if (e.keyCode == 13)
+			    continueButton.click();
+		    };
+		    if (eval("typeof " + inputVarName) != 'undefined') {
+			inputDiv.value = eval (inputVarName);
+		    }
+		    textboxDiv = inputDiv;
+		    labelDiv.appendChild (textDiv);
+		    labelDiv.appendChild (inputDiv);
+		    textboxHack = function() {
+			var ____val = textboxDiv.value;
+			eval (inputVarName + " = ____val;");  // code smell, should ensure inputVarName != "____val" I guess
+			var choiceIndex = fs.choiceHistory.pop();
+			fs.choiceHistory.push ([choiceIndex, inputVarName, ____val]);
+			return ____val;
+		    };
+		} else {
+		    inputDiv.setAttribute ("type", "radio");
+		    textboxDiv = undefined;
+		    if (choiceText === '') {
+			hideElement (labelDiv);
+		    }
+		    labelDiv.appendChild (inputDiv);
+		    labelDiv.appendChild (textDiv);
+		}
+		inputDiv.setAttribute ("name", "opt");
+		if (j == 0 && validOptions.length == 1) {
+		    labelDiv.setAttribute ("class", "onlyOption");
+		} else if (j == 0) {
+		    labelDiv.setAttribute ("class", "firstOption");
+		} else if (j == validOptions.length - 1) {
+		    labelDiv.setAttribute ("class", "lastOption");
+		}
+		if (j == 0) {
+		    inputDiv.setAttribute ("checked", 1);
+		}
+		if (typeof sceneFunction === 'undefined') {
+		    inputDiv.setAttribute ("disabled", 1);
+		    labelDiv.setAttribute ("disabled", 1);
+		}
+		menuDiv.appendChild (labelDiv);
+	    }
 	}
 
-	if (typeof textboxHack != 'undefined') {
-	    // activate/initialize the continue button, calling textboxHack to set the associated variable
-	    continueButton.removeAttribute ("style");  // make sure button is visible
-	    continueButton.onclick = function() {
-		var text_func = getSelectedSceneFunction();
-		var input_val = textboxHack();
-		recordChoiceText(input_val);
-		viewScene(text_func[1]); };
-	} else if (validOptions.length > 0) {
-	    // activate/initialize the continue button
-	    continueButton.removeAttribute ("style");  // make sure button is visible
-	    continueButton.onclick = function() {
-		var text_func = getSelectedSceneFunction();
-		recordChoiceText(text_func[0]);
-		viewScene(text_func[1]); };
-	} else {
-	    // no choices, so hide button and show coda
-	    continueButton.setAttribute ("style", "display: none");
-	    var codaText = codaPage()[0];
-	    recordSceneText (codaText);
-	    codaDiv.innerHTML = fs.sceneTextToHtml (codaText);
-	    codaParent.setAttribute ("style", "display: block");
-	    restartButton.onclick = function() { location.reload(); };
-	    window.onbeforeunload = undefined;
-	}
+	// hook up the continue button
+	if (!fastForward)
+	    if (typeof textboxHack != 'undefined') {
+		// activate/initialize the continue button, calling textboxHack to set the associated variable
+		continueButton.removeAttribute ("style");  // make sure button is visible
+		continueButton.onclick = function() {
+		    var text_func = getSelectedSceneFunction();
+		    var input_val = textboxHack();
+		    recordChoiceText(input_val);
+		    viewScene(text_func[1]); };
+	    } else if (validOptions.length > 0) {
+		// activate/initialize the continue button
+		continueButton.removeAttribute ("style");  // make sure button is visible
+		continueButton.onclick = function() {
+		    var text_func = getSelectedSceneFunction();
+		    recordChoiceText(text_func[0]);
+		    viewScene(text_func[1]); };
+	    } else {
+		// no choices, so hide button and show coda
+		continueButton.setAttribute ("style", "display: none");
+		var codaText = codaPage()[0];
+		recordSceneText (codaText);
+		codaDiv.innerHTML = fs.sceneTextToHtml (codaText);
+		codaParent.setAttribute ("style", "display: block");
+		restartButton.onclick = function() { location.reload(); };
+		window.onbeforeunload = undefined;
+	    }
 
-	return undefined;  // a return value of undefined signifies no minigame on this page
+	// a return value of undefined signifies no minigame on this page
+	return undefined;
     };
 
     function buildErrorMessage(e) {
@@ -378,11 +390,12 @@
 	showElement (minigameDiv);
 
 	function callbackWrapper(callbackArg) {
+	    fs.choiceHistory.push (callbackArg);
 	    hideElement (minigameDiv);
 	    showElement (statsButton);
 	    showElement (historyButton);
 	    showElement (storyParentDiv);
-	    fs.choiceHistory.push (callbackArg);
+	    // yield control back to FunkScene
 	    return callbackFunc (eval (callbackArg));
 	}
 

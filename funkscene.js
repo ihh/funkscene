@@ -54,7 +54,7 @@
 	continueButton.innerHTML = defaultContinueText;
     };
 
-    // distinguished scenes are 'statusPage' and 'start'
+    // distinguished global page variables are 'statusPage', 'codaPage' and 'start'
     var getStartPage = function() { return start; }
     var makeStatusPage = function() { return statusPage()[0]; };
 

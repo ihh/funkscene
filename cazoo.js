@@ -293,16 +293,17 @@
     };
 
     caz.Tool.prototype.startRecharging = function() {
-	this.clearTimer();
-	this.timer = window.setInterval (function() {
-	    if (this.level < this.reserve) {
-		++this.level;
-		showMeter (this);
+	var tool = this;
+	tool.clearTimer();
+	tool.timer = window.setInterval (function() {
+	    if (tool.level < tool.reserve) {
+		++tool.level;
+		showMeter (tool);
 	    } else {
-		window.clearInterval (this.timer);
-		this.timer = undefined;
+		window.clearInterval (tool.timer);
+		tool.timer = undefined;
 	    }
-	}, Math.floor (1000 / this.recharge) + 1);
+	}, Math.floor (1000 / tool.recharge) + 1);
     };
 
     caz.Tool.prototype.startSpraying = function(game) {
@@ -533,7 +534,7 @@
 			    game.toolDivs[j].setAttribute ("class", "tool unselected");
 			}
 		    }
-		    game.startRecharging(oldTool);
+		    oldTool.startRecharging (game);
 		};
 	    }) (i, toolDiv);
 	    toolDiv.onclick = selectTool;

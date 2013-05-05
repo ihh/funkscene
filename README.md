@@ -273,29 +273,32 @@ other interesting applications of functional programming patterns to narrative, 
 To make use of the queue, the keywords are `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
 Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
-`#CONTINUE` is like RETURN with a traditional GOSUB, except you can use the stack as a queue as well,
-scheduling scenes at the end of the game as well as immediately after you finish a sub-scene.
 
 As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` followed by `#GOTO`, like so:
 
 	#PAGE start
 	#( Fight or flee?
-	#CHOOSE Fight! #FOR battle
-	#CHOOSE Flee! #FOR flee #)
+	   #CHOOSE Fight! #FOR battle
+	   #CHOOSE Flee! #FOR flee #)
+
+	// The following two scenes use GOSUB followed by GOTO:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
-	#GOSUB death_blow
-	#GOTO heaven
+	 #GOSUB death_blow
+	 #GOTO heaven
 	#ENDSCENE
 
 	#PAGE flee
 	#SCENE You turn to run, letting your guard down for a moment...
-	#GOSUB death_blow
-	#GOTO hell
+	 #GOSUB death_blow
+	 #GOTO hell
 	#ENDSCENE
+
+	// The rest is just code to make this a complete game:
 	
-	#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #CONTINUE #)
+	#PAGE death_blow
+	#( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #CONTINUE #)
 
 	#PAGE hell
 	#( Cowards never prosper! Enjoy your Hell, roast chicken. #OVER #)
@@ -311,18 +314,18 @@ it shows explicitly how `#GOSUB` pushes its return continuation onto the stack:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
-	#STACK heaven
-	#GOTO death_blow
+	 #STACK heaven
+	 #GOTO death_blow
 	#ENDSCENE
 
 In fact, the following version is also equivalent:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
-	#FLUSH
-	#QUEUE death_blow
-	#QUEUE afterlife
-	#CONTINUE
+	 #FLUSH
+	 #QUEUE death_blow
+	 #QUEUE heaven
+	 #CONTINUE
 	#ENDSCENE
 
 The `#FLUSH` is only necessary if there might be other scenes on the queue already
@@ -332,10 +335,17 @@ Note that you can chain `#GOSUB` clauses together:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
-	#GOSUB death_blow
-	#GOSUB in_limbo
-	#GOTO afterlife
+	 #GOSUB death_blow
+	 #GOSUB in_limbo
+	 #GOTO heaven
 	#ENDSCENE
+
+`#CONTINUE` is analogous to the RETURN of a traditional GOSUB, except the stack doubles up as a queue.
+With `#QUEUE`, you can schedule scenes for the end of the game;
+with `#GOSUB` or `#STACK`, you can schedule scenes for immediately after you finish a side-quest.
+
+It is quite easy to implement your own scene scheduler; for example, to choreograph an escalating tension,
+like the Drama Manager which "sequences beats" (i.e. schedules short vignettes) in Mateas and Stern's "Facade".
 
 
 Implicit continuation

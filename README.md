@@ -284,16 +284,18 @@ As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` follow
 	// The following two scenes use GOSUB followed by GOTO:
 
 	#PAGE battle
-	#SCENE You fight valiantly against the stronger opponent.
-	 #GOSUB death_blow
-	 #GOTO heaven
-	#ENDSCENE
+	#(
+	   You fight valiantly against the stronger opponent.
+	   #GOSUB death_blow
+	   #GOTO heaven
+	#)
 
 	#PAGE flee
-	#SCENE You turn to run, letting your guard down for a moment...
-	 #GOSUB death_blow
-	 #GOTO hell
-	#ENDSCENE
+	#(
+	   You turn to run, letting your guard down for a moment...
+	   #GOSUB death_blow
+	   #GOTO hell
+	#)
 
 	// The rest is just code to make this a complete game:
 	
@@ -313,20 +315,22 @@ The following version of the `battle` scene is exactly equivalent, if a bit cryp
 it shows explicitly how `#GOSUB` pushes its return continuation onto the stack:
 
 	#PAGE battle
-	#SCENE You fight valiantly against the stronger opponent.
-	 #STACK heaven
-	 #GOTO death_blow
-	#ENDSCENE
+	#(
+	   You fight valiantly against the stronger opponent.
+	   #STACK heaven
+	   #GOTO death_blow
+	#)
 
 In fact, the following version is also equivalent:
 
 	#PAGE battle
-	#SCENE You fight valiantly against the stronger opponent.
-	 #FLUSH
-	 #QUEUE death_blow
-	 #QUEUE heaven
-	 #CONTINUE
-	#ENDSCENE
+	#(
+	   You fight valiantly against the stronger opponent.
+	   #FLUSH
+	   #QUEUE death_blow
+	   #QUEUE heaven
+	   #CONTINUE
+	#)
 
 The `#FLUSH` is only necessary if there might be other scenes on the queue already
 (its effect is to clear the queue).
@@ -334,18 +338,26 @@ The `#FLUSH` is only necessary if there might be other scenes on the queue alrea
 Note that you can chain `#GOSUB` clauses together:
 
 	#PAGE battle
-	#SCENE You fight valiantly against the stronger opponent.
-	 #GOSUB death_blow
-	 #GOSUB in_limbo
-	 #GOTO heaven
-	#ENDSCENE
+	#(
+	   You fight valiantly against the stronger opponent.
+	   #GOSUB death_blow
+	   #GOSUB in_limbo
+	   #GOTO heaven
+	#)
 
-`#CONTINUE` is analogous to the RETURN of a traditional GOSUB, except the stack doubles up as a queue.
+`#CONTINUE` is analogous to the RETURN of a traditional GOSUB,
+but the keyword CONTINUE is more appropriate than RETURN because the stack doubles up as a queue.
 With `#QUEUE`, you can schedule scenes for the end of the game;
-with `#GOSUB` or `#STACK`, you can schedule scenes for immediately after you finish a side-quest.
+with `#GOSUB` or `#STACK`, you can schedule scenes for immediately after you finish (RETURN from) a side-quest.
+Both forms represent a continuation of the story.
 
-It is quite easy to implement your own scene scheduler; for example, to choreograph an escalating tension,
-like the Drama Manager which "sequences beats" (i.e. schedules short vignettes) in Mateas and Stern's "Facade".
+As noted, this is a rudimentary scheduling system, designed to implement the idea of GOSUB in a simple way.
+However, the functional programming representation of low-level control-flow constructs (GOTO and GOSUB) is necessarily a bit tortured.
+(Since every scene is a function, one can think of every scene as a sort of `GOSUB narrator` anyway.)
+
+The ability to nest and sequence side-quests is a neat trick, but even neater ones are conceivable.
+It is quite easy to implement your own scene scheduler; for example, to choreograph a steadily escalating tension,
+like the Drama Manager which "sequences beats" (i.e. schedules appropriately-paced vignettes) in Mateas and Stern's "Facade".
 
 
 Implicit continuation

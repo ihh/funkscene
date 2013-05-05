@@ -97,12 +97,12 @@ compiles to the following:
 
 	electrified = function() {
 	    return ["Several amps flow through your body. Think that doesn't sound like a lot? No, you don't think that, because you're dead.",
-		     []];
+	            []];
 	};
 
 	wise_choice = function() {
 	    return ["A wise choice, my friend.",
-	     []];
+	            []];
 	};
 
 Note that the quotation marks around `"BEWARE!"` do not need to be escaped in the

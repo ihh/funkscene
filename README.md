@@ -43,11 +43,12 @@ There are currently no inline hyperlinks or dropdown menus in FunkScene.
 While links encourage close examination of a text, and indeed add extra semantics, they can detract from the pace of a story and the balancing of choices.
 A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.
 
-The design philosophy of FunkScene is
+The design philosophy of FunkScene:
 
 1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
-2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) and drop-down menus (Schooz)
-3. a functional programming style (building on an earlier prototype, Schooz)
+2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) or drop-down menus (Schooz)
+3. some ideas from functional programming (c.f. Schooz), mostly using plain English keywords (c.f. Logo)
+4. re-use of standard languages where possible (JavaScript, Markdown; some similarities to ChoiceScript)
 
 
 FunkScene language

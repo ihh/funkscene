@@ -117,8 +117,8 @@ To play the Temple of Belsidore "game", you will need to save it with a filename
 (after all other `script` and `link` blocks):
 
 	<script type="text/javascript">
-	  loadSceneFile ("mygame.scene");
-	  initialize();
+	  FunkScene.loadSceneFile ("mygame.scene");
+	  FunkScene.initialize();
 	</script>
 
 You'll then need to open `index.html` over a web connection (i.e. an

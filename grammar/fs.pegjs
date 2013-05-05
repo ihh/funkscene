@@ -278,6 +278,9 @@ status_if_expr
  = "#IF" spc expr:status_condition { return expr; }
  / "#NOW" { return 1; }
 
+icon_filename
+  = chars:[A-Za-z0-9\-_]+ { return chars.join(""); }
+
 meter_bars
  = bars:meter_bar+
    { return makeTable ("meterTable", bars); }
@@ -430,6 +433,7 @@ quoted_text
 text
   = "\\#" tail:text? { return "#" + tail; }
   / "\\\\" tail:text? { return "\\\\" + tail; }
+  / comment tail:text? { return tail; }
   / rank:hash_rank tail:text? { return rank + tail; }
   / "#$" v:symbol tail:text? { return "\" + " + v + " + \"" + tail; }
   / "#[" expr:balanced_code "#]" tail:text? { return "\" + " + expr + " + \"" + tail; }
@@ -449,6 +453,7 @@ text
 scene_text
   = "\\#" tail:scene_text? { return accumulateQuoted("#",tail); }
   / "\\\\" tail:scene_text? { return accumulateQuoted("\\\\",tail); }
+  / comment tail:scene_text? { return tail; }
   / rank:hash_rank tail:scene_text? { return accumulateQuoted(rank,tail); }
   / "#$" v:symbol tail:scene_text? { return accumulate(v,tail); }
   / "#[" expr:balanced_code "#]" tail:scene_text? { return accumulate(expr,tail); }
@@ -486,8 +491,24 @@ hash_rank
 text_chars
   = chars:[^#\\\"\n]+ { return chars.join(""); }
 
-icon_filename
-  = chars:[A-Za-z0-9\-_]+ { return chars.join(""); }
+comment
+  = multi_line_comment
+  / single_line_comment
+
+multi_line_comment
+  = "#/*" (!"*/" source_character)* "*/"
+
+multi_line_comment_no_line_terminator
+  = "#/*" (!("*/" / line_terminator) source_character)* "*/"
+
+single_line_comment
+  = "#//" (!line_terminator source_character)*
+
+line_terminator
+  = [\n\r\u2028\u2029]
+
+source_character
+  = .
 
 named_minigame_scene
   = "#PAGE" spc+ name:symbol spc+ "#SCENE" spc intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#ENDSCENE"

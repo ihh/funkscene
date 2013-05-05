@@ -22,7 +22,10 @@ Cedric the Fisherman's Space Jetty.
 
 #MINIGAME
 
-R = 3;
+/* test Cazoo multi-line comment
+ * ...still testing...
+ */
+R = 3;  // test Cazoo single-line comment
 type wall { icon: padlock };
 type drifter { icon: mad-scientist, rotates, isometric, moore, async };
 tool { type: wall, radius: 2, reserve: 50, rate: 20, recharge: 5 };

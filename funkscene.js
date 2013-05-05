@@ -60,9 +60,9 @@
 
     if (typeof start === 'undefined') {
 	start = function() {
-	    return ["You are in a vortex.",
- 		    [["Escape", function(){return ["You can't.",[]]}],
- 		     ["Fall in", function(){return ["A fitting end.",[]]}]]];
+	    return ["You are in a Vortex of Error.",
+ 		    [["Escape", function(){return ["You can't. There's a bug. (Checked the console log?)",[]]}],
+ 		     ["Fall in", function(){return ["A fitting end. Now go debug! (Take a look at the console?)",[]]}]]];
 	};
     }
 

@@ -17,9 +17,29 @@ statement
  / goal_decl
  / size_decl
  / init_block
+ / comment    { return function(){}; }
 
 spc
   = [ \t\n\r]
+
+comment
+  = multi_line_comment
+  / single_line_comment
+
+multi_line_comment
+  = "/*" (!"*/" source_character)* "*/"
+
+multi_line_comment_no_line_terminator
+  = "/*" (!("*/" / line_terminator) source_character)* "*/"
+
+single_line_comment
+  = "//" (!line_terminator source_character)*
+
+line_terminator
+  = [\n\r\u2028\u2029]
+
+source_character
+  = .
 
 particle_decl
  = "type" spc+ n:symbol spc* "{" spc* p:particle_property_list spc* "}" spc* ";" spc*

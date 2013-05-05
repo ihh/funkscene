@@ -353,7 +353,7 @@ Both forms represent a continuation of the story.
 
 As noted, this is a rudimentary scheduling system, designed to implement the idea of GOSUB in a simple way.
 However, the functional programming representation of low-level control-flow constructs (GOTO and GOSUB) is necessarily a bit tortured.
-(Since every scene is a function, one can think of every scene as a sort of `GOSUB narrator` anyway.)
+(In fact, FunkScene implicitly uses subroutines everywhere, as every scene is a function returning some scenetext and a list of choices.)
 
 The ability to nest and sequence side-quests is a neat trick, but even neater ones are conceivable.
 It is quite easy to implement your own scene scheduler; for example, to choreograph a steadily escalating tension,

@@ -373,7 +373,7 @@ You may be tempted to do something like this. Don't:
 	// This is bad code and WILL NOT COMPILE
 	#SCENE
 	 You are in the scullery.
-	 #IF got_knife
+	 #IF got_knife #THEN
 	  "Hey! You! Girl with the knife!" says the Cook.
 	  #// The following line will not work; you can't use a #GOSUB in an #IF block
 	  #GOSUB carrot_chopping_side_quest
@@ -651,6 +651,17 @@ To execute JavaScript statements, use this construct:
 
 You can also use `#IF...#THEN...#ELSIF...#ELSIF...#ELSE...#ENDIF`
 to conditionally display certain pieces of text.
+
+	You are in the scullery.
+	#IF got_knife
+	 #THEN A young serving-boy eyes your knife uneasily.
+	 #ELSE A young boy scurries back and forth with plates.
+	#ENDIF
+
+Note: this use of `#IF` is for conditional display of text only.
+It is not a good way to control program flow.
+In particular, you cannot use `#GOSUB` statements inside a `#THEN` or `#ELSE` clause
+(see notes on implicit continuations and the scene queue, elsewhere in this file).
 
 
 Text input direct to variables

@@ -40,7 +40,8 @@
   <hr>
  </div>
  <!-- Grid of cellular automata -->
-  <div id="minigame">
+  <div id="minigameParent">
+   <div id="minigame"></div>   <!-- you can hang intro text off this element -->
    <div id="board"></div>
    <hr>
    <div id="toolbar" class="toolbar"></div>
@@ -116,7 +117,7 @@
 <script type="text/javascript" src="grammar/cz.js"></script>
 <script type="text/javascript">
   var zoo = Cazoo.newZooFromUrl ("grammar/brownian.cazoo");
-  zoo.initialize (function(x){alert("woohoo, "+x+"!");});
+  zoo.initialize (document.getElementById("board"), document.getElementById("toolbar"), function(x){alert("woohoo, "+x+"!");});
 </script>
 
 </body>

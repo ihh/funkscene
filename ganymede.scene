@@ -20,6 +20,19 @@ You and Robot Sergeant XK-17 have a choice. Where to investigate first?
 Cedric the Fisherman's Space Jetty.
 ===================================
 
+#MINIGAME
+
+R = 3;
+type wall { icon: padlock };
+type drifter { icon: mad-scientist, rotates, isometric, moore, async };
+tool { type: wall, radius: 2, reserve: 50, rate: 20, recharge: 5 };
+tool { type: drifter, radius: 2, reserve: 10, rate: 4 };
+drifter _ -> _ $s.f : R;
+size [32,32];
+init { [16,16,drifter.e] };
+timeout 5: bella;
+extinct drifter: claire;
+
 #ENDSCENE
 
 #PAGE bella

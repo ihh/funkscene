@@ -1,6 +1,4 @@
 (function (caz) {
-    var boardDiv = document.getElementById("board");
-    var toolbarDiv = document.getElementById("toolbar");
 
     caz.compassToInt = { n:0, ne:1, e:2, se:3, s:4, sw:5, w:6, nw:7 };
     caz.relativeToInt = { f:0, fr:1, r:2, br:3, b:4, bl:5, l:6, fl:7 };
@@ -45,10 +43,11 @@
 	hash[sym] = def;
     };
 
-    caz.buildErrorMessage = function(e) {
-	return e.line !== undefined && e.column !== undefined
-	    ? "Line " + e.line + ", column " + e.column + ": " + e.message
-	    : e.message;
+    caz.buildErrorMessage = function(e,text) {
+	return "In the following code:\n===\n" + text + "===\n"
+	    + (e.line !== undefined && e.column !== undefined
+	       ? "Line " + e.line + ", column " + e.column + ": " + e.message
+	       : e.message);
     };
 
     caz.selectRandomElement = function(arr) {
@@ -103,7 +102,7 @@
 
     caz.Cell.prototype.setTimer = function() {
 	this.clearTimer();
-	var info = zoo.particle[this.state];
+	var info = this.zoo.particle[this.state];
 	if (info.rate) {
 	    var callback = (function(cell){return function(){cell.update();}}) (this);
 	    var delayInSecs = (info.sync ? 1 : caz.randomWaitTime()) / info.rate;  // exponentially distributed wait if async
@@ -242,10 +241,10 @@
 	if (rule) {
 	    var newSrcStateExpr = rule[2][0];
 	    var newSrcDirExpr = rule[2][1];
-	    var newSrcState = zoo.evalStateExpr (newSrcStateExpr, newSrcDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
+	    var newSrcState = this.zoo.evalStateExpr (newSrcStateExpr, newSrcDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
 	    var newTargetStateExpr = rule[3][0];
 	    var newTargetDirExpr = rule[3][1];
-	    var newTargetState = zoo.evalStateExpr (newTargetStateExpr, newTargetDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
+	    var newTargetState = this.zoo.evalStateExpr (newTargetStateExpr, newTargetDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
 	    srcCell.setState (newSrcState[0], newSrcState[1]);
 	    targetCell.setState (newTargetState[0], newTargetState[1]);
 	} else
@@ -397,7 +396,7 @@
 	return [state, dir];
     };
 
-    caz.Zoo.prototype.initialize = function(callback) {
+    caz.Zoo.prototype.initialize = function(boardDiv,toolbarDiv,callback) {
 	// ensure every particle type mentioned by a rule or tool is defined
 	var zoo = this;
 	function ensureDefined(s) { if (!s in zoo.particle) defineType(s); };
@@ -581,15 +580,18 @@
 	xhr.open ("GET", url, false);
 	xhr.send();
 	var raw = xhr.responseText;
+	return caz.newZooFromString (raw);
+    };
+
+    caz.newZooFromString = function (text) {
 	var processed;
-//	try {
-	    processed = Cazoo.parser.parse (raw);
-//	} catch (e) {
-//	    console.log (Cazoo.buildErrorMessage(e));
-//	}
+	try {
+	    processed = Cazoo.parser.parse (text);
+	} catch (e) {
+	    console.log (Cazoo.buildErrorMessage(e,text));
+	}
 	return processed;
     }
-
 
 })(Cazoo = {});
 

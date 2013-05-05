@@ -55,6 +55,20 @@
     Continue
   </button>
  </div>
+  <!-- Coda -->
+  <div class="coda" id="codaParent" style="display:none">
+    <div class="coda" id="coda"></div>
+    <button type="button" class="continue" id="restart">
+      Restart
+    </button>
+  </div>
+ <!-- Minigame -->
+  <div id="minigame" style="display:none">
+   <div id="minigameText"></div>
+   <div id="minigameBoard"></div>
+   <hr>
+   <div id="minigameTools" class="toolbar"></div>
+  </div>
 </div>
 
 
@@ -63,11 +77,13 @@
 <!-- Markdown parser -->
 <script type="text/javascript" src="pagedown/Markdown.Converter.js"></script>
 
-<!-- FunkScene library -->
+<!-- FunkScene library & parser -->
 <script type="text/javascript" src="funkscene.js"></script>
-
-<!-- FunkScene parser -->
 <script type="text/javascript" src="grammar/fs.js"></script>
+
+<!-- Cazoo library & parser -->
+<script type="text/javascript" src="cazoo.js"></script>
+<script type="text/javascript" src="grammar/cz.js"></script>
 
 <!-- load the scene file and parse it -->
 <script type="text/javascript">

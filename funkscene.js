@@ -1,4 +1,5 @@
 (function (fs) {
+    // DOM hooks
     var sceneDiv = document.getElementById("scene");
     var menuDiv = document.getElementById("menu");
     var historyDiv = document.getElementById("history");
@@ -13,10 +14,21 @@
     var statsButton = document.getElementById("showStats");
     var historyButton = document.getElementById("showHistory");
     var storyButton = document.getElementById("showStory");
+    var minigameDiv = document.getElementById("minigame");
+    var minigameTextDiv = document.getElementById("minigameText");
+    var minigameBoardDiv = document.getElementById("minigameBoard");
+    var minigameToolbarDiv = document.getElementById("minigameTools");
 
     // Uncomment to guard against accidental navigation away from page:
     //    window.onbeforeunload = function() { return "Your position will be lost."; };
 
+    // utility to test if object is a function
+    fs.isFunction = function(object) {
+	var getType = {};
+	return object && getType.toString.call(object) === '[object Function]';
+    }
+
+    // our stuff
     var choiceFuncs = undefined;
     var choiceTexts = undefined;
     fs.choiceHistory = undefined;
@@ -42,7 +54,7 @@
 	continueButton.innerHTML = defaultContinueText;
     };
 
-    // distinguished scenes are 'stats' and 'start'
+    // distinguished scenes are 'statusPage' and 'start'
     var getStartPage = function() { return start; }
     var makeStatusPage = function() { return statusPage()[0]; };
 
@@ -121,6 +133,7 @@
 
     function viewScene(f) {
 	menuDiv.innerHTML = "";
+	sceneDiv.innerHTML = "";
 	choiceFuncs = [];
 	choiceTexts = [];
 
@@ -128,9 +141,17 @@
 
 	fs.previousScene = fs.currentScene;
 	fs.currentScene = f;
-	var text_options = f();
-	var sceneText = text_options[0];
-	var options = text_options[1];
+
+	// call the scene function
+	var result = f();
+	if (fs.isFunction(result)) {
+	    return result (viewScene);  // yield control to minigame, with this function as a callback
+	}
+
+	// normal scene
+	var resul;t = result;
+	var sceneText = result[0];
+	var options = result[1];
 
 	var sceneHtml = fs.sceneTextToHtml (sceneText);
 	sceneDiv.innerHTML = sceneHtml;
@@ -270,9 +291,11 @@
 	var choices = [];
 	for (var i = 0; i < scenes.length; ++i) {
 	    var f = scenes[i];
-	    var text_options = f();
-	    text = text + text_options[0];
-	    choices = choices.concat (text_options[1]);
+	    var result = f();
+	    if (!fs.isFunction(result)) {  // ignore minigames here
+		text = text + result[0];
+		choices = choices.concat (result[1]);
+	    }
 	}
 	return [text, choices];
     };
@@ -321,5 +344,28 @@
 	return meterBarDiv.outerHTML;
     };
 
+    fs.runMinigame = function (introText, cazooCode, callbackFunc) {
+	hideElement (statsButton);
+	hideElement (historyButton);
+	hideElement (storyButton);
+
+	hideElement (storyParentDiv);
+	hideElement (historyParentDiv);
+	hideElement (statsParentDiv);
+
+	var zoo = Cazoo.newZooFromString (cazooCode);
+
+	minigameTextDiv.innerHTML = fs.sceneTextToHtml (introText);
+	showElement (minigameDiv);
+
+	function callbackWrapper(callbackArg) {
+	    hideElement (minigameDiv);
+	    showElement (statsButton);
+	    showElement (historyButton);
+	    showElement (storyParentDiv);
+	    return callbackFunc (eval (callbackArg));
+	}
+	return zoo.initialize (minigameBoardDiv, minigameToolbarDiv, callbackWrapper);
+    };
 
 })(FunkScene = {});

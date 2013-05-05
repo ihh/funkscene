@@ -20,8 +20,7 @@
   }
 
   function makeMinigameSceneFunction(intro,cazoo) {
-      // TODO: write me
-      return "";
+      return "(function(){return function(callback){return FunkScene.runMinigame(" + intro + "," + cazoo + ",callback);}})";
   }
 
   function renderList(x) {
@@ -395,7 +394,7 @@ balanced_code
   / c:query_event_count tail:balanced_code? { return c + tail; }
   / "(" inside:balanced_code ")" tail:balanced_code? { return "(" + inside + ")" + tail; }
   / "{" inside:balanced_code "}" tail:balanced_code? { return "{" + inside + "}" + tail; }
-  / "[" inside:balanced_code "]" tail:balanced_code? { return "{" + inside + "}" + tail; }
+  / "[" inside:balanced_code "]" tail:balanced_code? { return "[" + inside + "]" + tail; }
   / head:balanced_code_chars tail:balanced_code? { return head + tail; }
 
 balanced_code_chars
@@ -491,26 +490,34 @@ icon_filename
   = chars:[A-Za-z0-9\-_]+ { return chars.join(""); }
 
 named_minigame_scene
-  = "#PAGE" spc+ name:symbol spc+ "#SCENE" spc intro:quoted_text "#MINIGAME" spc cazoo:quoted_cazoo "#ENDSCENE"
+  = "#PAGE" spc+ name:symbol spc+ "#SCENE" spc intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#ENDSCENE"
     { return makeAssignment (name, makeMinigameSceneFunction(intro,cazoo)); }
-  / "#PAGE" spc+ name:symbol spc+ "#(" spc intro:quoted_text "#MINIGAME" spc cazoo:quoted_cazoo "#)"
+  / "#PAGE" spc+ name:symbol spc+ "#(" spc intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#)"
     { return makeAssignment (name, makeMinigameSceneFunction(intro,cazoo)); }
 
-quoted_cazoo
- = c:cazoo { return '"' + c + '"'; }
+quoted_cazoo_code
+ = c:cazoo_code { return '"' + c + '"'; }
 
-cazoo
-  = "\\#" tail:cazoo? { return "#" + tail; }
-  / "\\\\" tail:cazoo? { return "\\\\" + tail; }
-  / rank:hash_rank tail:cazoo? { return rank + tail; }
-  / "#$" v:symbol tail:cazoo? { return "\" + " + v + " + \"" + tail; }
-  / "#[" expr:balanced_code "#]" tail:cazoo? { return "\" + " + expr + " + \"" + tail; }
-  / "#{" code:statements "#}" tail:cazoo? { return "\" + " + makeDummy(code) + " + \"" + tail; }
-  / "#EVAL" expr:balanced_code "#TEXT" tail:cazoo? { return "\" + " + expr + " + \"" + tail; }
-  / '"' tail:cazoo? { return '\\"' + tail; }
-  / "\n" tail:cazoo? { return '\\n' + tail; }
-  / "(" inside:cazoo ")" tail:cazoo? { return "(" + inside + ")" + tail; }
-  / "{" inside:cazoo "}" tail:cazoo? { return "{" + inside + "}" + tail; }
-  / "[" inside:cazoo "]" tail:cazoo? { return "{" + inside + "}" + tail; }
-  / head:balanced_code_chars tail:cazoo? { return head + tail; }
-  / h:hash_run tail:cazoo? { return h + tail; }
+cazoo_code
+  = "\\#" tail:cazoo_code? { return "#" + tail; }
+  / "\\\\" tail:cazoo_code? { return "\\\\" + tail; }
+  / rank:hash_rank tail:cazoo_code? { return rank + tail; }
+  / "#$" v:symbol tail:cazoo_code? { return "\" + " + v + " + \"" + tail; }
+  / "#[" expr:balanced_code "#]" tail:cazoo_code? { return "\" + " + expr + " + \"" + tail; }
+  / "#{" code:statements "#}" tail:cazoo_code? { return "\" + " + makeDummy(code) + " + \"" + tail; }
+  / "#EVAL" expr:balanced_code "#TEXT" tail:cazoo_code? { return "\" + " + expr + " + \"" + tail; }
+  / '"' tail:cazoo_code? { return '\\"' + tail; }
+  / "\n" tail:cazoo_code? { return '\\n' + tail; }
+  / "(" inside:cazoo_code ")" tail:cazoo_code? { return "(" + inside + ")" + tail; }
+  / "{" inside:cazoo_code "}" tail:cazoo_code? { return "{" + inside + "}" + tail; }
+  / "[" inside:cazoo_code "]" tail:cazoo_code? { return "[" + inside + "]" + tail; }
+  / head:cazoo_code_chars tail:cazoo_code? { return head + tail; }
+  / h:hash_run tail:cazoo_code? { return h + tail; }
+
+cazoo_code_chars
+  = chars:[^#(){}\[\]\\\"\n]+ { return chars.join(""); }
+
+cazoo_intro_text
+  = head:quoted_text? "#TITLE" spc+ t:nonempty_quoted_text "#ENDTITLE" tail:quoted_text?
+     { return head + " + " + makeDummy("document.title = " + t + ";") + " + " + tail; }
+  / quoted_text

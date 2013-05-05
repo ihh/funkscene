@@ -6,5 +6,5 @@ tool { type: drifter, radius: 2, reserve: 10, rate: 4 };
 drifter _ -> _ $s.f : R;
 size [32,32];
 init { [16,16,drifter.e] };
-timeout 60: survived;
+timeout 30: survived;
 extinct drifter: died;

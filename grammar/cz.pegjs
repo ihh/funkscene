@@ -133,7 +133,7 @@ tool_decl
 
 tool_property_list
  = p:tool_property spc* "," spc* h:tool_property_list { h[p[0]] = p[1]; return h; }
- / p:tool_property                          { var h={}; h[p[0]] = p[1]; return h; }
+ / p:tool_property          { var h = new Cazoo.Tool(); h[p[0]] = p[1]; return h; }
 
 tool_property
  = "type" v:optionally_directed_symbol_value  { return ["state", v]; }  // hack to avoid using "type" as a member field
@@ -177,10 +177,10 @@ init
 optionally_directed_symbol = symbol dir?
 
 goal_decl
- = "timeout" spc+ positive_integer symbol_value spc* ";" spc*
- { return function(z){}; }
- / "extinct" spc+ symbol symbol_value spc* ";" spc*
- { return function(z){}; }
+ = "timeout" spc+ t:positive_integer g:symbol_value spc* ";" spc*
+ { return function(z){z.goal.push(["testTimeoutGoal",t,g]);}; }
+ / "extinct" spc+ s:symbol g:symbol_value spc* ";" spc*
+ { return function(z){z.goal.push(["testExtinctionGoal",s,g]);}; }
 
 size_decl
  = "size" spc* "[" spc* x:positive_integer spc* "," spc* y:positive_integer spc* "]" spc* ";" spc*

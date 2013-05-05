@@ -116,7 +116,7 @@
 <script type="text/javascript" src="grammar/cz.js"></script>
 <script type="text/javascript">
   var zoo = Cazoo.newZooFromUrl ("grammar/brownian.cazoo");
-  zoo.initialize();
+  zoo.initialize (function(x){alert("woohoo, "+x+"!");});
 </script>
 
 </body>

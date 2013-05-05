@@ -12,7 +12,6 @@
     caz.mooreHood = [0, 1, 2, 3, 4, 5, 6, 7];
 
     var emptyState = "_";
-    caz.toolDefaults = { rate: 1, radius: 0, reserve: 1, recharge: 1, overwrite: emptyState };
 
     caz.evalDirExprIntVal = function (fwdDir, dirExpr) {
 	if (dirExpr == "*" || dirExpr == "")
@@ -95,16 +94,20 @@
 	this.setTimer();
     };
 
-    caz.Cell.prototype.setTimer = function() {
+    caz.Cell.prototype.clearTimer = function() {
 	if (this.timer) {
 	    window.clearTimeout (this.timer);
 	    this.timer = undefined;
 	}
+    };
+
+    caz.Cell.prototype.setTimer = function() {
+	this.clearTimer();
 	var info = zoo.particle[this.state];
 	if (info.rate) {
 	    var callback = (function(cell){return function(){cell.update();}}) (this);
 	    var delayInSecs = (info.sync ? 1 : caz.randomWaitTime()) / info.rate;  // exponentially distributed wait if async
-	    var delayInMillisecs = Math.floor (delayInSecs * 1000);
+	    var delayInMillisecs = Math.floor (delayInSecs * 1000) + 1;
 	    this.timer = window.setTimeout (callback, delayInMillisecs);
 	    // for debugging, record time of current/next events
 	    var d = new Date();
@@ -115,6 +118,13 @@
 
     caz.Cell.prototype.update = function() { this.game.update (this.x, this.y); }
 
+    caz.Cell.prototype.stopCell = function() {
+	this.clearTimer();
+	this.div.onmouseover = undefined;
+	this.div.onmousedown = undefined;
+	this.div.onmouseup = undefined;
+    };
+
     // Game
     caz.Game = function (zoo) {
 	this.zoo = zoo;
@@ -124,6 +134,56 @@
 	this.toolMeterDivs = [];
 	this.currentTool = undefined;
 	this.lastMousePos = [];
+
+	this.callback = function() { };  // when a goal completes, this function will be called with the goalTarget
+
+	var d = new Date();
+	this.startTime = d.getTime();
+
+	var game = this;
+	this.timer = window.setInterval (function() {
+	    var goalTarget = game.testGoals();
+	    if (typeof goalTarget != 'undefined') {
+		game.stopGame();
+		(game.callback) (goalTarget);
+	    }
+	}, Math.floor (1000 / caz.goalTestRate) + 1);
+    };
+
+    caz.goalTestRate = 10;  // units: hertz, like all the other rates
+    caz.Game.prototype.testGoals = function() {
+	for (var i = 0; i < this.zoo.goal.length; ++i) {
+	    var goal = this.zoo.goal[i].slice(0);  // copy goal array
+	    var goalFunction = this[goal.shift()];
+	    var goalTarget = goal.pop();
+	    var val = goalFunction.apply (this, goal);
+	    if (val)
+		return goalTarget;
+	}
+	return undefined;
+    };
+
+    caz.Game.prototype.testTimeoutGoal = function(secs) {
+	var d = new Date();
+	return d.getTime() >= this.startTime + 1000*secs;
+    };
+
+    caz.Game.prototype.testExtinctionGoal = function(particleType) {
+	return this.particleCount[particleType] == 0;
+    };
+
+    caz.Game.prototype.stopGame = function() {
+	for (var x = 0; x < this.zoo.size[0]; ++x)
+	    for (var y = 0; y < this.zoo.size[1]; ++y)
+		this.getCell(x,y).stopCell();
+
+	for (var i = 0; i < this.zoo.tool.length; ++i)
+	    this.zoo.tool[i].clearTimer();
+
+	if (this.timer) {
+	    window.clearInterval (this.timer);
+	    this.timer = undefined;
+	}
     };
 
     caz.Game.prototype.getCell = function(x,y) {
@@ -214,31 +274,46 @@
 	}
     };
 
-    caz.Game.prototype.startRecharging = function(tool) {
-	if (tool.timer) {
-	    window.clearTimeout (tool.timer);
-	}
-	tool.timer = window.setInterval (function() {
-	    if (tool.level < tool.reserve) {
-		++tool.level;
-		showMeter (tool);
-	    } else {
-		window.clearInterval (tool.timer);
-		tool.timer = undefined;
-	    }
-	}, Math.floor (1000 / tool.recharge));
+    // Tool
+    caz.toolDefaults = { rate: 1,
+			 radius: 0,
+			 reserve: 1,
+			 recharge: 1,
+			 overwrite: emptyState };
+
+    caz.Tool = function() {
+	caz.extend (this, caz.toolDefaults);
     };
 
-    caz.Game.prototype.startSpraying = function(tool) {
-	var game = this;
-	if (tool.timer)
-	    window.clearTimeout (tool.timer);
+    caz.Tool.prototype.clearTimer = function() {
+	if (this.timer) {
+	    window.clearInterval (this.timer);
+	    this.timer = undefined;
+	}
+    };
+
+    caz.Tool.prototype.startRecharging = function() {
+	this.clearTimer();
+	this.timer = window.setInterval (function() {
+	    if (this.level < this.reserve) {
+		++this.level;
+		showMeter (this);
+	    } else {
+		window.clearInterval (this.timer);
+		this.timer = undefined;
+	    }
+	}, Math.floor (1000 / this.recharge) + 1);
+    };
+
+    caz.Tool.prototype.startSpraying = function(game) {
+	var tool = this;
+	tool.clearTimer();
 	function spray() {
 	    if (tool.level > 0)
 		game.sprayParticle (game.lastMousePos[0], game.lastMousePos[1], tool.state);
 	};
 	spray();
-	tool.timer = window.setInterval (spray, Math.floor (1000 / tool.rate));
+	tool.timer = window.setInterval (spray, Math.floor (1000 / tool.rate) + 1);
     };
 
     // Zoo
@@ -291,6 +366,7 @@
 				      sync: 0,
 				      neighborhood: caz.mooreHood,
 				      rate: 0 };
+
     caz.Zoo.prototype.defineType = function(name,props) {
 	var defaults = caz.extend ({}, caz.defaultParticleProperties);
 	caz.defineSymbol ("Particle name", this.particle, name, caz.extend (defaults, props));
@@ -320,7 +396,25 @@
 	return [state, dir];
     };
 
-    caz.Zoo.prototype.initialize = function() {
+    caz.Zoo.prototype.initialize = function(callback) {
+	// ensure every particle type mentioned by a rule or tool is defined
+	var zoo = this;
+	function ensureDefined(s) { if (!s in zoo.particle) defineType(s); };
+	for (var a in this.rule) {
+	    ensureDefined (a);
+	    for (var b in this.rule[a]) {
+		ensureDefined (b);
+		for (var i = 0; i < this.rule[a][b]; ++i) {
+		    var rule = this.rule[a][b][i];
+		    var c = rule[2][0], d = rule[3][0];
+		    ensureDefined (c);
+		    ensureDefined (d);
+		}
+	    }
+	}
+	for (var i = 0; i < this.tool.length; ++i)
+	    ensureDefined (this.tool[i].state[0]);
+
 	// calculate particle update rates by type
 	var types = this.particleTypes();
 	var maxRate = 0;
@@ -401,8 +495,8 @@
 		    cellDiv.setAttribute ("id", "x" + x + "y" + y);
 		    cellDiv.setAttribute ("style", "width: " + cellWidth + "px; height: " + cellWidth + "px;");
 		    cellDiv.onmouseover = function() { game.lastMousePos = [x, y]; };
-		    cellDiv.onmousedown = function() { game.startSpraying (game.currentTool); }
-		    cellDiv.onmouseup = function() { game.startRecharging (game.currentTool); }
+		    cellDiv.onmousedown = function() { game.currentTool.startSpraying (game); }
+		    cellDiv.onmouseup = function() { game.currentTool.startRecharging (game); }
 		    boardDiv.appendChild (cellDiv);
 		    row.push (new caz.Cell (game, cellDiv, x, y));
 		}) (x, y, game);
@@ -424,10 +518,8 @@
 
 	// set up tools
 	for (var i = 0; i < this.tool.length; ++i) {
-	    var toolDefaults = caz.extend ({}, caz.toolDefaults);
-	    var tool = caz.extend (toolDefaults, this.tool[i]);
+	    var tool = this.tool[i];
 	    tool.level = tool.reserve;
-	    this.tool[i] = tool;
 	    var toolParentDiv = document.createElement("DIV");
 	    toolParentDiv.setAttribute ("class", "toolslot");
 	    var toolDiv = document.createElement("DIV");
@@ -478,6 +570,9 @@
 	}
 	if (this.tool.length)
 	    game.currentTool = this.tool[0];
+
+	game.callback = callback;
+	return game;
     };
 
     caz.newZooFromUrl = function (url) {

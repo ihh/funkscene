@@ -1,0 +1,29 @@
+
+	#PAGE start
+	#( Fight or flee?
+	#CHOOSE Fight! #FOR battle
+	#CHOOSE Flee! #FOR flee #)
+
+	#PAGE battle
+	#SCENE You fight valiantly against the stronger opponent.
+	#GOSUB death_blow
+	#GOTO heaven
+	#ENDSCENE
+
+	#PAGE flee
+	#SCENE You turn to run, letting your guard down for a moment...
+	#GOSUB death_blow
+	#GOTO hell
+	#ENDSCENE
+	
+	#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #CONTINUE #)
+
+	#PAGE hell
+	#( Cowards never prosper! Enjoy your Hell, roast chicken. #OVER #)
+
+	#PAGE heaven
+	#( Well, here you are in Heaven. Everything it's cracked up to be.
+        All whims are yours for the satisfying. But how will you indulge yourself?
+        #ONCE #CHOOSE I join the perpetual orgy. #FOR #( After centuries, one tires of lust. #BACK #)
+        #ONCE #CHOOSE I stuff my face at the Infinite Banquet. #FOR #( In time, food tastes like ashes. #BACK #)
+        #)

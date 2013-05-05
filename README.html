@@ -270,19 +270,40 @@ other interesting applications of functional programming patterns to narrative, 
 
 <p>To make use of the queue, the keywords are <code>#STACK &lt;scene&gt;</code> and <code>#QUEUE &lt;scene&gt;</code>, which can go anywhere in the scene text.
 <code>#STACK</code> puts the scene on the front of the scene queue, whereas <code>#QUEUE</code> puts it at the back.
-Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</code> is reached.</p>
+Both will postpone the delayed scene until a scene ending with <code>#CONTINUE</code> is reached.
+<code>#CONTINUE</code> is like RETURN with a traditional GOSUB, except you can use the stack as a queue as well,
+scheduling scenes at the end of the game as well as immediately after you finish a sub-scene.</p>
 
 <p>As an alternative to <code>#STACK</code>, at the end of a scene you can use <code>#GOSUB</code> followed by <code>#GOTO</code>, like so:</p>
 
-<pre><code>#PAGE battle
+<pre><code>#PAGE start
+#( Fight or flee?
+#CHOOSE Fight! #FOR battle
+#CHOOSE Flee! #FOR flee #)
+
+#PAGE battle
 #SCENE You fight valiantly against the stronger opponent.
 #GOSUB death_blow
-#GOTO afterlife
+#GOTO heaven
 #ENDSCENE
 
-#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #)
+#PAGE flee
+#SCENE You turn to run, letting your guard down for a moment...
+#GOSUB death_blow
+#GOTO hell
+#ENDSCENE
 
-#PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
+#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #CONTINUE #)
+
+#PAGE hell
+#( Cowards never prosper! Enjoy your Hell, roast chicken. #OVER #)
+
+#PAGE heaven
+#( Well, here you are in Heaven. Everything it's cracked up to be.
+    All whims are yours for the satisfying. But how will you indulge yourself?
+    #ONCE #CHOOSE I join the perpetual orgy. #FOR #( After centuries, one tires of lust. #BACK #)
+    #ONCE #CHOOSE I stuff my face at the Infinite Banquet. #FOR #( In time, food tastes like ashes. #BACK #)
+    #)
 </code></pre>
 
 <p>The following version of the <code>battle</code> scene is exactly equivalent, if a bit cryptic ---
@@ -290,7 +311,7 @@ it shows explicitly how <code>#GOSUB</code> pushes its return continuation onto 
 
 <pre><code>#PAGE battle
 #SCENE You fight valiantly against the stronger opponent.
-#STACK afterlife
+#STACK heaven
 #GOTO death_blow
 #ENDSCENE
 </code></pre>

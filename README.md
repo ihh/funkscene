@@ -273,25 +273,46 @@ other interesting applications of functional programming patterns to narrative, 
 To make use of the queue, the keywords are `#STACK <scene>` and `#QUEUE <scene>`, which can go anywhere in the scene text.
 `#STACK` puts the scene on the front of the scene queue, whereas `#QUEUE` puts it at the back.
 Both will postpone the delayed scene until a scene ending with `#CONTINUE` is reached.
+`#CONTINUE` is like RETURN with a traditional GOSUB, except you can use the stack as a queue as well,
+scheduling scenes at the end of the game as well as immediately after you finish a sub-scene.
 
 As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` followed by `#GOTO`, like so:
+
+	#PAGE start
+	#( Fight or flee?
+	#CHOOSE Fight! #FOR battle
+	#CHOOSE Flee! #FOR flee #)
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
 	#GOSUB death_blow
-	#GOTO afterlife
+	#GOTO heaven
+	#ENDSCENE
+
+	#PAGE flee
+	#SCENE You turn to run, letting your guard down for a moment...
+	#GOSUB death_blow
+	#GOTO hell
 	#ENDSCENE
 	
-	#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #)
-	
-	#PAGE afterlife #( Well, here you are in Heaven. Everything it's cracked up to be. #)
+	#PAGE death_blow #( One slip is all it takes. A powerful blow pierces your helmet. It's all over. #CONTINUE #)
+
+	#PAGE hell
+	#( Cowards never prosper! Enjoy your Hell, roast chicken. #OVER #)
+
+	#PAGE heaven
+	#( Well, here you are in Heaven. Everything it's cracked up to be.
+        All whims are yours for the satisfying. But how will you indulge yourself?
+        #ONCE #CHOOSE I join the perpetual orgy. #FOR #( After centuries, one tires of lust. #BACK #)
+        #ONCE #CHOOSE I stuff my face at the Infinite Banquet. #FOR #( In time, food tastes like ashes. #BACK #)
+        #)
 
 The following version of the `battle` scene is exactly equivalent, if a bit cryptic ---
 it shows explicitly how `#GOSUB` pushes its return continuation onto the stack:
 
 	#PAGE battle
 	#SCENE You fight valiantly against the stronger opponent.
-	#STACK afterlife
+	#STACK heaven
 	#GOTO death_blow
 	#ENDSCENE
 

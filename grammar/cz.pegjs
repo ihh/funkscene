@@ -129,15 +129,15 @@ param_decl
 
 tool_decl
  = "tool" spc* "{" spc* p:tool_property_list spc* "}" spc* ";" spc*
- { return function(z){z.tool.push(p);}; }
+ { return function(z){z.tool.unshift(p);}; }
 
 tool_property_list
  = p:tool_property spc* "," spc* h:tool_property_list { h[p[0]] = p[1]; return h; }
  / p:tool_property                          { var h={}; h[p[0]] = p[1]; return h; }
 
 tool_property
- = "type" v:symbol_value  { return ["particle", v]; }  // hack to avoid using "type" as a member field
- / "intensity" numeric_value
+ = "type" v:optionally_directed_symbol_value  { return ["state", v]; }  // hack to avoid using "type" as a member field
+ / "rate" numeric_value
  / "radius" numeric_value
  / "reserve" numeric_value
  / "recharge" numeric_value
@@ -151,6 +151,9 @@ symbol_value
 
 symbol_or_wild_value
  = spc* ":" spc* s:symbol_or_wild    { return s; }
+
+optionally_directed_symbol_value
+ = spc* ":" spc* s:optionally_directed_symbol  { return s; }
 
 positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }

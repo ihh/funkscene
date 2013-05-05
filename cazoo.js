@@ -2,15 +2,6 @@
     var boardDiv = document.getElementById("board");
     var toolbarDiv = document.getElementById("toolbar");
 
-    var toolDivs = [];
-    var currentTool = 0;
-
-    var clickedOn = function(x,y) { console.log("Clicked on ("+x+","+y+")"); }
-
-    var mouseDown = 0;
-    var onMouseDown = function() { ++mouseDown; }
-    var onMouseUp = function() { mouseDown = 0; }
-
     caz.compassToInt = { n:0, ne:1, e:2, se:3, s:4, sw:5, w:6, nw:7 };
     caz.relativeToInt = { f:0, fr:1, r:2, br:3, b:4, bl:5, l:6, fl:7 };
 
@@ -19,6 +10,9 @@
     caz.neumannHood = [0, 2, 4, 6];
     caz.bishopHood = [1, 3, 5, 7];
     caz.mooreHood = [0, 1, 2, 3, 4, 5, 6, 7];
+
+    var emptyState = "_";
+    caz.toolDefaults = { rate: 1, radius: 0, reserve: 1, recharge: 1, overwrite: emptyState };
 
     caz.evalDirExprIntVal = function (fwdDir, dirExpr) {
 	if (dirExpr == "*" || dirExpr == "")
@@ -68,7 +62,7 @@
     caz.Cell = function (game, div, x, y) {
 	this.game = game;
 	this.zoo = game.zoo;
-	this.state = zoo.empty;
+	this.state = emptyState;
 	this.dir = 0;
 	this.div = div;
 	this.x = x;
@@ -88,20 +82,34 @@
 	this.dir = newDir;
 
 	if (newState != oldState || newDir != oldDir) {
-	    var html = this.zoo.makeIconHtml(newState,newDir);
-	    this.div.innerHTML = this.zoo.makeIconHtml(newState,newDir);
+	    var img = this.zoo.makeIconImg(newState,newDir);
+	    if (this.div.children.length)
+		this.div.removeChild (this.div.children[0]);
+	    if (img)
+		this.div.appendChild (img);
+
+	    --this.game.particleCount[oldState];
+	    ++this.game.particleCount[newState];
 	}
 
+	this.setTimer();
+    };
+
+    caz.Cell.prototype.setTimer = function() {
 	if (this.timer) {
 	    window.clearTimeout (this.timer);
 	    this.timer = undefined;
 	}
-	var info = zoo.particle[newState];
+	var info = zoo.particle[this.state];
 	if (info.rate) {
 	    var callback = (function(cell){return function(){cell.update();}}) (this);
 	    var delayInSecs = (info.sync ? 1 : caz.randomWaitTime()) / info.rate;  // exponentially distributed wait if async
 	    var delayInMillisecs = Math.floor (delayInSecs * 1000);
 	    this.timer = window.setTimeout (callback, delayInMillisecs);
+	    // for debugging, record time of current/next events
+	    var d = new Date();
+	    this.lastTimerEvent = d.getTime();
+	    this.nextTimerEvent = this.lastTimerEvent + delayInMillisecs;
 	}
     };
 
@@ -111,7 +119,11 @@
     caz.Game = function (zoo) {
 	this.zoo = zoo;
 	this.cell = [];
-	this.currentTool = zoo.tool[0];
+	this.particleCount = {};
+	this.toolDivs = [];
+	this.toolMeterDivs = [];
+	this.currentTool = undefined;
+	this.lastMousePos = [];
     };
 
     caz.Game.prototype.getCell = function(x,y) {
@@ -176,9 +188,58 @@
 	    var newTargetState = zoo.evalStateExpr (newTargetStateExpr, newTargetDirExpr, fwdDir, srcState, srcDir, targetState, targetDir);
 	    srcCell.setState (newSrcState[0], newSrcState[1]);
 	    targetCell.setState (newTargetState[0], newTargetState[1]);
+	} else
+	    srcCell.setTimer();
+    };
+
+    function showMeter(tool) {
+	tool.meterSpan.setAttribute ("style", "width: " + Math.floor (100 * tool.level / tool.reserve) + "%");
+    };
+
+    caz.Game.prototype.sprayParticle = function(x,y) {
+	var tool = this.currentTool;
+	var r = tool.radius;
+	if (tool.level > 0) {
+	    var dx, dy;
+	    do {
+		dx = Math.floor (Math.random() * r * 2) - r;
+		dy = Math.floor (Math.random() * r * 2) - r;
+	    } while (dx*dx + dy*dy > r*r);
+	    var oldState = this.getState (x+dx, y+dy);
+	    if (oldState[0] == tool.overwrite || tool.overwrite == "*") {
+		this.setState (x+dx, y+dy, tool.state[0], tool.state[1]);
+		--tool.level;
+		showMeter (tool);
+	    }
 	}
     };
 
+    caz.Game.prototype.startRecharging = function(tool) {
+	if (tool.timer) {
+	    window.clearTimeout (tool.timer);
+	}
+	tool.timer = window.setInterval (function() {
+	    if (tool.level < tool.reserve) {
+		++tool.level;
+		showMeter (tool);
+	    } else {
+		window.clearInterval (tool.timer);
+		tool.timer = undefined;
+	    }
+	}, Math.floor (1000 / tool.recharge));
+    };
+
+    caz.Game.prototype.startSpraying = function(tool) {
+	var game = this;
+	if (tool.timer)
+	    window.clearTimeout (tool.timer);
+	function spray() {
+	    if (tool.level > 0)
+		game.sprayParticle (game.lastMousePos[0], game.lastMousePos[1], tool.state);
+	};
+	spray();
+	tool.timer = window.setInterval (spray, Math.floor (1000 / tool.rate));
+    };
 
     // Zoo
     caz.Zoo = function() {
@@ -193,9 +254,8 @@
 	this.iconPrefix = "img/icon/";
 	this.iconSuffix = ".svg";
 
-	this.defineType (this.empty, {});
+	this.defineType (emptyState, {});
     };
-    caz.Zoo.prototype.empty = "_";
 
     caz.Zoo.prototype.particleTypes = function() { return Object.keys (this.particle); }
 
@@ -203,16 +263,20 @@
 	return this.iconPrefix + icon + this.iconSuffix;
     };
 
-    caz.Zoo.prototype.makeIconHtml = function(type,dir) {
+    function alwaysFalse() { return false; };
+    caz.Zoo.prototype.makeIconImg = function(type,dir) {
 	var typeInfo = this.particle[type];
 	var icon = typeInfo.icon;
-	if (typeof(icon) == "undefined") return "";
-	var style = "";
+	if (typeof(icon) == "undefined") return undefined;
+	var img = document.createElement ("IMG");
+	img.setAttribute ("class", "unselectable");
+	img.src = this.makeIconPath(icon);
 	if (typeInfo.rotates) {
 	    var angle = (45 * dir) + "deg";
-	    style = " style=\" -webkit-transform: rotate(" + angle + "); -moz-transform: rotate(" + angle + ")\"";
+	    img.setAttribute ("style", "-webkit-transform: rotate(" + angle + "); -moz-transform: rotate(" + angle + ")");
 	}
-	return "<img src=\"" + this.makeIconPath(icon) + "\"" + style + "/>";
+	img.ondragstart = alwaysFalse;
+	return img;
     };
 
     caz.Zoo.prototype.initRules = function(s,t) {
@@ -318,6 +382,7 @@
 	var game = new caz.Game (this);
 	this.game = game;
 
+	// create dummy off-board cell
 	game.dummyCell = new caz.Cell (game, undefined, undefined, undefined);  // for off-board access
 	game.dummyCell.setState = function() { };  // nullify default write method
 
@@ -329,21 +394,25 @@
 	    var row = [];
 	    game.cell.push (row);
 	    for (var x = 0; x < xSize; ++x) {
-		(function (x, y, zoo) {
+		(function (x, y, game) {
+		    var zoo = game.zoo;
 		    var cellDiv = document.createElement("DIV");
-		    cellDiv.setAttribute ("class", "cell");
+		    cellDiv.setAttribute ("class", "cell unselectable");
 		    cellDiv.setAttribute ("id", "x" + x + "y" + y);
 		    cellDiv.setAttribute ("style", "width: " + cellWidth + "px; height: " + cellWidth + "px;");
-		    var clickCell = function() { return clickedOn (x, y); };
-		    cellDiv.onclick = clickCell;
-		    cellDiv.onmouseover = function() { if (mouseDown) clickCell(); };
-		    cellDiv.onmousedown = onMouseDown;
-		    cellDiv.onmouseup = onMouseUp;
+		    cellDiv.onmouseover = function() { game.lastMousePos = [x, y]; };
+		    cellDiv.onmousedown = function() { game.startSpraying (game.currentTool); }
+		    cellDiv.onmouseup = function() { game.startRecharging (game.currentTool); }
 		    boardDiv.appendChild (cellDiv);
 		    row.push (new caz.Cell (game, cellDiv, x, y));
-		}) (x, y, this);
+		}) (x, y, game);
 	    }
 	}
+
+	// initialize particle counts
+	for (var t = 0; t < types.length; ++t)
+	    game.particleCount[types[t]] = 0;
+	game.particleCount[emptyState] = xSize * ySize;
 
 	// do inits
 	for (var i = 0; i < zoo.init.length; ++i) {
@@ -355,34 +424,60 @@
 
 	// set up tools
 	for (var i = 0; i < this.tool.length; ++i) {
+	    var toolDefaults = caz.extend ({}, caz.toolDefaults);
+	    var tool = caz.extend (toolDefaults, this.tool[i]);
+	    tool.level = tool.reserve;
+	    this.tool[i] = tool;
+	    var toolParentDiv = document.createElement("DIV");
+	    toolParentDiv.setAttribute ("class", "toolslot");
 	    var toolDiv = document.createElement("DIV");
 	    var selectTool = (function (currentToolIndex, toolDiv) {
 		return function() {
-//		    console.log ("Selected tool " + currentToolIndex);
-		    game.currentTool = this.tool[currentToolIndex];
+		    var oldTool = game.currentTool;
+		    game.currentTool = game.zoo.tool[currentToolIndex];
 		    toolDiv.setAttribute ("class", "tool selected");
-		    for (var j = 0; j < toolDivs.length; ++j) {
+		    for (var j = 0; j < game.toolDivs.length; ++j) {
 			if (j != currentToolIndex) {
-			    toolDivs[j].setAttribute ("class", "tool unselected");
+			    game.toolDivs[j].setAttribute ("class", "tool unselected");
 			}
 		    }
+		    game.startRecharging(oldTool);
 		};
 	    }) (i, toolDiv);
 	    toolDiv.onclick = selectTool;
 	    toolDiv.setAttribute ("class", i == 0 ? "tool selected" : "tool unselected");
 	    toolDiv.setAttribute ("id", "tool" + i);
 	    var toolImg = document.createElement("IMG");
-	    var toolIcon = this.tool[i].icon;
-	    var toolType = this.tool[i].particle;
+	    var toolIcon = tool.icon;
+	    var toolType = tool.state[0];
 	    if (typeof toolIcon == 'undefined') {
 		toolIcon = this.particle[toolType].icon;
 	    }
 	    toolImg.src = this.makeIconPath (toolIcon);
 	    toolImg.setAttribute ("class", "toolIcon");
 	    toolDiv.appendChild (toolImg);
-	    toolbarDiv.appendChild (toolDiv);
-	    toolDivs.push (toolDiv);
+
+	    var meterDiv = document.createElement("DIV");
+ 	    meterDiv.setAttribute ("class", "toolMeter");
+
+	    var meterSpan = document.createElement("SPAN");
+
+	    var spacerDiv = document.createElement("DIV");
+ 	    spacerDiv.setAttribute ("class", "toolSpacer");
+
+	    meterDiv.appendChild (meterSpan);
+	    toolParentDiv.appendChild (toolDiv);
+	    toolParentDiv.appendChild (spacerDiv);
+	    toolParentDiv.appendChild (meterDiv);
+	    toolbarDiv.appendChild (toolParentDiv);
+
+	    game.toolDivs.push (toolDiv);
+
+	    tool.meterSpan = meterSpan;
+	    showMeter (tool);
 	}
+	if (this.tool.length)
+	    game.currentTool = this.tool[0];
     };
 
     caz.newZooFromUrl = function (url) {

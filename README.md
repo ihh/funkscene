@@ -4,8 +4,8 @@ FunkScene
 FunkScene is a dialect of JavaScript intended to encourage functional
 programming in the creation of choose-your-own (CYO) interactive fiction.
 
-Most JavaScript programs are valid FunkScene programs. In addition,
-FunkScene provides a few macros to construct the staples of CYO fiction:
+In a certain trivial sense, most JavaScript programs are valid FunkScene programs. In addition,
+and more specifically, FunkScene provides a few macros to construct the staples of CYO fiction:
 passages of text _("scenes")_ with choices that lead to other scenes.
 
 This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.

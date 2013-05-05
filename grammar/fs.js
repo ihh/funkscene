@@ -650,7 +650,7 @@ FunkScene.parser = (function(){
           pos0 = clone(pos);
           result0 = parse_gosub_clause();
           if (result0 !== null) {
-            result0 = (function(offset, line, column, subr) { return gosubWithContinuation(subr,"defaultContinuation"); })(pos0.offset, pos0.line, pos0.column, result0);
+            result0 = (function(offset, line, column, subr) { return gosubWithDefaultContinuation(subr); })(pos0.offset, pos0.line, pos0.column, result0);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -1204,7 +1204,7 @@ FunkScene.parser = (function(){
             pos0 = clone(pos);
             result0 = parse_gosub_clause();
             if (result0 !== null) {
-              result0 = (function(offset, line, column, gosub) { return gosubWithContinuation(gosub,"defaultContinuation"); })(pos0.offset, pos0.line, pos0.column, result0);
+              result0 = (function(offset, line, column, gosub) { return gosubWithDefaultContinuation(gosub); })(pos0.offset, pos0.line, pos0.column, result0);
             }
             if (result0 === null) {
               pos = clone(pos0);
@@ -5854,6 +5854,10 @@ FunkScene.parser = (function(){
       
         function gosubWithContinuation(subroutine,continuation) {
             return "(function(){FunkScene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
+        }
+      
+        function gosubWithDefaultContinuation(subroutine) {
+            return gosubWithContinuation(subroutine,"defaultContinuation");
         }
       
         function makeAssignment(name,scene) {

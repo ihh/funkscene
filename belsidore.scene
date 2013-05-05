@@ -1,5 +1,5 @@
 // This should give you a cute death message:
-// funkscene.restore ([9, [0,"name","Best Beloved"], 6, 0, 5, 0, 1, 0, 5, 0, 0])
+// FunkScene.restore ([9, [0,"name","Best Beloved"], 6, 0, 5, 0, 1, 0, 5, 0, 0])
 
 amps = "Several"
 dial = "dial"

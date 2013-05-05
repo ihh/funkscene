@@ -261,6 +261,17 @@ no detectable interruption, use `#INCLUDE`, like so:
 The keyword `#PREVIOUS` yields the previous scene function, while
 `#CURRENT` gives the current one. Because `#GOTO #PREVIOUS` is a common construct, this can be shortened to `#BACK`.
 
+It's usually wise to give early attention to the testing of these constructs.
+Depending on JavaScript scoping, and so on, `#CURRENT` might not always mean the scene you think it means.
+For example, the following code may look superficially like it alternates between two scenes,
+but it will actually get stuck on the second one:
+
+	#PAGE start
+	#( What shall you do?
+	   #CHOOSE Navel-gaze. #FOR #( You gaze at your navel.
+	                               #GOTO #CURRENT #) #)
+
+
 Scheduling scenes for later
 ---------------------------
 
@@ -353,9 +364,33 @@ Both forms represent a continuation of the story.
 
 As noted, this is a rudimentary scheduling system, designed to implement the idea of GOSUB in a simple way.
 However, the functional programming representation of low-level control-flow constructs (GOTO and GOSUB) is necessarily a bit tortured.
-(In fact, FunkScene implicitly uses subroutines everywhere, as every scene is a function returning some scenetext and a list of choices.)
+(In fact, FunkScene implicitly uses subroutines everywhere, but in a different sense: every scene is a function returning some scenetext and a list of choices.)
 
-The ability to nest and sequence side-quests is a neat trick, but even neater ones are conceivable.
+One limitation of the way `#GOSUB` is implemented is that `#IF...#THEN...#ENDIF` does not play well with `#GOSUB`.
+You may be tempted to do something like this. Don't:
+
+	// This is bad code and WILL NOT COMPILE
+	#SCENE
+	 You are in the scullery.
+	 #IF got_knife
+	  "Hey! You! Girl with the knife!" says the Cook.
+	  // The following line will not work; you can't use a #GOSUB in an #IF block
+	  #GOSUB carrot_chopping_side_quest
+	  Well, that was fun.
+	 #ENDIF
+	 You were made for greater things than this. Why not go upstairs?
+	 #CHOOSE Yes, go upstairs #FOR posh_romance
+	 #CHOOSE No, stay downstairs #FOR servant_action
+	#ENDSCENE
+
+The implicit continuations required to make such things work, in the scene-functional framework, get rather tangled
+(one continuation from "...says the Cook" to "Well, that was fun", then another down to "You were made for...").
+With more nested `#IF` blocks and `#ELSE` clauses, it gets even messier.
+It's possible, but it involves too many contortions in the compiler. You don't need it!
+You can shunt the `#IF` block down into the side quest, or use `#GOTO` instead of `#GOSUB`,
+or (even better) stop being so uptight about control flow and give the player a choice instead.....
+
+With all these caveats, the ability to nest and sequence side-quests is still a neat trick. Even neater tricks are conceivable.
 It is quite easy to implement your own scene scheduler; for example, to choreograph a steadily escalating tension,
 like the Drama Manager which "sequences beats" (i.e. schedules appropriately-paced vignettes) in Mateas and Stern's "Facade".
 

@@ -47,6 +47,10 @@
       return "(function(){FunkScene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
   }
 
+  function gosubWithDefaultContinuation(subroutine) {
+      return gosubWithContinuation(subroutine,"defaultContinuation");
+  }
+
   function makeAssignment(name,scene) {
       return name + " = " + scene + ";\n";
   }
@@ -162,7 +166,7 @@ named_scene_body
 
 gosub_chain
  = subr:gosub_clause chain:gosub_chain  { return gosubWithContinuation(subr,chain); }
- / subr:gosub_clause                    { return gosubWithContinuation(subr,"defaultContinuation"); }
+ / subr:gosub_clause                    { return gosubWithDefaultContinuation(subr); }
 
 scene
  = "#SCENE" single_spc s:scene_body endscene  { return s; }
@@ -204,7 +208,7 @@ goto_clause
  / gosub:gosub_clause target:goto_clause_or_continuation
    { return gosubWithContinuation(gosub,target); }
  / gosub:gosub_clause
-   { return gosubWithContinuation(gosub,"defaultContinuation"); }
+   { return gosubWithDefaultContinuation(gosub); }
  / "#CONTINUE" spc
    { return "FunkScene.continuationScene()"; }
  / "#BACK" spc

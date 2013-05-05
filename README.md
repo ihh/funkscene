@@ -302,10 +302,10 @@ As an alternative to `#STACK`, at the end of a scene you can use `#GOSUB` follow
 
 	#PAGE heaven
 	#( Well, here you are in Heaven. Everything it's cracked up to be.
-        All whims are yours for the satisfying. But how will you indulge yourself?
-        #ONCE #CHOOSE I join the perpetual orgy. #FOR #( After centuries, one tires of lust. #BACK #)
-        #ONCE #CHOOSE I stuff my face at the Infinite Banquet. #FOR #( In time, food tastes like ashes. #BACK #)
-        #)
+	All whims are yours for the satisfying. But how will you indulge yourself?
+	#ONCE #CHOOSE I join the perpetual orgy. #FOR #( After centuries, one tires of lust. #BACK #)
+	#ONCE #CHOOSE I stuff my face at the Infinite Banquet. #FOR #( In time, food tastes like ashes. #BACK #)
+	#)
 
 The following version of the `battle` scene is exactly equivalent, if a bit cryptic ---
 it shows explicitly how `#GOSUB` pushes its return continuation onto the stack:

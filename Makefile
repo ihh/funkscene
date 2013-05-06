@@ -5,6 +5,9 @@ all: grammar/fs.js grammar/cz.js README.html img/icon pagedown
 grammar/fs.js: grammar/fs.pegjs
 	$(PEGJS) -e FunkScene.parser --track-line-and-column $< $@
 
+grammar/graph.js: grammar/graph.pegjs
+	$(PEGJS) -e FunkScene.graphGenerator --track-line-and-column $< $@
+
 grammar/cz.js: grammar/cz.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
 

@@ -308,6 +308,14 @@
 	    console.log (processed);
 	    console.log (e.message);
 	}
+
+	var graph;
+	try {
+	    graph = FunkScene.graphGenerator.parse (raw);
+	} catch (e) {
+	    console.log (buildErrorMessage(e));
+	}
+	console.log (graph);
     }
 
     fs.joinScenes = function (scenes) {

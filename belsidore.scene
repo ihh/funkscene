@@ -45,6 +45,26 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 
 #PAGE wise_choice
 #( A wise choice, my friend.
+
+Now, I have to warn you that there is a bug coming up soon.
+Without bugs there would be no point in a debugger; I do hope you understand.
+
+Are you ready for a big, bad Bug?
+
+#CHOOSE I'm ready! #FOR pre_bug_page
+#CHOOSE No, get me away from that thing #FOR #( Very well. You live a tranquil bug-free existence to the end of your days. #)
+#)
+
+#PAGE pre_bug_page
+#( I'm proud of you!
+
+So, the bug's coming right up. Click on the button to get there.
+#GOTO bug_page
+#)
+
+#PAGE bug_page
+#(
+Here's the bug! (You'll never see this text, I think.)
 #GOTO hell
 #)
 

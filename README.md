@@ -13,15 +13,17 @@ This is not a full tutorial, but a quick-start guide for experienced JavaScript 
 Acknowledgements
 ----------------
 
-FunkScene borrows visual bits and pieces from several open source projects:
+FunkScene borrows bits and pieces from several open source projects:
 
 * [Dan Fabulich's CSS](http://www.choiceofgames.com/make-your-own-games/choicescript-intro/) at choiceofgames.com
- * ChoiceScript was a major aesthetic influence in general
+ * ChoiceScript was a major influence; citing the CSS does poor justice. No other code was directly ripped, but the basic CYO-DSL structure is highly ChoiceScriptEsque
 * [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
 * [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
 
 An earlier prototype, [Schooz](https://github.com/ihh/schooz), developed the functional programming framework
 while also exploring some alternative UI ideas (such as dropdown menus) that were eventually omitted from this framework.
+
+The nascent debugger (such as it is) was influenced by InkleWriter and Twine.
 
 Scene functions
 ---------------

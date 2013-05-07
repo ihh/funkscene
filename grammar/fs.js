@@ -7683,9 +7683,7 @@ FunkScene.parser = (function(){
           var nodes = [];
           function newNode(l,c) {
       	var n = typeof(lastPageName) == 'undefined' ? "scene" : lastPageName;
-      	n += "." + (nodes.length + 1);
-      	n += ":" + l;
-      	n += "," + c;
+      	n = (nodes.length + 1) + "(" + n + "," + l + "," + c + ")";
       	nodes.push (n);
       	return n;
           }

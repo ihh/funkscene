@@ -339,14 +339,32 @@ body {
     height: 100%;
     top: 0;
     left: 0;
-}
 
-.sigmaPopup {
-    display: inline-block;
     border-radius: 3;
     padding: 5;
     background: #fff;
     color: #000;
     box-shadow: 0 0 4px #666;
+}
+
+.sigmaPopup {
+    display: inline-block;
+    left: .5em;
+    top: .5em;
+    border-radius: 3;
+    padding: 5;
+    background: #eee;
+    color: #000;
+    box-shadow: 0 0 4px #666;
     position: absolute;
+}
+
+.sigmaPopup>ul {
+    list-style-type: none;
+    padding-left: 0em;
+}
+
+.sigmaPopup>ul>li {
+    padding-left: 1em;
+    text-indent: -1em;
 }

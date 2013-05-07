@@ -7326,9 +7326,7 @@ FunkScene.graphGenerator = (function(){
           var nodes = [];
           function newNode(l,c) {
       	var n = typeof(lastPageName) == 'undefined' ? "scene" : lastPageName;
-      	n += "." + (nodes.length + 1);
-      	n += ":" + l;
-      	n += "," + c;
+      	n = (nodes.length + 1) + "(" + n + "," + l + "," + c + ")";
       	nodes.push (n);
       	return n;
           }
@@ -7434,15 +7432,17 @@ FunkScene.graphGenerator = (function(){
       	xml += "<gexf>\n";
       	xml += "<graph type=\"static\" defaultedgetype=\"directed\">\n";
       	xml += "<attributes>\n";
-      	xml += "<attribute id=\"file\" title=\"File\" type=\"string\"/>\n";
-      	xml += "<attribute id=\"line\" title=\"Line\" type=\"integer\"/>\n";
-      	xml += "<attribute id=\"col\" title=\"Column\" type=\"integer\"/>\n";
-      	xml += "<attribute id=\"text\" title=\"Scene\" type=\"string\"/>\n";
+      	xml += "<attribute id=\"File\" type=\"string\"/>\n";
+      	xml += "<attribute id=\"Line\" type=\"integer\"/>\n";
+      	xml += "<attribute id=\"Column\" type=\"integer\"/>\n";
+      	xml += "<attribute id=\"Text\" type=\"string\"/>\n";
+      	xml += "<attribute id=\"Bug\" type=\"string\"/>\n";
       	xml += "</attributes>\n";
       	// nodes
       	xml += "<nodes>\n";
       	// first the nodes with definitions
       	var definedNode = {};
+      	var x = 0, y = 0;
       	for (var i = 0; i < nodes.length; ++i) {
       	    var id = nodes[i];
       	    var label = id in nodeName ? nodeName[id] : id;
@@ -7450,10 +7450,10 @@ FunkScene.graphGenerator = (function(){
       	    if (!isContinuationNode(id) && !isSpecialNode(label)) {
       		xml += "<node id=\"" + label + "\">\n";
       		xml += "<attvalues>\n";
-      		xml += "<attvalue for=\"file\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
-      		xml += "<attvalue for=\"line\" value=\"" + sceneLine[id] + "\"/>";
-      		xml += "<attvalue for=\"col\" value=\"" + sceneColumn[id] + "\"/>";
-      		xml += "<attvalue for=\"text\" value=\"" + sceneText[id] + "\"/>";
+      		xml += "<attvalue for=\"File\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
+      		xml += "<attvalue for=\"Line\" value=\"" + sceneLine[id] + "\"/>";
+      		xml += "<attvalue for=\"Column\" value=\"" + sceneColumn[id] + "\"/>";
+      		xml += "<attvalue for=\"Text\" value=\"" + sceneText[id] + "\"/>";
       		xml += "</attvalues>\n";
       		if (label == "start") {
       		    xml += "<color r=\"0\" g=\"128\" b=\"0\"/>\n";
@@ -7463,6 +7463,8 @@ FunkScene.graphGenerator = (function(){
       		    xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
       		}
       		xml += "<size value=\"2\"/>\n";
+      		xml += "<x value=\"" + ++x + "\"/>\n";
+      		xml += "<y value=\"" + ++y + "\"/>\n";
       		xml += "</node>\n";
       		definedNode[id] = 1;
       		definedNode[label] = 1;
@@ -7474,9 +7476,13 @@ FunkScene.graphGenerator = (function(){
       	    var id = edges[i][1];
       	    if (!((id in definedNode) || (id in looseEndNode) || isContinuationNode(id))) {
       		xml += "<node id=\"" + id + "\">\n";
-      		xml += "<attvalues></attvalues>\n";
+      		xml += "<attvalues>\n";
+      		xml += "<attvalue for=\"Bug\" value=\"Loose End\"/>";
+      		xml += "</attvalues>\n";
       		xml += "<color r=\"255\" g=\"0\" b=\"0\"/>\n";
       		xml += "<size value=\"4\"/>\n";
+      		xml += "<x value=\"" + ++x + "\"/>\n";
+      		xml += "<y value=\"" + ++y + "\"/>\n";
       		xml += "</node>\n";
       		looseEndNode[id] = 1;
       	    }
@@ -7484,20 +7490,24 @@ FunkScene.graphGenerator = (function(){
       	// end of nodes
       	xml += "</nodes>\n";
       	xml += "<edges>\n";
+      	var edgeId = 0;
+      	function addEdge (source, target, props) {
+      	    if (source in nodeName) source = nodeName[source];
+      	    if (target in nodeName) target = nodeName[target];
+      	    if (!isContinuationNode(source) && !isContinuationNode(target)) {
+      		xml += "<edge id=\"" + edgeId++ + "\" source=\"" + source + "\" target=\"" + target + "\"";
+      		if ("choiceType" in props) xml += " choicetype=\"" + props.choiceType + "\"";
+      		if ("label" in props) xml += " label=\"" + props.label + "\"";
+      		xml += "/>\n";
+      	    }
+      	};
       	for (var i = 0; i < edges.length; ++i) {
       	    var source = edges[i][0];
       	    var target = edges[i][1];
       	    var props = edges[i][2];
-      	    if (source in nodeName) source = nodeName[source];
-      	    if (target in nodeName) target = nodeName[target];
-      	    if (!isContinuationNode(source) && !isContinuationNode(target)) {
-      		xml += "<edge id=\"" + i + "\" source=\"" + source + "\" target=\"" + target + "\"";
-      		if ("choiceType" in props) xml += " choicetype=\"" + props.choiceType + "\"";
-      		if (target in canGoBack)
-      		    xml += " edgetype=\"mutual\"";
-      		if ("label" in props) xml += " label=\"" + props.label + "\"";
-      		xml += "/>\n";
-      	    }
+      	    addEdge (source, target, props);
+      	    if (target in canGoBack)
+      		addEdge (target, source, props);
       	}
       	xml += "</edges>\n";
       	xml += "</graph>\n";

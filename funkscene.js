@@ -154,8 +154,8 @@
 	    }).graphProperties({
 		minNodeSize: 0.1,
 		maxNodeSize: 5,
-		minEdgeSize: 1,
-		maxEdgeSize: 1
+		minEdgeSize: 2,
+		maxEdgeSize: 2
 	    }).mouseProperties({
 		maxRatio: 32
 	    });
@@ -163,16 +163,18 @@
 	    // Parse the GEXF encoded graph
 	    sigInst.parseGexfXmlDoc(graphXmlDoc);
 
-	    function attributesToList(attr) {
+	    function attributesToList(attr,id) {
+		var attrPlusId = attr.slice(0);
+		attrPlusId.unshift ({ attr: "ID", val: id });
 		return '<ul>' +
-		    attr.map(function(o){
-			return '<li>' + o.attr + ' : ' + o.val + '</li>';
+		    attrPlusId.map(function(o){
+			return '<li><b>' + o.attr + '</b> : ' + o.val + '</li>';
 		    }).join('') +
 		    '</ul>';
 	    }
 	    
 	    function showNodeInfo(event) {
-		popUp && popUp.remove();
+		hideNodeInfo();
 		
 		var node;
 		sigInst.iterNodes(function(n){
@@ -181,8 +183,7 @@
 		
 		popUp = document.createElement("DIV");
 		popUp.setAttribute ("class", "sigmaPopup");
-		popUp.setAttribute ("display", "left: " + node.displayX + "; top: " + node.displayY+15 + ";");
-		popUp.innerHTML = attributesToList (node['attr']['attributes']);
+		popUp.innerHTML = attributesToList (node['attr']['attributes'], node.id);
 		
 		sigmaDiv.appendChild (popUp);
 	    }
@@ -195,6 +196,20 @@
 	    
 	    sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo);
 
+sigma.publicPrototype.circularLayout = function() {
+    var R = 100,
+        i = 0,
+        L = this.getNodesCount();
+ 
+    this.iterNodes(function(n){
+      n.x = -Math.cos(Math.PI*(i++)/L)*R;
+      n.y = Math.sin(Math.PI*(i++)/L)*R;
+    });
+ 
+    return this.position(0,0,1).draw();
+  };
+sigInst.circularLayout();
+ 
 	    // Turn on the fish eye
 	    sigInst.activateFishEye();
 
@@ -228,6 +243,10 @@
 	historyDiv.innerHTML += fs.sceneTextToHistoryHtml(s);
     };
 
+    function bugHtml(str) {
+	return "<b><font color=\"red\">BUG</font></b> : " + str;
+    };
+
     // viewScene
     //  f: the current scene function
     //  fastForward: flag indicating whether we are in replay mode, with more scenes coming
@@ -237,7 +256,7 @@
     //  undefined => no minigame on this page
     function viewScene(f,fastForward) {
 	menuDiv.innerHTML = "";
-	sceneDiv.innerHTML = "";
+	sceneDiv.innerHTML = bugHtml("Check Debugger Map for Loose Ends");
 	choiceFuncs = [];
 	choiceTexts = [];
 

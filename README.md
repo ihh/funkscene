@@ -252,7 +252,6 @@ scene:
 	#ENDSCENE
 
 Note the final `#ENDSCENE` delimiter is still required after a `#GOTO`.
-(You can optionally use `#END` any place you can use `#ENDSCENE`, too.)
 
 A scene can also end with a statement of the form `#GOSUB x #GOTO y`
 or with a `#CONTINUE`, which is loosely equivalent to returning from a `#GOSUB`,

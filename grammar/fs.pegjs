@@ -1,141 +1,183 @@
 {
-  function sceneFunction(continuation,includes,scene_desc,choices) {
-      var f = "(function() {\n";
-      if (typeof(continuation) != 'undefined') {
-          f += "var defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
-      }
-      f += "var __t=\"\",__c=[],__tc;\n";
-      if (typeof(includes) != 'undefined') {
-          for (var i = 0; i < includes.length; ++i) {
-	      var text = includes[i][0], incl = includes[i][1];
-	      if (typeof(text) != 'undefined') { f += text; }
-	      if (typeof(incl) != 'undefined') { f += "__tc=(" + incl + ")();\n__t+=__tc[0];\n__c=__c.concat(__tc[1]);\n"; }
-	  }
-      }
-      f += scene_desc;
-      f += "__c=__c.concat(" + renderList(choices) + ");\n";
-      f += "return [__t,__c];})";
+    // Warning: duplicated code (also found in graph.pegjs)
+    // The code & grammar must be exactly the same so that the node IDs match up (code smell....)
+    var sceneStack = [];
+    var sceneIndex = {};
+    var sceneLine = {};
+    var sceneColumn = {};
 
-      return f;
-  }
+    var lastPageName;
+    function setPageName(n) { lastPageName = n; return true; }
+    function resetPageName() { lastPageName = undefined; return true; }
 
-  function makeMinigameSceneFunction(intro,cazoo) {
-      return "(function(){return function(callback){return FunkScene.runMinigame(" + intro + "," + cazoo + ",callback);}})";
-  }
+    function currentScene() { return sceneStack[sceneStack.length - 1]; }
+    function startScene(l,c) {
+	// for some reason, sceneFunction is getting called multiple times by the parser for the same scene
+	// The line/column ID is a hacky workaround to ensure things only get defined once...
+	// It also makes the node IDs more meaningful for debugging
+	var lc = l + "." + c;
+	var id;
+	if (!sceneIndex[lc]) {
+	    id = newNode(l,c);
+	    sceneLine[id] = l;
+	    sceneColumn[id] = c;
+	    sceneIndex[lc] = id;
+	} else
+	    id = sceneIndex[lc];
+	sceneStack.push(id);
+	return true;
+    }
+    function endScene() { return sceneStack.pop(); return true; }
 
-  function renderList(x) {
-      if (typeof x === 'string') {
-          return x;
-      } else {
-          return "[" + x.join(",") + "]";
-      }
-  }
+    var nodes = [];
+    function newNode(l,c) {
+	var n = typeof(lastPageName) == 'undefined' ? "scene" : lastPageName;
+	n += "." + (nodes.length + 1);
+	n += ":" + l;
+	n += "," + c;
+	nodes.push (n);
+	return n;
+    }
 
-  function joinScenes(scenes) {
-      return "(function(){return FunkScene.joinScenes([" + scenes.join(",") + "]);})";	
-  }
+    // end of duplicated code
 
-  function makeGoto (target) {
-      return "[\"\", " + target + "]";
-  }
+    function sceneFunction(continuation,includes,scene_desc,choices) {
+	var f = "(function() {\n";
+	if (typeof(continuation) != 'undefined') {
+            f += "var defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
+	}
+	f += "var __t=\"\",__c=[],__tc;\n";
+	if (typeof(includes) != 'undefined') {
+            for (var i = 0; i < includes.length; ++i) {
+		var text = includes[i][0], incl = includes[i][1];
+		if (typeof(text) != 'undefined') { f += text; }
+		if (typeof(incl) != 'undefined') { f += "__tc=(" + incl + ")();\n__t+=__tc[0];\n__c=__c.concat(__tc[1]);\n"; }
+	    }
+	}
+	f += scene_desc;
+	f += "__c=__c.concat(" + renderList(choices) + ");\n";
+	f += "return [__t,__c];})";
 
-  function gotoIfDefined(x) {
-      return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
-  }
+	return f;
+    }
 
-  function continueIfDefined() {
-      return gotoIfDefined ("defaultContinuation");
-  }
+    function makeMinigameSceneFunction(intro,cazoo) {
+	return "(function(){return function(callback){return FunkScene.runMinigame(" + intro + "," + cazoo + ",callback);}})";
+    }
 
-  function gosubWithContinuation(subroutine,continuation) {
-      return "(function(){FunkScene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
-  }
+    function renderList(x) {
+	if (typeof x === 'string') {
+            return x;
+	} else {
+            return "[" + x.join(",") + "]";
+	}
+    }
 
-  function gosubWithDefaultContinuation(subroutine) {
-      return gosubWithContinuation(subroutine,"defaultContinuation");
-  }
+    function joinScenes(scenes) {
+	return "(function(){return FunkScene.joinScenes([" + scenes.join(",") + "]);})";	
+    }
 
-  function makeAssignment(name,scene) {
-      return name + " = " + scene + ";\n";
-  }
+    function makeGoto (target) {
+	return "[\"\", " + target + "]";
+    }
 
-  function makeInput(prompt,target,var_name) {
-      return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"];
-  }
+    function gotoIfDefined(x) {
+	return "(typeof(" + x + ") === 'undefined' ? [] : [\"\", " + x + "])";
+    }
 
-  function makeInlineConditional(cond,true_val,false_val) {
-      return "((" + cond + ") ? (" + true_val + ") : (" + false_val + "))";
-  }
+    function continueIfDefined() {
+	return gotoIfDefined ("defaultContinuation");
+    }
 
-  function makeConditional(cond,true_val,false_val) {
-      return "if(" + cond + "){" + true_val + "}else{" + false_val + "}";
-  }
+    function gosubWithContinuation(subroutine,continuation) {
+	return "(function(){FunkScene.sceneDeque.push(" + continuation + ");return(" + subroutine + ")();})";
+    }
 
-  function makeDummy(s) {
-      return "(function(){" + s + ";return\"\";})()";
-  }
+    function gosubWithDefaultContinuation(subroutine) {
+	return gosubWithContinuation(subroutine,"defaultContinuation");
+    }
 
-  function eventCounter(tag) {
-      return "FunkScene.namedEventCount[\"" + tag + "\"]";
-  }
+    function makeAssignment(name,scene) {
+	return name + " = " + scene + ";\n";
+    }
 
-  function valueOrZero(v) {
-      return "(typeof (" + v + ") === 'undefined' ? 0 : " + v + ")";
-  }
+    function makeInput(prompt,target,var_name) {
+	return ["[" + prompt + ", " + target + ", \"" + var_name + "\"]"];
+    }
 
-  function incEventCount(tag) {
-      var v = eventCounter(tag);
-      return "(" + v + " = " + valueOrZero(v) + " + 1)";
-  }
+    function makeInlineConditional(cond,true_val,false_val) {
+	return "((" + cond + ") ? (" + true_val + ") : (" + false_val + "))";
+    }
 
-  function resetEventCount(tag) {
-      var v = eventCounter(tag);
-      return "(" + v + " = 0)";
-  }
+    function makeConditional(cond,true_val,false_val) {
+	return "if(" + cond + "){" + true_val + "}else{" + false_val + "}";
+    }
 
-  function makeMeterBar(label,expr,max,units,color) {
-      var func = "(function(){var level = " + expr + ";var max = ";
-      if (typeof(max) == 'undefined' || max == "") {
-      	  max = 1;
-          func += "1";
-      } else {
-          func += max;
-	  if (units.length > 0 && units.substring(0,1) == " ") {
-	      units = units.replace(/^\s?|\s*$/g,'')
-              label += " + \"<br><small>(\" + level + \"" + units + ")</small>\"";
-	  } else {
-              label += " + \"<br><small>(\" + level + \"/\" + max + \"" + ")</small>\"";
-  	  }
-      }
-      return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + FunkScene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
-  }
+    function makeDummy(s) {
+	return "(function(){" + s + ";return\"\";})()";
+    }
 
-  function makeTable(classname,rows) {
-      return "\"<p><table class=\\\"" + classname + "\\\">\\n\" + " + rows.join(" + ") + " + \"</table>\"";
-  }
+    function eventCounter(tag) {
+	return "FunkScene.namedEventCount[\"" + tag + "\"]";
+    }
 
-  function accumulate(expr,tail) {
-      return "__t += " + expr + ";" + tail;
-  }
+    function valueOrZero(v) {
+	return "(typeof (" + v + ") === 'undefined' ? 0 : " + v + ")";
+    }
 
-  function accumulateQuoted(text,tail) {
-      return "__t += \"" + text + "\";" + tail;
-  }
+    function incEventCount(tag) {
+	var v = eventCounter(tag);
+	return "(" + v + " = " + valueOrZero(v) + " + 1)";
+    }
 
-  var iconPrefix = "img/icon/";
-  var iconSuffix = ".svg";
-  function makeIconText(icon,text) {
-      return "\"<tr><td class=\\\"badge\\\"><img class=\\\"badgeIcon\\\" src=\\\"" + iconPrefix + icon + iconSuffix + "\\\"></td><td class=\\\"badgeText\\\">\" + " + text + " + \"</td></tr>\\n\"";
-  }
+    function resetEventCount(tag) {
+	var v = eventCounter(tag);
+	return "(" + v + " = 0)";
+    }
 
-  var oneTimeCount = 0;
-  var oneTimeEventPrefix = "_oneTime";
+    function makeMeterBar(label,expr,max,units,color) {
+	var func = "(function(){var level = " + expr + ";var max = ";
+	if (typeof(max) == 'undefined' || max == "") {
+      	    max = 1;
+            func += "1";
+	} else {
+            func += max;
+	    if (units.length > 0 && units.substring(0,1) == " ") {
+		units = units.replace(/^\s?|\s*$/g,'')
+		label += " + \"<br><small>(\" + level + \"" + units + ")</small>\"";
+	    } else {
+		label += " + \"<br><small>(\" + level + \"/\" + max + \"" + ")</small>\"";
+  	    }
+	}
+	return func + ";return \"<tr><td class=\\\"meterTableLabel\\\">\" + " + label + " + \"</td><td class=\\\"meterTableBar\\\">\" + FunkScene.makeMeterBar(level/max," + color + ") + \"</td></tr>\\n\";})()";
+    }
 
-  var badgeCount = 0;
-  var badgeEventPrefix = "_badge";
+    function makeTable(classname,rows) {
+	return "\"<p><table class=\\\"" + classname + "\\\">\\n\" + " + rows.join(" + ") + " + \"</table>\"";
+    }
 
-  var cycleCount = 0;
-  var cyclePrefix = "_cycle";
+    function accumulate(expr,tail) {
+	return "__t += " + expr + ";" + tail;
+    }
+
+    function accumulateQuoted(text,tail) {
+	return "__t += \"" + text + "\";" + tail;
+    }
+
+    var iconPrefix = "img/icon/";
+    var iconSuffix = ".svg";
+    function makeIconText(icon,text) {
+	return "\"<tr><td class=\\\"badge\\\"><img class=\\\"badgeIcon\\\" src=\\\"" + iconPrefix + icon + iconSuffix + "\\\"></td><td class=\\\"badgeText\\\">\" + " + text + " + \"</td></tr>\\n\"";
+    }
+
+    var oneTimeCount = 0;
+    var oneTimeEventPrefix = "_oneTime";
+
+    var badgeCount = 0;
+    var badgeEventPrefix = "_badge";
+
+    var cycleCount = 0;
+    var cyclePrefix = "_cycle";
 }
 
 start
@@ -149,15 +191,15 @@ body
   / code:code rest:body? { return code + rest; }
 
 named_scene_assignment
-  = "#PAGE" spc+ name:symbol spc+ scene:named_scene
+  = "#PAGE" spc+ name:symbol spc+ &{return setPageName(name);} scene:named_scene &{return resetPageName();}
    { return makeAssignment (name, scene); }
 
 named_scene
- = "#SCENE" spc s:named_scene_body endscene  { return s; }
- / "#("     spc s:named_scene_body "#)"      { return s; }
+ = "#SCENE" spc &{return startScene(line,column);} s:named_scene_body endscene  &{return endScene();}  { return s; }
+ / "#("     spc &{return startScene(line,column);} s:named_scene_body "#)"      &{return endScene();}  { return s; }
 
 inline_named_scene_assignment
- = "#PAGE" spc+ name:symbol spc+ scene:named_scene_body
+ = "#PAGE" spc+ name:symbol spc+ &{return setPageName(name);} scene:named_scene_body &{return resetPageName();}
    { return [name, makeAssignment (name, scene)]; }
 
 named_scene_body
@@ -174,8 +216,8 @@ gosub_chain
  / subr:gosub_clause                    { return gosubWithDefaultContinuation(subr); }
 
 scene
- = "#SCENE" spc s:scene_body endscene  { return s; }
- / "#("     spc s:scene_body "#)"      { return s; }
+ = "#SCENE" spc &{return startScene(line,column);} s:scene_body endscene  &{return endScene();} { return s; }
+ / "#("     spc &{return startScene(line,column);} s:scene_body "#)"      &{return endScene();} { return s; }
 
 scene_body
  = incl:include* scene_desc:scene_text choices:conjunctive_choice_list cont:explicit_or_implicit_continuation
@@ -511,9 +553,9 @@ source_character
   = .
 
 named_minigame_scene
-  = "#PAGE" spc+ name:symbol spc+ "#SCENE" spc intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#ENDSCENE"
+  = "#PAGE" spc+ name:symbol spc+ &{return setPageName(name);} "#SCENE" spc &{return startScene(line,column);} intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#ENDSCENE" &{return endScene();} &{return resetPageName();}
     { return makeAssignment (name, makeMinigameSceneFunction(intro,cazoo)); }
-  / "#PAGE" spc+ name:symbol spc+ "#(" spc intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#)"
+  / "#PAGE" spc+ name:symbol spc+  &{return setPageName(name);} "#(" spc &{return startScene(line,column);} intro:cazoo_intro_text "#MINIGAME" spc cazoo:quoted_cazoo_code "#)" &{return endScene();}  &{return resetPageName();}
     { return makeAssignment (name, makeMinigameSceneFunction(intro,cazoo)); }
 
 quoted_cazoo_code

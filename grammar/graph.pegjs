@@ -1,4 +1,6 @@
 {
+    // Warning: duplicated code (also found in fs.pegjs)
+    // The code & grammar must be exactly the same so that the node IDs match up (code smell....)
     var sceneStack = [];
     var sceneIndex = {};
     var sceneLine = {};
@@ -10,38 +12,43 @@
 
     function currentScene() { return sceneStack[sceneStack.length - 1]; }
     function startScene(l,c) {
-	var lc = "Line " + l + ", Column " + c;
-	var s;
 	// for some reason, sceneFunction is getting called multiple times by the parser for the same scene
-	// This is a hacky workaround to ensure things only get defined once... we want the line & column anyway
-	if (lc in sceneIndex)
-	    s = sceneIndex[lc];
-	else {
-	    s = newNode();
-	    sceneIndex[lc] = s;
-	    sceneLine[s] = l;
-	    sceneColumn[s] = c;
-	}
-	sceneStack.push(s);
+	// The line/column ID is a hacky workaround to ensure things only get defined once...
+	// It also makes the node IDs more meaningful for debugging
+	var lc = l + "." + c;
+	var id;
+	if (!sceneIndex[lc]) {
+	    id = newNode(l,c);
+	    sceneLine[id] = l;
+	    sceneColumn[id] = c;
+	    sceneIndex[lc] = id;
+	} else
+	    id = sceneIndex[lc];
+	sceneStack.push(id);
 	return true;
     }
     function endScene() { return sceneStack.pop(); return true; }
 
-    var continuationIndex = {};
-    function defaultContinuation() { return currentScene() + "+"; }
-
     var nodes = [];
+    function newNode(l,c) {
+	var n = typeof(lastPageName) == 'undefined' ? "scene" : lastPageName;
+	n += "." + (nodes.length + 1);
+	n += ":" + l;
+	n += "," + c;
+	nodes.push (n);
+	return n;
+    }
+
+    // end of duplicated code
+
     var nodeName = {};  // indexed by node ID
+    var nodeId = {};  // indexed by node name
     var sceneText = {};  // indexed by node ID
     var edges = [];
     var canGoBack = {};
 
-    function newNode() {
-	var n = typeof(lastPageName) == 'undefined' ? "scene" : lastPageName;
-	n += "." + (nodes.length + 1);
-	nodes.push (n);
-	return n;
-    }
+    var continuationIndex = {};
+    function defaultContinuation() { return currentScene() + "+"; }
 
     function addEdge(node1,node2,props) {
 	if (typeof(node1) != 'undefined' && typeof(node2) != 'undefined')
@@ -104,6 +111,7 @@
 
     function makeAssignment(name,scene) {
 	nodeName[scene] = name;
+	nodeId[name] = scene;
 	return scene;
     }
 
@@ -127,21 +135,49 @@
 	var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	xml += "<gexf>\n";
 	xml += "<graph type=\"static\" defaultedgetype=\"directed\">\n";
-	xml += "<attributes></attributes>\n";
+	xml += "<attributes>\n";
+	xml += "<attribute id=\"file\" title=\"File\" type=\"string\"/>\n";
+	xml += "<attribute id=\"line\" title=\"Line\" type=\"integer\"/>\n";
+	xml += "<attribute id=\"col\" title=\"Column\" type=\"integer\"/>\n";
+	xml += "<attribute id=\"text\" title=\"Scene\" type=\"string\"/>\n";
+	xml += "</attributes>\n";
+	// nodes
 	xml += "<nodes>\n";
+	// first the nodes with definitions
+	var definedNode = {};
 	for (var i = 0; i < nodes.length; ++i) {
 	    var id = nodes[i];
 	    var label = id in nodeName ? nodeName[id] : id;
 	    // check if id ends in a "+" (default continuation); if so, and it's not defined, skip it
 	    if (!isContinuationNode(id)) {
-		xml += "<node id=\"" + label + "\"";
-		xml += " line=\"" + sceneLine[id] + "\"";
-		xml += " column=\"" + sceneColumn[id] + "\"";
-		xml += ">";
-		xml += sceneText[id];
+		xml += "<node id=\"" + label + "\">\n";
+		xml += "<attvalues>\n";
+		xml += "<attvalue for=\"file\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
+		xml += "<attvalue for=\"line\" value=\"" + sceneLine[id] + "\"/>";
+		xml += "<attvalue for=\"col\" value=\"" + sceneColumn[id] + "\"/>";
+		xml += "<attvalue for=\"text\" value=\"" + sceneText[id] + "\"/>";
+		xml += "</attvalues>\n";
+		xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
+		xml += "<size value=\"2\"/>\n";
 		xml += "</node>\n";
+		definedNode[id] = 1;
+		definedNode[label] = 1;
 	    }
 	}
+	// now the "loose end" nodes, that are referred to but never defined
+	var looseEndNode = {};
+	for (var i = 0; i < edges.length; ++i) {
+	    var id = edges[i][1];
+	    if (!((id in definedNode) || (id in looseEndNode) || isContinuationNode(id))) {
+		xml += "<node id=\"" + id + "\">\n";
+		xml += "<attvalues></attvalues>\n";
+		xml += "<color r=\"255\" g=\"0\" b=\"0\"/>\n";
+		xml += "<size value=\"4\"/>\n";
+		xml += "</node>\n";
+		looseEndNode[id] = 1;
+	    }
+	}
+	// end of nodes
 	xml += "</nodes>\n";
 	xml += "<edges>\n";
 	for (var i = 0; i < edges.length; ++i) {
@@ -162,6 +198,7 @@
 	xml += "</edges>\n";
 	xml += "</graph>\n";
 	xml += "</gexf>\n";
+//	console.log(xml);
 	return xml;
     };
 }
@@ -374,7 +411,7 @@ endscene
 
 cycle
   = c:begin_cycle spc cycles:cycle_list loop_flag:end_cycle
-  { return "(" + cycles.join(" / ") + ")"; }
+  { return "(" + cycles.join(" | ") + ")"; }
 
 cycle_list
   = head:postponed_quoted_text "#NEXT" spc tail:cycle_list  { return [head].concat (tail); }

@@ -2,6 +2,7 @@
     // DOM hooks
     var sceneDiv = document.getElementById("scene");
     var menuDiv = document.getElementById("menu");
+    var buttonsDiv = document.getElementById("buttons");
     var historyDiv = document.getElementById("history");
     var statsDiv = document.getElementById("stats");
     var codaDiv = document.getElementById("coda");
@@ -18,6 +19,14 @@
     var minigameTextDiv = document.getElementById("minigameText");
     var minigameBoardDiv = document.getElementById("minigameBoard");
     var minigameToolbarDiv = document.getElementById("minigameTools");
+    var debugButton = document.getElementById("showDebug");
+    var debugParentDiv = document.getElementById("debugParent");
+    var sigmaParentDiv = document.getElementById("sigmaParent");
+    var sigmaDiv = document.getElementById("sigma");
+
+    // Debugging flag
+    var debug = 0;
+    fs.debug = function() { debug = 1; showElement (debugButton); };
 
     // Uncomment to guard against accidental navigation away from page:
     //    window.onbeforeunload = function() { return "Your position will be lost."; };
@@ -90,6 +99,7 @@
 	hideElement (storyParentDiv);
 	hideElement (historyParentDiv);
 	showElement (statsParentDiv);
+	hideElement (debugParentDiv);
     };
 
     historyButton.onclick = function() {
@@ -99,6 +109,7 @@
 	hideElement (storyParentDiv);
 	hideElement (statsParentDiv);
 	showElement (historyParentDiv);
+	hideElement (debugParentDiv);
     };
 
     storyButton.onclick = function() {
@@ -108,7 +119,92 @@
 	hideElement (statsParentDiv);
 	hideElement (historyParentDiv);
 	showElement (storyParentDiv);
+	hideElement (debugParentDiv);
     };
+
+    var mapRendered = false;
+    debugButton.onclick = function() {
+	showElement (statsButton);
+	showElement (historyButton);
+	showElement (storyButton);
+	hideElement (storyParentDiv);
+	hideElement (historyParentDiv);
+	hideElement (statsParentDiv);
+	showElement (debugParentDiv);
+	if (!mapRendered++)
+	    renderMap();
+    };
+
+    var popUp;
+    function renderMap() {
+	try {
+	    console.log ("Rendering map graph");
+	    var graphXmlDoc = xmlDocFromString (graphXmlString);
+
+	    // Instantiate sigma.js and customize rendering
+	    var sigInst = sigma.init(sigmaDiv).drawingProperties({
+		defaultLabelColor: '#000',
+		defaultLabelSize: 14,
+		defaultLabelBGColor: '#000',
+		defaultLabelHoverColor: '#048',
+		labelThreshold: 6,
+		defaultEdgeType: 'curve',
+		defaultEdgeColor: '#000',
+		defaultNodeColor: '#222'
+	    }).graphProperties({
+		minNodeSize: 0.1,
+		maxNodeSize: 5,
+		minEdgeSize: 1,
+		maxEdgeSize: 1
+	    }).mouseProperties({
+		maxRatio: 32
+	    });
+
+	    // Parse the GEXF encoded graph
+	    sigInst.parseGexfXmlDoc(graphXmlDoc);
+
+	    function attributesToList(attr) {
+		return '<ul>' +
+		    attr.map(function(o){
+			return '<li>' + o.attr + ' : ' + o.val + '</li>';
+		    }).join('') +
+		    '</ul>';
+	    }
+	    
+	    function showNodeInfo(event) {
+		popUp && popUp.remove();
+		
+		var node;
+		sigInst.iterNodes(function(n){
+		    node = n;
+		},[event.content[0]]);
+		
+		popUp = document.createElement("DIV");
+		popUp.setAttribute ("class", "sigmaPopup");
+		popUp.setAttribute ("display", "left: " + node.displayX + "; top: " + node.displayY+15 + ";");
+		popUp.innerHTML = attributesToList (node['attr']['attributes']);
+		
+		sigmaDiv.appendChild (popUp);
+	    }
+	    
+	    function hideNodeInfo(event) {
+		popUp && popUp.remove();
+		popUp = false;
+	    }
+	    
+	    sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo);
+
+	    // Turn on the fish eye
+	    sigInst.activateFishEye();
+
+	    // Draw the graph
+	    sigInst.draw();
+
+	} catch (e) {
+	    console.log (graphXmlString);
+	    console.log (buildErrorMessage(e));
+	}
+    }
 
     function getSelectedSceneFunction() {
 	for (var i = 0; i < menuDiv.length; i++) {
@@ -291,31 +387,54 @@
 	    : e.message;
     }
 
+    var graphXmlString;
+    fs.lastLoadedFile = "";
     fs.loadSceneFile = function (url) {
+	fs.lastLoadedFile = url;
+	console.log ("Loading scenes from \"" + url + "\"");
 	var xhr = new XMLHttpRequest();
 	xhr.open ("GET", url, false);
 	xhr.send();
 	var raw = xhr.responseText;
 	var processed;
 	try {
+	    console.log ("Compiling scenes to JavaScript");
 	    processed = FunkScene.parser.parse (raw);
 	} catch (e) {
 	    console.log (buildErrorMessage(e));
 	}
 	try {
+	    console.log ("Evaluating compiled JavaScript");
 	    eval (processed);
 	} catch (e) {
 	    console.log (processed);
 	    console.log (e.message);
 	}
 
-	var graph;
-	try {
-	    graph = FunkScene.graphGenerator.parse (raw);
-	} catch (e) {
-	    console.log (buildErrorMessage(e));
+	if (fs.debug) {
+	    try {
+		console.log ("Generating map XML");
+		graphXmlString = FunkScene.graphGenerator.parse (raw);
+	    } catch (e) {
+		console.log (buildErrorMessage(e));
+	    }
 	}
-	console.log (graph);
+
+	console.log ("OK, done compiling \"" + url + "\"");
+    }
+
+    function xmlDocFromString (str) {
+	var xmlDoc;
+	if (window.DOMParser) {
+	    var parser = new DOMParser();
+	    xmlDoc = parser.parseFromString (str,"text/xml");
+	} else {
+	    // Internet Explorer
+	    xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+	    xmlDoc.async = false;
+	    xmlDoc.loadXML (str); 
+	}
+	return xmlDoc;
     }
 
     fs.joinScenes = function (scenes) {
@@ -384,9 +503,7 @@
     };
 
     fs.runMinigame = function (introText, cazooCode, callbackFunc) {
-	hideElement (statsButton);
-	hideElement (historyButton);
-	hideElement (storyButton);
+	hideElement (buttonsDiv);
 
 	hideElement (storyParentDiv);
 	hideElement (historyParentDiv);
@@ -400,8 +517,7 @@
 	function callbackWrapper(callbackArg) {
 	    fs.choiceHistory.push (callbackArg);
 	    hideElement (minigameDiv);
-	    showElement (statsButton);
-	    showElement (historyButton);
+	    showElement (buttonsDiv);
 	    showElement (storyParentDiv);
 	    // yield control back to FunkScene
 	    return callbackFunc (eval (callbackArg));

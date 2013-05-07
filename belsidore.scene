@@ -45,7 +45,7 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 
 #PAGE wise_choice
 #( A wise choice, my friend.
-#OVER
+#GOTO hell
 #)
 
 #PAGE messy_hair

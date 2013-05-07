@@ -1822,7 +1822,7 @@ FunkScene.graphGenerator = (function(){
             pos = clone(pos1);
           }
           if (result0 !== null) {
-            result0 = (function(offset, line, column, tag, cond, c) { return [c]; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1], result0[2]);
+            result0 = (function(offset, line, column, tag, cond, c) { return c; })(pos0.offset, pos0.line, pos0.column, result0[0], result0[1], result0[2]);
           }
           if (result0 === null) {
             pos = clone(pos0);
@@ -7436,6 +7436,10 @@ FunkScene.graphGenerator = (function(){
       	return id.length > 0 && id.charAt(id.length-1) == "+";
           }
       
+          function isSpecialNode(id) {
+      	return id == "statusPage" || id == "codaPage";
+          }
+      
           function makeGEXF() {
       	var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
       	xml += "<gexf>\n";
@@ -7454,7 +7458,7 @@ FunkScene.graphGenerator = (function(){
       	    var id = nodes[i];
       	    var label = id in nodeName ? nodeName[id] : id;
       	    // check if id ends in a "+" (default continuation); if so, and it's not defined, skip it
-      	    if (!isContinuationNode(id)) {
+      	    if (!isContinuationNode(id) && !isSpecialNode(label)) {
       		xml += "<node id=\"" + label + "\">\n";
       		xml += "<attvalues>\n";
       		xml += "<attvalue for=\"file\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
@@ -7462,7 +7466,13 @@ FunkScene.graphGenerator = (function(){
       		xml += "<attvalue for=\"col\" value=\"" + sceneColumn[id] + "\"/>";
       		xml += "<attvalue for=\"text\" value=\"" + sceneText[id] + "\"/>";
       		xml += "</attvalues>\n";
-      		xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
+      		if (label == "start") {
+      		    xml += "<color r=\"0\" g=\"128\" b=\"0\"/>\n";
+      		} else if (id != label) {
+      		    xml += "<color r=\"0\" g=\"0\" b=\"128\"/>\n";
+      		} else {
+      		    xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
+      		}
       		xml += "<size value=\"2\"/>\n";
       		xml += "</node>\n";
       		definedNode[id] = 1;

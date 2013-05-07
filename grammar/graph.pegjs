@@ -131,6 +131,10 @@
 	return id.length > 0 && id.charAt(id.length-1) == "+";
     }
 
+    function isSpecialNode(id) {
+	return id == "statusPage" || id == "codaPage";
+    }
+
     function makeGEXF() {
 	var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 	xml += "<gexf>\n";
@@ -149,7 +153,7 @@
 	    var id = nodes[i];
 	    var label = id in nodeName ? nodeName[id] : id;
 	    // check if id ends in a "+" (default continuation); if so, and it's not defined, skip it
-	    if (!isContinuationNode(id)) {
+	    if (!isContinuationNode(id) && !isSpecialNode(label)) {
 		xml += "<node id=\"" + label + "\">\n";
 		xml += "<attvalues>\n";
 		xml += "<attvalue for=\"file\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
@@ -157,7 +161,13 @@
 		xml += "<attvalue for=\"col\" value=\"" + sceneColumn[id] + "\"/>";
 		xml += "<attvalue for=\"text\" value=\"" + sceneText[id] + "\"/>";
 		xml += "</attvalues>\n";
-		xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
+		if (label == "start") {
+		    xml += "<color r=\"0\" g=\"128\" b=\"0\"/>\n";
+		} else if (id != label) {
+		    xml += "<color r=\"0\" g=\"0\" b=\"128\"/>\n";
+		} else {
+		    xml += "<color r=\"0\" g=\"0\" b=\"0\"/>\n";
+		}
 		xml += "<size value=\"2\"/>\n";
 		xml += "</node>\n";
 		definedNode[id] = 1;
@@ -306,14 +316,14 @@ choose_expr
  = c:choice
   { return c; }
  / "#SECRETLY" spc+ expr:if_expr c:choice
-  { return c; }  // FIXME: different styled edge?
+  { return c; }  // FIXME: differently styled edge?
  /  expr:if_expr c:choice
-  { return c; }  // FIXME: different styled edge?
+  { return c; }  // FIXME: differently styled edge?
 
 qualified_choose_expr
  = choose_expr
  / tag:onetime_tag_expr cond:if_expr? c:choice
-  { return [c]; }  // FIXME: different styled edge?
+  { return c; }  // FIXME: differently styled edge?
 
 onetime_tag_expr
  = "#AS" spc+ tag:symbol spc+

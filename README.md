@@ -10,9 +10,18 @@ passages of text _("scenes")_ with choices that lead to other scenes.
 
 This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.
 
+Source code
+-----------
+
+The source code is available at [GitHub](https://github.com/ihh/funkscene).
+
+If you want to modify the compiler you will need [PegJS](http://pegjs.majda.cz/).
+
+
 Acknowledgements
 ----------------
 
+As well as the abovementioned [PegJS](http://pegjs.majda.cz/),
 FunkScene borrows bits and pieces from several open source projects:
 
 * [Dan Fabulich's CSS](http://www.choiceofgames.com/make-your-own-games/choicescript-intro/) at choiceofgames.com
@@ -23,7 +32,7 @@ FunkScene borrows bits and pieces from several open source projects:
 An earlier prototype, [Schooz](https://github.com/ihh/schooz), developed the functional programming framework
 while also exploring some alternative UI ideas (such as dropdown menus) that were eventually omitted from this framework.
 
-The nascent debugger (such as it is) was influenced by InkleWriter and Twine.
+The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js).
 
 Scene functions
 ---------------

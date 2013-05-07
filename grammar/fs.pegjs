@@ -195,8 +195,8 @@ named_scene_assignment
    { return makeAssignment (name, scene); }
 
 named_scene
- = "#SCENE" spc &{return startScene(line,column);} s:named_scene_body endscene  &{return endScene();}  { return s; }
- / "#("     spc &{return startScene(line,column);} s:named_scene_body "#)"      &{return endScene();}  { return s; }
+ = "#SCENE" spc &{return startScene(line,column);} s:named_scene_body "#ENDSCENE" &{return endScene();}  { return s; }
+ / "#("     spc &{return startScene(line,column);} s:named_scene_body "#)"        &{return endScene();}  { return s; }
 
 inline_named_scene_assignment
  = "#PAGE" spc+ name:symbol spc+ &{return setPageName(name);} scene:named_scene_body &{return resetPageName();}
@@ -216,8 +216,8 @@ gosub_chain
  / subr:gosub_clause                    { return gosubWithDefaultContinuation(subr); }
 
 scene
- = "#SCENE" spc &{return startScene(line,column);} s:scene_body endscene  &{return endScene();} { return s; }
- / "#("     spc &{return startScene(line,column);} s:scene_body "#)"      &{return endScene();} { return s; }
+ = "#SCENE" spc &{return startScene(line,column);} s:scene_body "#ENDSCENE" &{return endScene();} { return s; }
+ / "#("     spc &{return startScene(line,column);} s:scene_body "#)"        &{return endScene();} { return s; }
 
 scene_body
  = incl:include* scene_desc:scene_text choices:conjunctive_choice_list cont:explicit_or_implicit_continuation
@@ -393,10 +393,6 @@ inline_else_clause
    { return text; }
  / "#ELSIF" spc+ cond:balanced_code then_else:inline_if_body
    { return makeInlineConditional(cond,then_else[0],then_else[1]); }
-
-endscene
-  = "#ENDSCENE"
-  / "#END"
 
 cycle
   = c:begin_cycle spc cycles:cycle_list loop_flag:end_cycle

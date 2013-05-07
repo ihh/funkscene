@@ -81,7 +81,6 @@ FunkScene.graphGenerator = (function(){
         "inline_if_then_else": parse_inline_if_then_else,
         "inline_if_body": parse_inline_if_body,
         "inline_else_clause": parse_inline_else_clause,
-        "endscene": parse_endscene,
         "cycle": parse_cycle,
         "cycle_list": parse_cycle_list,
         "begin_cycle": parse_begin_cycle,
@@ -412,7 +411,15 @@ FunkScene.graphGenerator = (function(){
             if (result2 !== null) {
               result3 = parse_named_scene_body();
               if (result3 !== null) {
-                result4 = parse_endscene();
+                if (input.substr(pos.offset, 9) === "#ENDSCENE") {
+                  result4 = "#ENDSCENE";
+                  advance(pos, 9);
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#ENDSCENE\"");
+                  }
+                }
                 if (result4 !== null) {
                   result5 = (function(offset, line, column, s) {return endScene();})(pos.offset, pos.line, pos.column, result3) ? "" : null;
                   if (result5 !== null) {
@@ -779,7 +786,15 @@ FunkScene.graphGenerator = (function(){
             if (result2 !== null) {
               result3 = parse_scene_body();
               if (result3 !== null) {
-                result4 = parse_endscene();
+                if (input.substr(pos.offset, 9) === "#ENDSCENE") {
+                  result4 = "#ENDSCENE";
+                  advance(pos, 9);
+                } else {
+                  result4 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"#ENDSCENE\"");
+                  }
+                }
                 if (result4 !== null) {
                   result5 = (function(offset, line, column, s) {return endScene();})(pos.offset, pos.line, pos.column, result3) ? "" : null;
                   if (result5 !== null) {
@@ -3279,32 +3294,6 @@ FunkScene.graphGenerator = (function(){
           }
           if (result0 === null) {
             pos = clone(pos0);
-          }
-        }
-        return result0;
-      }
-      
-      function parse_endscene() {
-        var result0;
-        
-        if (input.substr(pos.offset, 9) === "#ENDSCENE") {
-          result0 = "#ENDSCENE";
-          advance(pos, 9);
-        } else {
-          result0 = null;
-          if (reportFailures === 0) {
-            matchFailed("\"#ENDSCENE\"");
-          }
-        }
-        if (result0 === null) {
-          if (input.substr(pos.offset, 4) === "#END") {
-            result0 = "#END";
-            advance(pos, 4);
-          } else {
-            result0 = null;
-            if (reportFailures === 0) {
-              matchFailed("\"#END\"");
-            }
           }
         }
         return result0;

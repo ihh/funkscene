@@ -34,6 +34,8 @@ while also exploring some alternative UI ideas (such as dropdown menus) that wer
 
 <p>The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's <a href="https://github.com/jacomyal/sigma.js">sigma.js</a>.</p>
 
+<h1>The FunkScene Language</h1>
+
 <h2>Scene functions</h2>
 
 <p>The fundamental concept in the FunkScene JavaScript API is the <em>"scene function".</em>
@@ -60,7 +62,7 @@ A strict separation of scene and choices is restrictive in some ways, but it sim
 <li>re-use of standard languages where possible (JavaScript, Markdown; some similarities to ChoiceScript)</li>
 </ol>
 
-<h2>FunkScene language</h2>
+<h2>Describing scenes</h2>
 
 <p>FunkScene is JavaScript, plus a few keywords for constructing scene
 functions, and a small amount of boilerplate code for hooking up scene
@@ -140,8 +142,7 @@ needs to do an <code>XMLHttpRequest</code>). So you'll need to put the
 
 <p>The general format of the FunkScene <code>#PAGE...#SCENE...#ENDSCENE</code> macro,
 which constructs a scenefunction and assigns it to a JavaScript <code>var</code> (the <em>"page variable"</em> ),
-is as follows (NB newlines are not significant, they are treated
-exactly the same as any other whitespace):</p>
+is as follows. Every scene consists of some text, followed by a list of choices:</p>
 
 <pre><code>#PAGE &lt;name of page variable&gt;
 #SCENE &lt;...scene text...&gt;
@@ -151,6 +152,10 @@ exactly the same as any other whitespace):</p>
  &lt;...&gt;
 #ENDSCENE
 </code></pre>
+
+<p>Newlines are not significant; they are treated exactly the same as any other whitespace.
+The exception is newline termination of C++-style comments, which must also be prefixed by a hash
+inside scenetext, i.e. <code>#// C++-style comment....</code></p>
 
 <p>You can use <code>#(...#)</code> in place of <code>#SCENE...#ENDSCENE</code>, if cryptic
 uber-efficiency via punctuation is your thing. (Actually, this has an

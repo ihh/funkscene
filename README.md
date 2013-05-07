@@ -34,6 +34,9 @@ while also exploring some alternative UI ideas (such as dropdown menus) that wer
 
 The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js).
 
+The FunkScene Language
+======================
+
 Scene functions
 ---------------
 
@@ -62,8 +65,8 @@ The design philosophy of FunkScene:
 4. re-use of standard languages where possible (JavaScript, Markdown; some similarities to ChoiceScript)
 
 
-FunkScene language
-------------------
+Describing scenes
+-----------------
 
 FunkScene is JavaScript, plus a few keywords for constructing scene
 functions, and a small amount of boilerplate code for hooking up scene
@@ -144,8 +147,7 @@ General format of a scene declaration
 
 The general format of the FunkScene `#PAGE...#SCENE...#ENDSCENE` macro,
 which constructs a scenefunction and assigns it to a JavaScript `var` (the _"page variable"_ ),
-is as follows (NB newlines are not significant, they are treated
-exactly the same as any other whitespace):
+is as follows. Every scene consists of some text, followed by a list of choices:
 
 	#PAGE <name of page variable>
 	#SCENE <...scene text...>
@@ -154,6 +156,10 @@ exactly the same as any other whitespace):
 	 <more #CHOOSE...#FOR... blocks here, if you want them>
 	 <...>
 	#ENDSCENE
+
+Newlines are not significant; they are treated exactly the same as any other whitespace.
+The exception is newline termination of C++-style comments, which must also be prefixed by a hash
+inside scenetext, i.e. `#// C++-style comment....`
 
 You can use `#(...#)` in place of `#SCENE...#ENDSCENE`, if cryptic
 uber-efficiency via punctuation is your thing. (Actually, this has an

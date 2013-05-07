@@ -188,7 +188,8 @@
 	    }
 	    
 	    function hideNodeInfo(event) {
-		popUp && popUp.remove();
+		if (popUp)
+		    sigmaDiv.removeChild (popUp);
 		popUp = false;
 	    }
 	    

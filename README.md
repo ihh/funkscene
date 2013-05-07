@@ -387,7 +387,7 @@ However, the functional programming representation of low-level control-flow con
 One limitation of the way `#GOSUB` is implemented is that `#IF...#THEN...#ENDIF` does not play well with `#GOSUB`.
 You may be tempted to do something like this. Don't:
 
-	// This is bad code and WILL NOT COMPILE
+	// This is bad code (not just because of the stereotyping) and WILL NOT COMPILE
 	#SCENE
 	 You are in the scullery.
 	 #IF got_knife #THEN
@@ -399,6 +399,7 @@ You may be tempted to do something like this. Don't:
 	 You were made for greater things than this. Why not go upstairs?
 	 #CHOOSE Yes, go upstairs #FOR posh_romance
 	 #CHOOSE No, stay downstairs #FOR servant_action
+	 #CHOOSE These possibilities constrain me unduly #FOR start_stabbing
 	#ENDSCENE
 
 The implicit continuations required to make such things work, in the scene-functional framework, get rather tangled

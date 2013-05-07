@@ -196,19 +196,21 @@
 	    
 	    sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo);
 
-sigma.publicPrototype.circularLayout = function() {
-    var R = 100,
-        i = 0,
-        L = this.getNodesCount();
- 
-    this.iterNodes(function(n){
-      n.x = -Math.cos(Math.PI*(i++)/L)*R;
-      n.y = Math.sin(Math.PI*(i++)/L)*R;
-    });
- 
-    return this.position(0,0,1).draw();
-  };
-sigInst.circularLayout();
+	    // FIXME: do a crude quasi-toposort of the graph here, to improve layout
+	    // (can't do a true toposort because of potential cycles in the graph)
+	    sigma.publicPrototype.circularLayout = function() {
+		var R = 100,
+		i = 0,
+		L = this.getNodesCount();
+		
+		this.iterNodes(function(n){
+		    n.x = -Math.cos(Math.PI*(i++)/L)*R;
+		    n.y = Math.sin(Math.PI*(i++)/L)*R;
+		});
+		
+		return this.position(0,0,1).draw();
+	    };
+	    sigInst.circularLayout();
  
 	    // Turn on the fish eye
 	    sigInst.activateFishEye();

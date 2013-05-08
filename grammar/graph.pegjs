@@ -45,6 +45,8 @@
     var edges = [];
     var canGoBack = {};
 
+    FunkScene.debug.nodeName = nodeName;
+
     var continuationIndex = {};
     function defaultContinuation() { return currentScene() + "+"; }
 
@@ -63,7 +65,7 @@
 	if (typeof(includes) != 'undefined') {
             for (var i = 0; i < includes.length; ++i) {
 		var text = includes[i][0], incl = includes[i][1];
-		addEdge (source, incl, {choiceType:"include"});
+		addEdge (source, incl, {choiceType:"include",label:"#INCLUDE"});
 		include_spacer += text;
 	    }
 	}
@@ -87,7 +89,7 @@
     }
 
     function makeGoto (target) {
-	return ["", target];
+	return ["#GOTO", target];
     }
 
     function gotoIfDefined(x) {
@@ -140,6 +142,7 @@
 	xml += "<attribute id=\"Text\" type=\"string\"/>\n";
 	xml += "<attribute id=\"Bug\" type=\"string\"/>\n";
 	xml += "</attributes>\n";
+
 	// nodes
 	xml += "<nodes>\n";
 	// first the nodes with definitions
@@ -172,6 +175,7 @@
 		definedNode[label] = 1;
 	    }
 	}
+
 	// now the "loose end" nodes, that are referred to but never defined
 	var looseEndNode = {};
 	for (var i = 0; i < edges.length; ++i) {
@@ -189,8 +193,14 @@
 		looseEndNode[id] = 1;
 	    }
 	}
-	// end of nodes
 	xml += "</nodes>\n";
+
+	// record loose ends
+	FunkScene.debug.looseEnds = Object.keys (looseEndNode);
+	FunkScene.debug.looseEndHtml = "Loose ends: " + FunkScene.debug.looseEnds.length + "<p>\n"
+	    + "<i><font color=\"red\">" + FunkScene.debug.looseEnds.join(", ") + "</font></i>";
+
+	// edges
 	xml += "<edges>\n";
 	var edgeId = 0;
 	function addEdge (source, target, props) {
@@ -203,13 +213,14 @@
 		xml += "/>\n";
 	    }
 	};
+
 	for (var i = 0; i < edges.length; ++i) {
 	    var source = edges[i][0];
 	    var target = edges[i][1];
 	    var props = edges[i][2];
 	    addEdge (source, target, props);
 	    if (target in canGoBack)
-		addEdge (target, source, props);
+		addEdge (target, source, {choiceType:"back", label:"#BACK"});
 	}
 	xml += "</edges>\n";
 	xml += "</graph>\n";

@@ -19,15 +19,14 @@
     var minigameTextDiv = document.getElementById("minigameText");
     var minigameBoardDiv = document.getElementById("minigameBoard");
     var minigameToolbarDiv = document.getElementById("minigameTools");
-    var debugButton = document.getElementById("showDebug");
-    var debugParentDiv = document.getElementById("debugParent");
-    var sigmaParentDiv = document.getElementById("sigmaParent");
-    var sigmaDiv = document.getElementById("sigma");
+    var sigmaParentDiv = document.getElementById("debugger");
+    var sigmaDiv = document.getElementById("debuggerMap");
+    var debugInfoDiv = document.getElementById("debuggerInfo");
 
-    // Debugging flag
-    var debug = 0;
-    fs.debug = function() { debug = 1; showElement (debugButton); };
-    fs.debugging = function() { return debug; };
+    // Debugging info
+    var debug = undefined;
+    fs.debug = function() { if (!fs.debugging()) debug = {}; };
+    fs.debugging = function() { return typeof(debug) != undefined; };
 
     // Uncomment to guard against accidental navigation away from page:
     //    window.onbeforeunload = function() { return "Your position will be lost."; };
@@ -104,7 +103,6 @@
 	hideElement (storyParentDiv);
 	hideElement (historyParentDiv);
 	showElement (statsParentDiv);
-	hideElement (debugParentDiv);
     };
 
     historyButton.onclick = function() {
@@ -114,7 +112,6 @@
 	hideElement (storyParentDiv);
 	hideElement (statsParentDiv);
 	showElement (historyParentDiv);
-	hideElement (debugParentDiv);
     };
 
     storyButton.onclick = function() {
@@ -124,166 +121,7 @@
 	hideElement (statsParentDiv);
 	hideElement (historyParentDiv);
 	showElement (storyParentDiv);
-	hideElement (debugParentDiv);
     };
-
-    var mapRendered = false;
-    debugButton.onclick = function() {
-	showElement (statsButton);
-	showElement (historyButton);
-	showElement (storyButton);
-	hideElement (storyParentDiv);
-	hideElement (historyParentDiv);
-	hideElement (statsParentDiv);
-	showElement (debugParentDiv);
-	if (!mapRendered++)
-	    renderMap();
-    };
-
-    var popUp;
-    var dfsLayoutThreshold = 10;  // controls the transition from depth-first search to breadth-first search in map layout
-    var sigInst;
-    function renderMap() {
-	console.log ("Rendering map graph");
-	var graphXmlDoc = xmlDocFromString (graphXmlString);
-
-	// Instantiate sigma.js and customize rendering
-	sigInst = sigma.init(sigmaDiv).drawingProperties({
-	    defaultLabelColor: '#000',
-	    defaultLabelSize: 14,
-	    defaultLabelBGColor: '#000',
-	    defaultLabelHoverColor: '#048',
-	    labelThreshold: 6,
-	    defaultEdgeType: 'curve',
-	    defaultEdgeColor: '#000',
-	    defaultNodeColor: '#222'
-	}).graphProperties({
-	    minNodeSize: 0.1,
-	    maxNodeSize: 5,
-	    minEdgeSize: 2,
-	    maxEdgeSize: 2
-	}).mouseProperties({
-	    maxRatio: 32
-	});
-
-	// Parse the GEXF encoded graph
-	sigInst.parseGexfXmlDoc(graphXmlDoc);
-
-	function attributesToList(attr,id) {
-	    var attrPlusId = attr.slice(0);
-	    attrPlusId.unshift ({ attr: "ID", val: id });
-	    return '<ul>' +
-		attrPlusId.map(function(o){
-		    return '<li><b>' + o.attr + '</b> : ' + o.val + '</li>';
-		}).join('') +
-		'</ul>';
-	}
-	
-	function showNodeInfo(event) {
-	    hideNodeInfo();
-	    
-	    var node;
-	    sigInst.iterNodes(function(n){
-		node = n;
-	    },[event.content[0]]);
-	    
-	    popUp = document.createElement("DIV");
-	    popUp.setAttribute ("class", "sigmaPopup");
-	    popUp.innerHTML = attributesToList (node['attr']['attributes'], node.id);
-	    
-	    sigmaDiv.appendChild (popUp);
-	}
-	
-	function hideNodeInfo(event) {
-	    if (popUp)
-		sigmaDiv.removeChild (popUp);
-	    popUp = false;
-	}
-	
-	sigInst.bind('overnodes',showNodeInfo).bind('outnodes',hideNodeInfo);
-
-	// do a modified breadth-first sort of the nodes
-	// the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
-	// or while the queue size is below some threshold
-	var outgoing = {}, nOut = {}, unmarked = {};
-	sigInst.iterNodes (function(node){outgoing[node.id]={};nOut[node.id]=0;unmarked[node.id]=1;});
-	sigInst.iterEdges (function(edge){outgoing[edge.source][edge.target]++;nOut[edge.source]++;});
-	var queue = [], bfsRank = {}, bfsCount = 0;
-	function visit(id) {
-	    if (unmarked[id]) {
-		queue.push(id);
-		bfsRank[id] = bfsCount++;
-		delete unmarked[id];
-		// the modified DFS step:
-		if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
-		    visitChildren(id);
-	    }
-	};
-	function visitChildren(source) {
-	    for (var target in outgoing[source])
-		visit (target);
-	};
-	var starts = ["start"];
-	while (starts.length) {
-	    visit (starts.shift());
-	    while (queue.length)
-		visitChildren (queue.shift());
-	    starts = Object.keys (unmarked);
-	}
-
-	// circular layout using BFS ranking
-	sigma.publicPrototype.circularLayout = function(sortFunc) {
-	    var R = 100,
-	    i = 0,
-	    L = this.getNodesCount();
-	    
-	    var ids = [];
-	    this.iterNodes (function(n){ids.push(n.id);});
-	    ids = ids.sort(sortFunc);
-	    this.iterNodes(function(n){
-		n.x = -Math.cos(2*Math.PI*i/L)*R;
-		n.y = -Math.sin(2*Math.PI*(i++)/L)*R;
-	    }, ids);
-	    
-	    return this.position(0,0,1).draw();
-	};
-	sigInst.circularLayout(function(a,b){ return bfsRank[a] - bfsRank[b]; });
-	
-	// Turn on the fish eye
-	sigInst.activateFishEye();
-
-	// Draw the graph
-	sigInst.draw();
-
-	// stash the node list in the FunkScene object for later use
-	fs.sigOutgoing = outgoing;
-
-	// center the map on the current scene
-	fs.locateDebugger (activeNodeId);
-    }
-
-    var activeNode, activeNodeId;
-    var sizeScaleFactor = 5;
-    fs.locateDebugger = function(id) {
-	activeNodeId = id;
-	if (sigInst)
-	    if (id in fs.sigOutgoing) {
-		if (activeNode) {
-		    activeNode.active = false;
-		    activeNode.color = activeNode.trueColor;
-		    activeNode.size /= sizeScaleFactor;
-		    activeNode.displaySize /= sizeScaleFactor;
-		}
-		activeNode = sigInst.getNodes(id); 
-		activeNode.active = true;
-		activeNode.size *= sizeScaleFactor;
-		activeNode.displaySize *= sizeScaleFactor;
-		activeNode.trueColor = activeNode.color;
-		activeNode.color = "#808080";
-		// can't get the following to work at the moment, grrr...
-		// sigInst.zoomTo (activeNode.displayX, activeNode.displayY, 1) . draw(2,2,2);
-	    }
-    }
 
     function getSelectedSceneFunction() {
 	for (var i = 0; i < menuDiv.length; i++) {
@@ -494,10 +332,11 @@
 	    console.log (e.message);
 	}
 
-	if (fs.debug) {
+	if (fs.debugging()) {
 	    try {
 		console.log ("Generating map XML");
 		graphXmlString = FunkScene.graphGenerator.parse (raw);
+		renderMap();
 	    } catch (e) {
 		console.log (buildErrorMessage(e));
 	    }
@@ -608,5 +447,177 @@
 
 	return zoo.initialize (minigameBoardDiv, minigameToolbarDiv, callbackWrapper);
     };
+
+
+    var dfsLayoutThreshold = 10;  // controls the transition from depth-first search to breadth-first search in map layout
+    var sigInst;
+    function renderMap() {
+	console.log ("Rendering map graph");
+	var graphXmlDoc = xmlDocFromString (graphXmlString);
+
+	// Instantiate sigma.js and customize rendering
+	sigInst = sigma.init(sigmaDiv).drawingProperties({
+	    defaultLabelColor: '#000',
+	    defaultLabelSize: 14,
+	    defaultLabelBGColor: '#000',
+	    defaultLabelHoverColor: '#048',
+	    labelThreshold: 6,
+	    defaultEdgeType: 'curve',
+	    defaultEdgeColor: '#000',
+	    defaultNodeColor: '#222'
+	}).graphProperties({
+	    minNodeSize: 0.1,
+	    maxNodeSize: 5,
+	    minEdgeSize: 2,
+	    maxEdgeSize: 2
+	}).mouseProperties({
+	    maxRatio: 32
+	});
+
+	// Parse the GEXF encoded graph
+	sigInst.parseGexfXmlDoc(graphXmlDoc);
+
+	function attributesToList(attr) {
+	    return '<ul>' +
+		attr.map(function(o){
+		    return '<li><b>' + o.attr + '</b> : ' + o.val + '</li>';
+		}).join('') +
+		'</ul>';
+	}
+	
+	function showNodeInfo(event) {
+	    hideNodeInfo();
+	    
+	    var node;
+	    sigInst.iterNodes(function(n){
+		node = n;
+	    },[event.content[0]]);
+	    
+	    var attr = node['attr']['attributes'].slice(0);
+	    var label = node.id in fs.debug.nodeName ? fs.debug.nodeName[node.id] : undefined;
+	    if (typeof(label) != 'undefined' && label != node.id)
+		attr.unshift ({ attr: "Label", val: label });
+	    attr.unshift ({ attr: "ID", val: node.id });
+
+	    var incoming = fs.debug.incoming[node.id];
+	    var outgoing = fs.debug.outgoing[node.id];
+
+	    for (var inc in incoming) {
+		var attr_val = { val: incoming[inc].label };
+		attr_val.attr = "From " + inc;
+		attr.push (attr_val);
+	    }
+
+	    for (var out in outgoing) {
+		var attr_val = { val: outgoing[out].label };
+		attr_val.attr = "To " + out;
+		attr.push (attr_val);
+	    }
+
+	    debugInfoDiv.innerHTML = attributesToList (attr);
+	}
+	
+	function hideNodeInfo(event) {
+	    debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
+	}
+	
+	sigInst.bind('overnodes',showNodeInfo);
+//	sigInst.bind('outnodes',hideNodeInfo);
+
+	// do a modified breadth-first sort of the nodes
+	// the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
+	// or while the queue size is below some threshold
+	var outgoing = {}, incoming = {}, nOut = {}, unmarked = {};
+	fs.debug.outgoing = outgoing;
+	fs.debug.incoming = incoming;
+
+	sigInst.iterNodes (function(node) {
+	    outgoing[node.id] = {};
+	    incoming[node.id] = {};
+	    nOut[node.id] = 0;
+	    unmarked[node.id] = 1;});
+
+	sigInst.iterEdges (function(edge) {
+	    outgoing[edge.source][edge.target] = edge;
+	    incoming[edge.target][edge.source] = edge;
+	    nOut[edge.source]++;});
+
+	var queue = [], bfsRank = {}, bfsCount = 0;
+	function visit(id) {
+	    if (unmarked[id]) {
+		queue.push(id);
+		bfsRank[id] = bfsCount++;
+		delete unmarked[id];
+		// the modified DFS step:
+		if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
+		    visitChildren(id);
+	    }
+	};
+	function visitChildren(source) {
+	    for (var target in outgoing[source])
+		visit (target);
+	};
+	var starts = ["start"];
+	while (starts.length) {
+	    visit (starts.shift());
+	    while (queue.length)
+		visitChildren (queue.shift());
+	    starts = Object.keys (unmarked);
+	}
+
+	// circular layout using BFS ranking
+	sigma.publicPrototype.circularLayout = function(sortFunc) {
+	    var R = 100,
+	    i = 0,
+	    L = this.getNodesCount();
+	    
+	    var ids = [];
+	    this.iterNodes (function(n){ids.push(n.id);});
+	    ids = ids.sort(sortFunc);
+	    this.iterNodes(function(n){
+		n.x = -Math.cos(2*Math.PI*i/L)*R;
+		n.y = -Math.sin(2*Math.PI*(i++)/L)*R;
+	    }, ids);
+	    
+	    return this.position(0,0,1).draw();
+	};
+	sigInst.circularLayout(function(a,b){ return bfsRank[a] - bfsRank[b]; });
+	
+	// Turn on the fish eye
+	sigInst.activateFishEye();
+
+	// Draw the graph
+	sigInst.draw();
+
+	// center the map on the current scene
+	fs.locateDebugger (activeNodeId);
+
+	// show loose end text
+	debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
+    }
+
+    var activeNode, activeNodeId;
+    var sizeScaleFactor = 5;
+    fs.locateDebugger = function(id) {
+	activeNodeId = id;
+	if (sigInst)
+	    if (id in fs.debug.outgoing) {
+		if (activeNode) {
+		    activeNode.active = false;
+		    activeNode.color = activeNode.trueColor;
+		    activeNode.size /= sizeScaleFactor;
+		    activeNode.displaySize /= sizeScaleFactor;
+		}
+		activeNode = sigInst.getNodes(id); 
+		activeNode.active = true;
+		activeNode.size *= sizeScaleFactor;
+		activeNode.displaySize *= sizeScaleFactor;
+		activeNode.trueColor = activeNode.color;
+		activeNode.color = "#808080";
+		// can't get the following to work at the moment, grrr...
+		// sigInst.zoomTo (activeNode.displayX, activeNode.displayY, 1) . draw(2,2,2);
+		sigInst.refresh();
+	    }
+    }
 
 })(FunkScene = {});

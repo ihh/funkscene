@@ -13,95 +13,85 @@ console.log ("Loading source files");
 <body>
 
 <!-- Main text panel -->
-<div>
+<div id="gameContainer">
   <div id="buttons">
-   <button type="button" id="showStory" style="display: none">
-     Back to choices
-   </button>
-   <button type="button" id="showStats">
-     Status page
-   </button>
-   <button type="button" id="showHistory">
-     History
-   </button>
-   <button type="button" id="showDebug" style="display: none">
-     Debug Map
-   </button>
-  <span style="float: right;"><small><i><a href="README.html" target="_blank">read?</a></i></small></span>
-   <br>
+    <button type="button" id="showStory" style="display: none">
+      Back to choices
+    </button>
+    <button type="button" id="showStats">
+      Status page
+    </button>
+    <button type="button" id="showHistory">
+      History
+    </button>
+    <span style="float: right;"><small><i><a href="README.html" target="_blank">readme</a> / <a href="debug.html" target="_blank">debug</a></i></small></span>
   </div>
 
- <!-- Stats -->
- <div id="statsParent" style="display: none">
-  <hr>
-  <div id="stats"></div>
-  <hr>
-  <!-- Icons by lorc, available on http://game-icons.net, are released under Creative Commons 3.0 BY license:
-       attribution required -->
-  <!-- for now, leave this commented out, since there is a more complete attribution on the README page -->
-  <!-- <span style="float: right;"><small><i>icons by <a href="http://game-icons.net/">lorc</a></i></small></span> -->
-  <span style="float: right;"><small><i><a href="README.html">README</a></i></small></span>
- </div>
- <!-- History -->
- <div id="historyParent" style="display: none">
-  <hr>
-  <div id="history"></div>
-  <hr>
- </div>
- <!-- Story -->
- <div id="storyParent">
-  <!-- Scene -->
-  <div id="scene">
-    <!-- Preloading animation from http://preloaders.net/ -->
-    <br> Loading... <br> <br> <img src="img/loading.gif">
-  <!-- Old demo scenetext, illustrates UI without doing anything... slightly less boring than lorem ipsum
-    After the six-day walk it looms quickly, unmistakable in its grand austerity.
-    You stand before the gates of a 16th-century Trappist monastery.
-   ... end of old demo scenetext -->
+  <!-- Stats -->
+  <div id="statsParent" style="display: none">
+    <hr>
+    <div id="stats"></div>
+    <hr>
+    <!-- Icons by lorc, available on http://game-icons.net, are released under Creative Commons 3.0 BY license:
+	 attribution required -->
+    <!-- for now, leave this commented out, since there is a more complete attribution on the README page -->
+    <!-- <span style="float: right;"><small><i>icons by <a href="http://game-icons.net/">lorc</a></i></small></span> -->
+    <span style="float: right;"><small><i><a href="README.html" target="_blank">README</a></i></small></span>
   </div>
-  <!-- Menu -->
-  <form action="#" class="menu" id="menu">
-  <!-- Old demo options... again, only slightly less boring than lorem ipsum
-    <label class="firstOption">
-      <input type="radio" name="opt" value="0" checked="1"/>
-      First glancing around, I knock on the door <br/>
-    </label>
-    <label>
-      <input type="radio" name="opt" value="1"/>
-      I kick the door open and storm inside <br/>
-    </label>
-    <label class="lastOption">
-      <input type="radio" name="opt" value="2"/>
-      I pause for a swig of mead and a bite of liverwurst <br/>
-    </label>
-   ... end of old demo options -->
-  </form>
-  <br/>
-  <!-- Continue button -->
-  <button type="button" class="continue" id="continue" style="display:none">
-    Continue
-  </button>
-  <!-- Coda -->
-  <div class="coda" id="codaParent" style="display:none">
-    <div class="coda" id="coda"></div>
-    <button type="button" class="continue" id="restart">
-      Restart
+  <!-- History -->
+  <div id="historyParent" style="display: none">
+    <hr>
+    <div id="history"></div>
+    <hr>
+  </div>
+  <!-- Story -->
+  <div id="storyParent">
+    <!-- Scene -->
+    <div id="scene">
+      <!-- Preloading animation from http://preloaders.net/ -->
+      <br> Loading... <br> <br> <img src="img/loading.gif">
+      <!-- Old demo scenetext, illustrates UI without doing anything... slightly less boring than lorem ipsum
+	   After the six-day walk it looms quickly, unmistakable in its grand austerity.
+	   You stand before the gates of a 16th-century Trappist monastery.
+	   ... end of old demo scenetext -->
+    </div>
+    <!-- Menu -->
+    <form action="#" class="menu" id="menu">
+      <!-- Old demo options... again, only slightly less boring than lorem ipsum
+	   <label class="firstOption">
+	     <input type="radio" name="opt" value="0" checked="1"/>
+	     First glancing around, I knock on the door <br/>
+	   </label>
+	   <label>
+	     <input type="radio" name="opt" value="1"/>
+	     I kick the door open and storm inside <br/>
+	   </label>
+	   <label class="lastOption">
+	     <input type="radio" name="opt" value="2"/>
+	     I pause for a swig of mead and a bite of liverwurst <br/>
+	   </label>
+	   ... end of old demo options -->
+    </form>
+    <br/>
+    <!-- Continue button -->
+    <button type="button" class="continue" id="continue" style="display:none">
+      Continue
     </button>
+    <!-- Coda -->
+    <div class="coda" id="codaParent" style="display:none">
+      <div class="coda" id="coda"></div>
+      <button type="button" class="continue" id="restart">
+	Restart
+      </button>
+    </div>
   </div>
- </div>
- <!-- Minigame -->
+  <!-- Minigame -->
   <div id="minigame" style="display:none">
-   <div id="minigameText"></div>
-   <div id="minigameBoard"></div>
-   <hr>
-   <div id="minigameTools" class="toolbar"></div>
+    <div id="minigameText"></div>
+    <div id="minigameBoard"></div>
+    <hr>
+    <div id="minigameTools" class="toolbar"></div>
   </div>
- <!-- Debugging -->
- <div id="debugParent" style="display:none">
-   <div class="sigmaParent" id="sigmaParent">
-     <div class="sigma" id="sigma"></div>
-   </div>
- </div>
 </div>
 
 
@@ -109,11 +99,6 @@ console.log ("Loading source files");
 
 <!-- Markdown parser -->
 <script type="text/javascript" src="pagedown/Markdown.Converter.js"></script>
-
-<!-- sigma.js graph library (to render debugging map) -->
-<script type="text/javascript" src="sigma/sigma.concat.js"></script>
-<script type="text/javascript" src="sigma/sigma.parseGexf.js"></script>
-<script type="text/javascript" src="sigma/sigma.fisheye.js"></script>
 
 <!-- FunkScene library & parser -->
 <script type="text/javascript" src="funkscene.js"></script>
@@ -126,7 +111,6 @@ console.log ("Loading source files");
 
 <!-- load the Belsidore scene file and parse it -->
 <script type="text/javascript">
-  FunkScene.debug();
   FunkScene.loadSceneFile ("belsidore.scene");
   FunkScene.initialize();
 </script>

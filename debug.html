@@ -1,0 +1,115 @@
+<html>
+  <head>
+    <title>FunkScene</title>
+
+    <script type="text/javascript">
+      console.log ("Loading source files");
+    </script>
+
+    <!-- Stylesheets -->
+    <link href="style.css" rel="stylesheet" type="text/css">
+
+  </head>
+  <body>
+    <div id="debugContainer">
+      <div id="game">
+	<div id="buttons">
+	  <button type="button" id="showStory" style="display: none">
+	    Back to choices
+	  </button>
+	  <button type="button" id="showStats">
+	    Status page
+	  </button>
+	  <button type="button" id="showHistory">
+	    History
+	  </button>
+	  <span style="float: right;"><small>(debugging)</i></small></span>
+	</div>
+
+	<!-- Stats -->
+	<div id="statsParent" style="display: none">
+	  <hr>
+	  <div id="stats"></div>
+	  <hr>
+	  <!-- Icons by lorc, available on http://game-icons.net, are released under Creative Commons 3.0 BY license:
+	       attribution required -->
+	  <!-- for now, leave this commented out, since there is a more complete attribution on the README page -->
+	  <!-- <span style="float: right;"><small><i>icons by <a href="http://game-icons.net/">lorc</a></i></small></span> -->
+	  <span style="float: right;"><small><i><a href="README.html" target="_blank">README</a></i></small></span>
+	</div>
+	<!-- History -->
+	<div id="historyParent" style="display: none">
+	  <hr>
+	  <div id="history"></div>
+	  <hr>
+	</div>
+	<!-- Story -->
+	<div id="storyParent">
+	  <!-- Scene -->
+	  <div id="scene">
+	    <!-- Preloading animation from http://preloaders.net/ -->
+	    <br> Loading... <br> <br> <img src="img/loading.gif">
+	  </div>
+	  <!-- Menu -->
+	  <form action="#" class="menu" id="menu">
+	  </form>
+	  <br/>
+	  <!-- Continue button -->
+	  <button type="button" class="continue" id="continue" style="display:none">
+	    Continue
+	  </button>
+	  <!-- Coda -->
+	  <div class="coda" id="codaParent" style="display:none">
+	    <div class="coda" id="coda"></div>
+	    <button type="button" class="continue" id="restart">
+	      Restart
+	    </button>
+	  </div>
+	</div>
+	<!-- Minigame -->
+	<div id="minigame" style="display:none">
+	  <div id="minigameText"></div>
+	  <div id="minigameBoard"></div>
+	  <hr>
+	  <div id="minigameTools" class="toolbar"></div>
+	</div>
+      </div>
+      <div id="debugger">
+	<div id="debuggerMapContainer">
+	  <div id="debuggerMap">
+	  </div>
+	</div>
+	<div id="debuggerInfo">
+	</div>
+      </div>
+
+    </div>
+
+    <!-- Scripts -->
+
+    <!-- Markdown parser -->
+    <script type="text/javascript" src="pagedown/Markdown.Converter.js"></script>
+
+    <!-- sigma.js graph library (to render debugging map) -->
+    <script type="text/javascript" src="sigma/sigma.concat.js"></script>
+    <script type="text/javascript" src="sigma/sigma.parseGexf.js"></script>
+    <script type="text/javascript" src="sigma/sigma.fisheye.js"></script>
+
+    <!-- FunkScene library & parser -->
+    <script type="text/javascript" src="funkscene.js"></script>
+    <script type="text/javascript" src="grammar/fs.js"></script>
+    <script type="text/javascript" src="grammar/graph.js"></script>
+
+    <!-- Cazoo library & parser -->
+    <script type="text/javascript" src="cazoo.js"></script>
+    <script type="text/javascript" src="grammar/cz.js"></script>
+
+    <!-- load the Belsidore scene file and parse it -->
+    <script type="text/javascript">
+      FunkScene.debug();
+      FunkScene.loadSceneFile ("belsidore.scene");
+      FunkScene.initialize();
+    </script>
+
+  </body>
+</html>

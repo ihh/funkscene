@@ -113,6 +113,11 @@
 	return "if(" + cond + "){" + true_val + "}else{" + false_val + "}";
     }
 
+    function makeCycle(cycle_var,cycles,loop_flag)
+    {
+	return "[" + cycles.join(",\n\t") + "][" + cycle_var + " = ((typeof(" + cycle_var + ") === 'undefined') ? 0 : (" + cycle_var + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + cycle_var + " + 1))]";
+    }
+
     function makeDummy(s) {
 	return "(function(){" + s + ";return\"\";})()";
     }
@@ -288,16 +293,34 @@ choose_expr
   { return "((" + expr + ") ? [" + c + "] : [" + c[0] + "])"; }
 
 qualified_choose_expr
- = choose_expr
- / tag:onetime_tag_expr cond:if_expr? c:choice
+ = choose_expr spc*
+ / onetime_choose_cycle
+ / tag:onetime_tag_expr cond:if_expr? c:choice spc*
   { var v = eventCounter(tag);
     c[1] = "(function(){" + incEventCount(tag) + ";return (" + c[1] + ")();})";
     return "(" + v + " > 0) ? [] : " +
      (((typeof cond === 'undefined') || cond.length == 0) ? ("[" + c + "]") : ("((" + cond + ") ? [" + c + "] : [])")); }
+ / choose_cycle
 
 onetime_tag_expr
  = "#AS" spc+ tag:symbol spc+ { return tag; }
  / "#ONCE" spc+ { return oneTimeEventPrefix + (++oneTimeCount); }
+
+onetime_choose_cycle
+  = "#ONCE" spc+ c:begin_choose_cycle spc+ cycles:choose_cycle_list "#STOP" spc*
+  { cycles.push([]); return makeCycle (c, cycles, false); }
+
+choose_cycle
+  = c:begin_choose_cycle spc+ cycles:choose_cycle_list loop_flag:end_cycle spc*
+  { return makeCycle (c, cycles, loop_flag); }
+
+begin_choose_cycle
+  = "#ROTATE(" spc* c:symbol spc* ")"   { return c; }
+  / "#ROTATE"  { return cyclePrefix + (++cycleCount); }
+
+choose_cycle_list
+  = head:choose_expr spc* ("#NEXT" spc*)? tail:choose_cycle_list  { return [head].concat (tail); }
+  / last:choose_expr spc*  { return [last]; }
 
 inc_event_count
  = "#ACHIEVE" spc+ tag:symbol { return incEventCount (tag); }
@@ -396,7 +419,7 @@ inline_else_clause
 
 cycle
   = c:begin_cycle spc cycles:cycle_list loop_flag:end_cycle
-  { return "[" + cycles.join(",") + "][" + c + " = ((typeof(" + c + ") === 'undefined') ? 0 : (" + c + " >= " + (cycles.length - 1) + " ? " + (loop_flag ? 0 : (cycles.length - 1)) + " : " + c + " + 1))]"; }
+  { return makeCycle (c, cycles, loop_flag); }
 
 cycle_list
   = head:postponed_quoted_text "#NEXT" spc tail:cycle_list  { return [head].concat (tail); }
@@ -417,6 +440,7 @@ scene_scheduling_statement
 
 spc
   = [ \t\n\r]
+  / comment { return ""; }
 
 symbol
   = first:[A-Za-z_] rest:symbol_tail? { return first + rest; }

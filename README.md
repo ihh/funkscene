@@ -617,6 +617,22 @@ only appears when the text about feeling a chill has been shown.
 
 Note that there cannot be any whitespace between the `#CYCLE` and the opening bracket.
 
+To cycle between choices, you use a different keyword, `#ROTATE`:
+
+	Well, here you are in the waiting room of the Principal's Office.
+	#CHOOSE I leave. #FOR #( You can't, I'm afraid. #)
+	#CHOOSE I sit perfectly still. #FOR #( You sit motionless for exactly 17 seconds. Quite an achievement. #)
+	#ROTATE(pointless_action)  #// the (pointless_action) bit is unnecessary unless you want to keep track
+	#CHOOSE I twiddle my thumbs #FOR #( Consider your thumbs twiddled. #BACK #)
+	#CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
+	#CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
+	#LOOP
+	The Principal will see you now.
+
+The `#NEXT` separator is optional when you use `#ROTATE` (it's not present in the above example).
+
+You can terminate the `#ROTATE` block with `#LOOP` or `#STOP`, just like with `#CYCLE`.
+If you prefix the initial `#ROTATE` with `#ONCE`, and end with `#STOP`, then the choice will disappear after the last rotation.
 
 Programmatically generated choice lists
 ---------------------------------------

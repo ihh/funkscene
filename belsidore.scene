@@ -8,6 +8,20 @@ name = "Adventurer"
 
 #PAGE start
 #(
+#{ wind = 0 #}
+	Well, here you are in the waiting room of the Principal's Office.
+	#CHOOSE I leave. #FOR #( You can't, I'm afraid. #)
+	#CHOOSE I sit perfectly still. #FOR #( You sit motionless for exactly 17 seconds. Quite an achievement. #)
+#ONCE	#ROTATE(pointless_action)  #// the (pointless_action) bit is unnecessary unless you want to keep track
+	#CHOOSE I twiddle my thumbs #FOR #( Consider your thumbs twiddled. #BACK #)
+	#CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
+	#CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
+	#STOP
+	The Principal will see you now.
+#)
+
+#PAGE old
+#(
 #// Test comment inside scene text
 #TITLE The Temple of Belsidore #ENDTITLE
 # Temple of Belsidore
@@ -26,7 +40,11 @@ You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate 
  #CHOOSE I turn the dial to 11! #FOR #( You turn the dial all the way to eleven. #{ amps="Eleven"; dial="dial, turned to eleven" #} #GOTO start #)
 #IF 0 #CHOOSE I meditate contemplatively before acting #FOR wise_choice
 #CHOOSE What is the philological origin of "Belsidore"? #FOR #( NERD!!! #OVER #)
-#CHOOSE I kill myself #FOR #( Done. #OVER #)
+#ROTATE(suicide_method)
+ #CHOOSE I kill myself #FOR #( Done. #OVER #)
+ #CHOOSE I end it all #FOR #( You got it. #OVER #)
+ #CHOOSE I jump off a ledge #FOR #( Bye. #OVER #)
+ #LOOP
 #ONCE #CHOOSE I think of the good times. #FOR #( You think about all the good times. It doesn't take long. #GOTO #PREVIOUS #)
 #AS penance #CHOOSE As penance, I cross myself. #FOR #( You cross yourself, in penance. #BACK #)
 #AS penance #CHOOSE As penance, I regurgitate my last meal. #FOR #( You retch, purging yourself of evil. #BACK #)
@@ -46,10 +64,10 @@ Think that doesn't sound like a lot, #$name? No, you don't think that, because y
 #PAGE wise_choice
 #( A wise choice, my friend.
 
-Now, I have to warn you that there is a bug coming up soon.
-Without bugs there would be no point in a debugger; I do hope you understand.
+Now, I have to warn you that there's a bug coming up soon.
+Without bugs there would be no point in a debugger; I hope you understand.
 
-Are you ready for a big, bad Bug?
+Are you ready for a bug?
 
 #CHOOSE I'm ready! #FOR pre_bug_page
 #CHOOSE No, get me away from that thing #FOR #( Very well. You live a tranquil bug-free existence to the end of your days. #)

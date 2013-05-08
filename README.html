@@ -623,6 +623,24 @@ only appears when the text about feeling a chill has been shown.</p>
 
 <p>Note that there cannot be any whitespace between the <code>#CYCLE</code> and the opening bracket.</p>
 
+<p>To cycle between choices, you use a different keyword, <code>#ROTATE</code>:</p>
+
+<pre><code>Well, here you are in the waiting room of the Principal's Office.
+#CHOOSE I leave. #FOR #( You can't, I'm afraid. #)
+#CHOOSE I sit perfectly still. #FOR #( You sit motionless for exactly 17 seconds. Quite an achievement. #)
+#ROTATE(pointless_action)  #// the (pointless_action) bit is unnecessary unless you want to keep track
+#CHOOSE I twiddle my thumbs #FOR #( Consider your thumbs twiddled. #BACK #)
+#CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
+#CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
+#LOOP
+The Principal will see you now.
+</code></pre>
+
+<p>The <code>#NEXT</code> separator is optional when you use <code>#ROTATE</code> (it's not present in the above example).</p>
+
+<p>You can terminate the <code>#ROTATE</code> block with <code>#LOOP</code> or <code>#STOP</code>, just like with <code>#CYCLE</code>.
+If you prefix the initial <code>#ROTATE</code> with <code>#ONCE</code>, and end with <code>#STOP</code>, then the choice will disappear after the last rotation.</p>
+
 <h2>Programmatically generated choice lists</h2>
 
 <p>As well as just generating scene functions directly in JavaScript or FunkScene,

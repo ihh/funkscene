@@ -274,7 +274,8 @@ conjunctive_choice_list
 { return makeInput (prompt, target, var_name); }
  / cond:if_expr target:basic_goto_clause
 { return [makeGoto(target), continueIfDefined()]; }  // both outcomes
- / qualified_choose_expr+
+ / q:qualified_choose_expr+
+{ return q.concat.apply (q.shift(), q); }
 
 choice_list
  = conjunctive_choice_list
@@ -327,13 +328,31 @@ choose_expr
   { return c; }  // FIXME: differently styled edge?
 
 qualified_choose_expr
- = choose_expr
- / tag:onetime_tag_expr cond:if_expr? c:choice
-  { return c; }  // FIXME: differently styled edge?
+ = c:choose_expr spc* { return [c]; }
+ / onetime_choose_cycle
+ / tag:onetime_tag_expr cond:if_expr? c:choice spc*
+  { return [c]; }  // FIXME: differently styled edge?
+ / c:choose_cycle
 
 onetime_tag_expr
  = "#AS" spc+ tag:symbol spc+
  / "#ONCE" spc+
+
+onetime_choose_cycle
+  = "#ONCE" spc+ c:begin_choose_cycle spc+ cycles:choose_cycle_list "#STOP" spc*
+  { return cycles; }
+
+choose_cycle
+  = c:begin_choose_cycle spc+ cycles:choose_cycle_list loop_flag:end_cycle spc*
+  { return cycles; }
+
+begin_choose_cycle
+  = "#ROTATE(" spc* c:symbol spc* ")"
+  / "#ROTATE"
+
+choose_cycle_list
+  = head:choose_expr spc* ("#NEXT" spc*)? tail:choose_cycle_list  { return [head].concat (tail); }
+  / last:choose_expr spc*  { return [last]; }
 
 inc_event_count
  = "#ACHIEVE" spc+ tag:symbol
@@ -444,6 +463,7 @@ scene_scheduling_statement
 
 spc
   = [ \t\n\r]
+  / comment
 
 symbol
   = first:[A-Za-z_] rest:symbol_tail? { return first + rest; }

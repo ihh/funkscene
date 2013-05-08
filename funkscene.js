@@ -280,9 +280,8 @@
 		activeNode.displaySize *= sizeScaleFactor;
 		activeNode.trueColor = activeNode.color;
 		activeNode.color = "#808080";
-		// can't get the following lines to work at the moment, grrr...
-		//   sigInst.goTo (activeNode.x, activeNode.y);
-		//   sigInst.draw();
+		// can't get the following to work at the moment, grrr...
+		// sigInst.zoomTo (activeNode.displayX, activeNode.displayY, 1) . draw(2,2,2);
 	    }
     }
 

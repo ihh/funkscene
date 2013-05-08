@@ -7692,6 +7692,8 @@ FunkScene.parser = (function(){
       
           function sceneFunction(continuation,includes,scene_desc,choices) {
       	var f = "(function() {\n";
+      	if (FunkScene.debugging())
+      	    f += "FunkScene.locateDebugger(\"" + currentScene() + "\");\n";
       	if (typeof(continuation) != 'undefined') {
                   f += "var defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
       	}

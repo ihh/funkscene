@@ -7423,10 +7423,6 @@ FunkScene.graphGenerator = (function(){
       	return id.length > 0 && id.charAt(id.length-1) == "+";
           }
       
-          function isSpecialNode(id) {
-      	return id == "statusPage" || id == "codaPage";
-          }
-      
           function makeGEXF() {
       	var xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
       	xml += "<gexf>\n";
@@ -7445,10 +7441,10 @@ FunkScene.graphGenerator = (function(){
       	var x = 0, y = 0;
       	for (var i = 0; i < nodes.length; ++i) {
       	    var id = nodes[i];
-      	    var label = id in nodeName ? nodeName[id] : id;
+      	    var label = id in nodeName ? nodeName[id] : (nodeName[id] = id);
       	    // check if id ends in a "+" (default continuation); if so, and it's not defined, skip it
-      	    if (!isContinuationNode(id) && !isSpecialNode(label)) {
-      		xml += "<node id=\"" + label + "\">\n";
+      	    if (!isContinuationNode(id) && !FunkScene.isSpecialNode(label)) {
+      		xml += "<node id=\"" + id + "\" label=\"" + label + "\">\n";
       		xml += "<attvalues>\n";
       		xml += "<attvalue for=\"File\" value=\"" + FunkScene.lastLoadedFile + "\"/>";
       		xml += "<attvalue for=\"Line\" value=\"" + sceneLine[id] + "\"/>";
@@ -7475,7 +7471,7 @@ FunkScene.graphGenerator = (function(){
       	for (var i = 0; i < edges.length; ++i) {
       	    var id = edges[i][1];
       	    if (!((id in definedNode) || (id in looseEndNode) || isContinuationNode(id))) {
-      		xml += "<node id=\"" + id + "\">\n";
+      		xml += "<node id=\"" + id + "\" label=\"" + id + "\">\n";
       		xml += "<attvalues>\n";
       		xml += "<attvalue for=\"Bug\" value=\"Loose End\"/>";
       		xml += "</attvalues>\n";
@@ -7492,8 +7488,8 @@ FunkScene.graphGenerator = (function(){
       	xml += "<edges>\n";
       	var edgeId = 0;
       	function addEdge (source, target, props) {
-      	    if (source in nodeName) source = nodeName[source];
-      	    if (target in nodeName) target = nodeName[target];
+      	    if (source in nodeId) source = nodeId[source];
+      	    if (target in nodeId) target = nodeId[target];
       	    if (!isContinuationNode(source) && !isContinuationNode(target)) {
       		xml += "<edge id=\"" + edgeId++ + "\" source=\"" + source + "\" target=\"" + target + "\"";
       		if ("choiceType" in props) xml += " choicetype=\"" + props.choiceType + "\"";

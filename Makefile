@@ -1,14 +1,18 @@
 PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
-all: parser/funkscene.js parser/cazoo.js parser/graph.js README.html img/icon pagedown
+PARSERS = $(addprefix lib/parser/,$(subst .pegjs,.js,$(notdir $(wildcard grammar/*.pegjs))))
 
-parser/funkscene.js: grammar/funkscene.pegjs
+all: parsers README.html img/icon pagedown
+
+parsers: $(PARSERS)
+
+lib/parser/funkscene.js: grammar/funkscene.pegjs
 	$(PEGJS) -e FunkScene.parser --track-line-and-column $< $@
 
-parser/graph.js: grammar/graph.pegjs
+lib/parser/graph.js: grammar/graph.pegjs
 	$(PEGJS) -e FunkScene.graphGenerator --track-line-and-column $< $@
 
-parser/cazoo.js: grammar/cazoo.pegjs
+lib/parser/cazoo.js: grammar/cazoo.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
 
 README.html: README.md

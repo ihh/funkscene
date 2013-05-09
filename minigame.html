@@ -106,17 +106,11 @@ Can you last 30 whole seconds? &iquest;
 <script type="text/javascript" src="lib/funkscene.js"></script>
 
 <!-- FunkScene parser -->
-<script type="text/javascript" src="parser/funkscene.js"></script>
-
-<!-- load the Belsidore scene file and parse it -->
-<script type="text/javascript">
-  FunkScene.loadSceneFile ("belsidore.scene");
-</script>
-
+<script type="text/javascript" src="lib/parser/funkscene.js"></script>
 
 <!-- Cellular automata -->
 <script type="text/javascript" src="lib/cazoo.js"></script>
-<script type="text/javascript" src="parser/cazoo.js"></script>
+<script type="text/javascript" src="lib/parser/cazoo.js"></script>
 <script type="text/javascript">
   var zoo = Cazoo.newZooFromUrl ("zoo/brownian.cazoo");
   zoo.initialize (document.getElementById("board"), document.getElementById("toolbar"), function(x){alert("woohoo, "+x+"!");});

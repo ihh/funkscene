@@ -10,7 +10,7 @@
 
 
 <!-- Main text panel -->
-<div>
+<div id="gameContainer">
   <div id="buttons">
    <button type="button" id="showStory" style="display: none">
      Back to choices
@@ -78,16 +78,16 @@
 <script type="text/javascript" src="pagedown/Markdown.Converter.js"></script>
 
 <!-- FunkScene library & parser -->
-<script type="text/javascript" src="funkscene.js"></script>
-<script type="text/javascript" src="grammar/fs.js"></script>
+<script type="text/javascript" src="lib/funkscene.js"></script>
+<script type="text/javascript" src="parser/funkscene.js"></script>
 
 <!-- Cazoo library & parser -->
-<script type="text/javascript" src="cazoo.js"></script>
-<script type="text/javascript" src="grammar/cz.js"></script>
+<script type="text/javascript" src="lib/cazoo.js"></script>
+<script type="text/javascript" src="parser/cazoo.js"></script>
 
 <!-- load the scene file and parse it -->
 <script type="text/javascript">
-  FunkScene.loadSceneFile ("ganymede.scene");
+  FunkScene.loadSceneFile ("scene/ganymede.scene");
   FunkScene.initialize();
 </script>
 

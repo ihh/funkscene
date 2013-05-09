@@ -1,3 +1,6 @@
 
 all:
-	cd ..; make grammar/fs.js grammar/graph.js grammar/cz.js
+	cd ..; make parser/funkscene.js parser/graph.js parser/cazoo.js
+
+force:
+	cd ..; make -B parser/funkscene.js parser/graph.js parser/cazoo.js

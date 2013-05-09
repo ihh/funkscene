@@ -8,9 +8,14 @@
 </head>
 <body>
 
-
 <!-- Main text panel -->
-<div>
+<div id="gameContainer">
+
+Try to stop Drunken Mad Scientist Face from falling off the giant chessboard during his Random Walk, by oppressing him with Padlocks!!1!!
+
+<p>
+Can you last 30 whole seconds? &iquest;
+
   <div id="buttons">
    <button type="button" id="showStory" style="display: none">
      Back to choices
@@ -98,13 +103,10 @@
 <script type="text/javascript" src="pagedown/Markdown.Converter.js"></script>
 
 <!-- FunkScene library -->
-<script type="text/javascript" src="funkscene.js"></script>
+<script type="text/javascript" src="lib/funkscene.js"></script>
 
 <!-- FunkScene parser -->
-<script type="text/javascript" src="grammar/fs.js"></script>
-
-<!-- Uncomment for native javascript version of Belsidore -->
-<!-- script type="text/javascript" src="belsidore.js"></script -->
+<script type="text/javascript" src="parser/funkscene.js"></script>
 
 <!-- load the Belsidore scene file and parse it -->
 <script type="text/javascript">
@@ -112,11 +114,11 @@
 </script>
 
 
-<!-- Cellular automaton -->
-<script type="text/javascript" src="cazoo.js"></script>
-<script type="text/javascript" src="grammar/cz.js"></script>
+<!-- Cellular automata -->
+<script type="text/javascript" src="lib/cazoo.js"></script>
+<script type="text/javascript" src="parser/cazoo.js"></script>
 <script type="text/javascript">
-  var zoo = Cazoo.newZooFromUrl ("grammar/brownian.cazoo");
+  var zoo = Cazoo.newZooFromUrl ("zoo/brownian.cazoo");
   zoo.initialize (document.getElementById("board"), document.getElementById("toolbar"), function(x){alert("woohoo, "+x+"!");});
 </script>
 

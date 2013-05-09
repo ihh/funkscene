@@ -459,8 +459,9 @@
 
     var dfsLayoutThreshold = 10;  // controls the transition from depth-first search to breadth-first search in map layout
     var sigInst;
+    var bfsRank = {}, bfsCount = 0;
 
-    function initializeMap(firstNodeId) {
+    function initializeMap() {
 
 	var graphXmlDoc = xmlDocFromString (graphXmlString);
 
@@ -490,59 +491,22 @@
 	// Parse the GEXF encoded graph
 	sigInst.parseGexfXmlDoc(graphXmlDoc);
 
-	// make the start node big
-	sigInst.iterNodes(function(n){
-	    n.size *= 3;
-	    n.color = "#806010";
-	}, [firstNodeId]);
-
 	// hook up some functions
-	function attributesToList(attr) {
-	    return '<ul>' +
-		attr.map(function(o){
-		    return '<li><b>' + o.attr + '</b> : ' + o.val + '</li>';
-		}).join('') +
-		'</ul>';
-	}
-	
-	function showNodeInfo(event) {
-	    hideNodeInfo();
-	    
+	function mouseOverNode(event) {
 	    var node;
 	    sigInst.iterNodes(function(n){
 		node = n;
 	    },[event.content[0]]);
-	    
-	    var attr = node['attr']['attributes'].slice(0);
-	    var label = node.id in fs.debug.nodeName ? fs.debug.nodeName[node.id] : undefined;
-	    if (typeof(label) != 'undefined' && label != node.id)
-		attr.unshift ({ attr: "Label", val: label });
-	    attr.unshift ({ attr: "ID", val: node.id });
 
-	    var incoming = fs.debug.incoming[node.id];
-	    var outgoing = fs.debug.outgoing[node.id];
-
-	    for (var inc in incoming) {
-		var attr_val = { val: incoming[inc].label };
-		attr_val.attr = "From " + inc;
-		attr.push (attr_val);
-	    }
-
-	    for (var out in outgoing) {
-		var attr_val = { val: outgoing[out].label };
-		attr_val.attr = "To " + out;
-		attr.push (attr_val);
-	    }
-
-	    debugInfoDiv.innerHTML = attributesToList (attr);
+	    fs.showNodeInfo (node);
 	}
-	
-	function hideNodeInfo(event) {
+	    
+	function mouseOffNode(event) {
 	    debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
 	}
 	
-	sigInst.bind('overnodes',showNodeInfo);
-	//	sigInst.bind('outnodes',hideNodeInfo);
+	sigInst.bind('overnodes',mouseOverNode);
+	//	sigInst.bind('outnodes',mouseOffNode);
 
 	// Turn on the fish eye
 	sigInst.activateFishEye();
@@ -550,6 +514,7 @@
 	// show loose end text
 	debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
 
+	// circular layout function
 	sigma.publicPrototype.circularLayout = function(sortFunc) {
 	    var R = 100,
 	    i = 0,
@@ -565,61 +530,112 @@
 	    
 	    return this.position(0,0,1).draw();
 	};
+
+	// do a modified breadth-first sort of the nodes
+	// the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
+	// or while the queue size is below some threshold
+	var outgoing = {}, incoming = {}, nOut = {}, unmarked = {};
+	fs.debug.outgoing = outgoing;
+	fs.debug.incoming = incoming;
+
+	sigInst.iterNodes (function(node) {
+	    outgoing[node.id] = {};
+	    incoming[node.id] = {};
+	    nOut[node.id] = 0;
+	    unmarked[node.id] = 1;});
+
+	sigInst.iterEdges (function(edge) {
+	    outgoing[edge.source][edge.target] = edge;
+	    incoming[edge.target][edge.source] = edge;
+	    nOut[edge.source]++;});
+
+	var queue = [];
+	function visit(id) {
+	    if (unmarked[id]) {
+		queue.push(id);
+		bfsRank[id] = bfsCount++;
+		delete unmarked[id];
+		// the modified DFS step:
+		if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
+		    visitChildren(id);
+	    }
+	};
+	function visitChildren(source) {
+	    for (var target in outgoing[source])
+		visit (target);
+	};
+	var starts = ["start"];
+	while (starts.length) {
+	    visit (starts.shift());
+	    while (queue.length)
+		visitChildren (queue.shift());
+	    starts = Object.keys (unmarked);
+	}
     }
 
     // called by scene function
+    var firstNodeColor = "#604080", firstNodeScaleFactor = 2;
     fs.locateDebugger = function(firstNodeId) {
 
 	if (fs.debugging()) {
-	    initializeMap(firstNodeId);
+
+	    initializeMap();  // it's inefficient to call this every time, but seems to be only way to reset node colors/sizes?
 
 	    if (typeof firstNodeId == 'undefined')
 		firstNodeId = "start";
 
-	    // do a modified breadth-first sort of the nodes
-	    // the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
-	    // or while the queue size is below some threshold
-	    var outgoing = {}, incoming = {}, nOut = {}, unmarked = {};
-	    fs.debug.outgoing = outgoing;
-	    fs.debug.incoming = incoming;
-
-	    sigInst.iterNodes (function(node) {
-		outgoing[node.id] = {};
-		incoming[node.id] = {};
-		nOut[node.id] = 0;
-		unmarked[node.id] = 1;});
-
-	    sigInst.iterEdges (function(edge) {
-		outgoing[edge.source][edge.target] = edge;
-		incoming[edge.target][edge.source] = edge;
-		nOut[edge.source]++;});
-
-	    var queue = [], bfsRank = {}, bfsCount = 0;
-	    function visit(id) {
-		if (unmarked[id]) {
-		    queue.push(id);
-		    bfsRank[id] = bfsCount++;
-		    delete unmarked[id];
-		    // the modified DFS step:
-		    if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
-			visitChildren(id);
-		}
-	    };
-	    function visitChildren(source) {
-		for (var target in outgoing[source])
-		    visit (target);
-	    };
-	    var starts = [firstNodeId];
-	    while (starts.length) {
-		visit (starts.shift());
-		while (queue.length)
-		    visitChildren (queue.shift());
-		starts = Object.keys (unmarked);
-	    }
+	    // find the current node, restyle it
+	    var firstNode;
+	    sigInst.iterNodes(function(n){
+		firstNode = n;
+		firstNode.color = firstNodeColor;
+		firstNode.size *= firstNodeScaleFactor;
+	    }, [firstNodeId]);
 
 	    // circular layout using BFS ranking
-	    sigInst.circularLayout(function(a,b){ return bfsRank[a] - bfsRank[b]; });
+	    sigInst.circularLayout(function(a,b){
+		var aRank = (bfsRank[a] + bfsCount - bfsRank[firstNodeId]) % bfsCount;
+		var bRank = (bfsRank[b] + bfsCount - bfsRank[firstNodeId]) % bfsCount;
+		return aRank - bRank;
+	    });
+
+	    // show info
+	    fs.showNodeInfo (firstNode);
 	}
     }
+
+    function attributesToList(attr) {
+	return '<ul>' +
+	    attr.map(function(o){
+		return '<li><b>' + o.attr + '</b> : ' + o.val + '</li>';
+	    }).join('') +
+	    '</ul>';
+    }
+
+    fs.showNodeInfo = function(node) {
+	var attr = node['attr']['attributes'].slice(0);
+	var label = node.id in fs.debug.nodeName ? fs.debug.nodeName[node.id] : undefined;
+	if (typeof(label) != 'undefined' && label != node.id)
+	    attr.unshift ({ attr: "Label", val: label });
+	attr.unshift ({ attr: "ID", val: node.id });
+
+	var incoming = fs.debug.incoming[node.id];
+	var outgoing = fs.debug.outgoing[node.id];
+
+	for (var inc in incoming) {
+	    var attr_val = { val: incoming[inc].label };
+	    attr_val.attr = "From " + inc;
+	    attr.push (attr_val);
+	}
+
+	for (var out in outgoing) {
+	    var attr_val = { val: outgoing[out].label };
+	    attr_val.attr = "To " + out;
+	    attr.push (attr_val);
+	}
+
+	debugInfoDiv.innerHTML = attributesToList (attr) + fs.debug.looseEndHtml;
+    }
+	
 
 })(FunkScene = {});

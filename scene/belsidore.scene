@@ -100,10 +100,10 @@ You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate 
 #// Input of a variable:
 #ONCE #CHOOSE I have a name, you know. #FOR
  #( #TITLE Getting acquainted... #ENDTITLE
-    OK then, tell me your name.
+  OK then, tell me your name.
 #// Here is where the input happens:
-    #INPUT Type your name: #TO name
-    #BACK #)
+  #INPUT Type your name: #TO name
+  #BACK #)
 
 #// Referencing an earlier CYCLE variable:
 #SECRETLY #IF wind == 2 #CHOOSE I pull my cloak tighter around me. #FOR #( Wimp. #ACHIEVE penance #CHOOSE Sorry. #FOR #PREVIOUS #)

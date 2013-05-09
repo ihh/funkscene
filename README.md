@@ -59,7 +59,7 @@ My subjective view at the moment is that, while links encourage close examinatio
 A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.
 I completely acknowledge that this is subjective and will put hyperlinks into FunkScene the moment a writer demands it.
 
-The design principles of FunkScene are as follows:
+The design principles of FunkScene are something like this:
 
 1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
 2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) or drop-down menus (Schooz)

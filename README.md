@@ -55,9 +55,10 @@ Aesthetics
 A scene is always presented as a scene text followed by a choice list.
 There are currently no inline hyperlinks or dropdown menus in FunkScene (although it would be straightforward to add them).
 
-My subjective view at the moment is that, while links encourage close examination of a text (and indeed add extra semantics), they can detract from the pace of a story and the balancing of choices.
-A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.
-I completely acknowledge that this is subjective and will put hyperlinks into FunkScene the moment a writer demands it.
+_My subjective view at the moment is that, while links encourage close examination of a text (and indeed add extra semantics), they can detract from the pace of a story and the balancing of choices._
+_A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow._
+_The back-and-forth between narrator and player is a significant part of the feel and pacing that I'm going for._
+_I completely acknowledge that these are 100% subjective reasons and I'll put hyperlinks into FunkScene the moment a writer says they need it._
 
 The design principles of FunkScene are something like this:
 

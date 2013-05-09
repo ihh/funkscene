@@ -331,7 +331,7 @@ symbol_or_scene
   / scene
 
 choice
- = "#CHOOSE" spc+ choice_desc:nonempty_quoted_text "#FOR" spc+ target:symbol_or_scene spc
+ = "#CHOOSE" spc+ choice_desc:nonempty_quoted_text "#FOR" spc+ target:symbol_or_scene spc+
  { return [choice_desc, target]; }
 
 choose_expr
@@ -343,7 +343,8 @@ choose_expr
   { return c; }  // FIXME: differently styled edge?
 
 qualified_choose_expr
- = c:choose_expr spc* { return [c]; }
+ = c:choose_expr
+  { return [c]; }
  / onetime_choose_cycle
  / tag:onetime_tag_expr cond:if_expr? c:choice spc*
   { return [c]; }  // FIXME: differently styled edge?
@@ -366,8 +367,8 @@ begin_choose_cycle
   / "#ROTATE"
 
 choose_cycle_list
-  = head:choose_expr spc* ("#NEXT" spc*)? tail:choose_cycle_list  { return [head].concat (tail); }
-  / last:choose_expr spc*  { return [last]; }
+  = head:choose_expr "#NEXT" spc+ tail:choose_cycle_list  { return [head].concat (tail); }
+  / last:choose_expr  { return [last]; }
 
 inc_event_count
  = "#ACHIEVE" spc+ tag:symbol
@@ -492,6 +493,7 @@ symbol_chars
 
 balanced_code
   = "##" tail:balanced_code? { return "#" + tail; }
+  / comment tail:balanced_code? { return tail; }
   / c:inc_event_count tail:balanced_code? { return tail; }
   / c:reset_event_count tail:balanced_code? { return tail; }
   / c:query_event_count tail:balanced_code? { return tail; }
@@ -505,6 +507,7 @@ balanced_code_chars
 
 code
   = "##" tail:code? { return "#" + tail; }
+  / comment tail:code? { return tail; }
   / c:inc_event_count tail:code? { return tail; }
   / c:reset_event_count tail:code? { return tail; }
   / c:query_event_count tail:code? { return tail; }
@@ -619,6 +622,7 @@ quoted_cazoo_code
 cazoo_code
   = "\\#" tail:cazoo_code?
   / "\\\\" tail:cazoo_code?
+  / comment tail:cazoo_code?
   / rank:hash_rank tail:cazoo_code?
   / "#$" v:symbol tail:cazoo_code?
   / "#[" expr:balanced_code "#]" tail:cazoo_code?

@@ -27,6 +27,7 @@ name = "Adventurer"
 
 #// The following "#(" is the opening delimiter of the scene:
 #(
+#// Note that we ARE allowed to write #( inside a FunkScene-style #// or #/*..*/ comment.
 
 #// Change the window title
 #TITLE The Temple of Belsidore #ENDTITLE

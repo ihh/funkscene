@@ -64,7 +64,7 @@ html, body {
     box-shadow: 0 0 4px #666;
 }
 
-#debuggerInfo {
+.debuggerInfo {
     box-shadow: 0 0 4px #666;
     border-color: '#fff';
     border-radius: 4px;
@@ -81,17 +81,16 @@ html, body {
     clear: left;
 
     width: 100%;
-    min-height: 300px;
 
     font-size: 75%;
 }
 
-#debuggerInfo>ul {
+.debuggerInfo>ul {
     list-style-type: none;
     padding-left: 0em;
 }
 
-#debuggerInfo>ul>li {
+.debuggerInfo>ul>li {
     padding-left: 1em;
     text-indent: -1em;
 }

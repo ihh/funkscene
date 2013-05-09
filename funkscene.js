@@ -22,6 +22,7 @@
     var sigmaParentDiv = document.getElementById("debugger");
     var sigmaDiv = document.getElementById("debuggerMap");
     var debugInfoDiv = document.getElementById("debuggerInfo");
+    var debugLooseEndsDiv = document.getElementById("debuggerLooseEnds");
 
     // Debugging info
     var debuggerDisabled = 0;  // used to temporarily disable debugger while evaluating status page
@@ -512,7 +513,7 @@
 	sigInst.activateFishEye();
 
 	// show loose end text
-	debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
+	debugLooseEndsDiv.innerHTML = fs.debug.looseEndHtml;
 
 	// circular layout function
 	sigma.publicPrototype.circularLayout = function(sortFunc) {
@@ -580,6 +581,7 @@
 	if (fs.debugging()) {
 
 	    initializeMap();  // it's inefficient to call this every time, but seems to be only way to reset node colors/sizes?
+	    debugLooseEndsDiv.innerHTML = fs.debug.looseEndHtml + "<br>Current node: <i><font color=\"" + firstNodeColor + "\">" + firstNodeId + "</font></i>";
 
 	    if (typeof firstNodeId == 'undefined')
 		firstNodeId = "start";
@@ -634,7 +636,7 @@
 	    attr.push (attr_val);
 	}
 
-	debugInfoDiv.innerHTML = attributesToList (attr) + fs.debug.looseEndHtml;
+	debugInfoDiv.innerHTML = "<h2>Node Info</h2>" + attributesToList(attr);
     }
 	
 

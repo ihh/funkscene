@@ -7882,8 +7882,9 @@ FunkScene.graphGenerator = (function(){
       	// record loose ends
       	if (FunkScene.debugging()) {
       	    FunkScene.debug.looseEnds = Object.keys (looseEndNode);
-      	    FunkScene.debug.looseEndHtml = "Loose ends: " + FunkScene.debug.looseEnds.length + "<p>\n"
-      		+ "<i><font color=\"red\">" + FunkScene.debug.looseEnds.join(", ") + "</font></i>";
+      	    var nLoose = FunkScene.debug.looseEnds.length;
+      	    FunkScene.debug.looseEndHtml = "Loose ends: "
+      		+ FunkScene.debug.looseEnds.map(function(t){return"<i><font color=\"red\">" + t + "</font></i>"}).join(", ") + (nLoose > 0 ? (" (" + nLoose + " total)") : "") + "</span>";
       	}
       
       	// edges

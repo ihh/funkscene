@@ -1,11 +1,9 @@
 <h1>FunkScene</h1>
 
-<p>FunkScene is a dialect of JavaScript intended to encourage functional
-programming in the creation of choose-your-own (CYO) interactive fiction.</p>
-
-<p>In a certain trivial sense, most JavaScript programs are valid FunkScene programs. In addition,
-and more specifically, FunkScene provides a few macros to construct the staples of CYO fiction:
-passages of text <em>("scenes")</em> with choices that lead to other scenes.</p>
+<p>FunkScene is a dialect of JavaScript for choose-your-own (CYO) interactive fiction.
+As well as the core JavaScript syntax (which remains available but largely out of sight),
+FunkScene provides a number of macros to construct the staples of CYO fiction:
+dynamic passages of text <em>("scenes")</em> with choices that lead to other scenes.</p>
 
 <p>This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.</p>
 
@@ -29,8 +27,10 @@ FunkScene borrows bits and pieces from several open source projects:</p>
 <li><a href="http://css-tricks.com/css3-progress-bars/">Chris Coyier's CSS3 progress bars</a> at css-tricks.com</li>
 </ul>
 
-<p>An earlier prototype, <a href="https://github.com/ihh/schooz">Schooz</a>, developed the functional programming framework
-while also exploring some alternative UI ideas (such as dropdown menus) that were eventually omitted from this framework.</p>
+<p>An earlier prototype, <a href="https://github.com/ihh/schooz">Schooz</a>,
+started as an investigation of functional programming techniques for CYO.
+(A true CYO FP language might look a bit more like Logo+ChoiceScript+Markdown,
+rather than JavaScript+ChoiceScript+Markdown+lots of game-focused hacks.)</p>
 
 <p>The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's <a href="https://github.com/jacomyal/sigma.js">sigma.js</a>.</p>
 

@@ -24,9 +24,11 @@
     var debugInfoDiv = document.getElementById("debuggerInfo");
 
     // Debugging info
-    var debug = undefined;
-    fs.debug = function() { if (!fs.debugging()) debug = {}; };
-    fs.debugging = function() { return typeof(debug) != undefined; };
+    var debuggerDisabled = 0;  // used to temporarily disable debugger while evaluating status page
+    fs.startDebugger = function() { if (!fs.debugging()) fs.debug = {}; };
+    fs.disableDebugger = function() { ++debuggerDisabled; };
+    fs.enableDebugger = function() { --debuggerDisabled; };
+    fs.debugging = function() { return typeof(fs.debug) != "undefined" && debuggerDisabled == 0; };
 
     // Uncomment to guard against accidental navigation away from page:
     //    window.onbeforeunload = function() { return "Your position will be lost."; };
@@ -65,7 +67,12 @@
 
     // distinguished global page variables are 'statusPage', 'codaPage' and 'start'
     var getStartPage = function() { return start; }
-    var makeStatusPage = function() { return statusPage()[0]; };
+    var makeStatusPage = function() {
+	fs.disableDebugger();
+	var content = statusPage()[0];
+	fs.enableDebugger();
+	return content;
+    };
 
     if (typeof start === 'undefined') {
 	start = function() {
@@ -290,7 +297,9 @@
 	    } else {
 		// no choices, so hide button and show coda
 		continueButton.setAttribute ("style", "display: none");
+		fs.disableDebugger();
 		var codaText = codaPage()[0];
+		fs.enableDebugger();
 		recordSceneText (codaText);
 		codaDiv.innerHTML = fs.sceneTextToHtml (codaText);
 		codaParent.setAttribute ("style", "display: block");
@@ -336,7 +345,6 @@
 	    try {
 		console.log ("Generating map XML");
 		graphXmlString = FunkScene.graphGenerator.parse (raw);
-		renderMap();
 	    } catch (e) {
 		console.log (buildErrorMessage(e));
 	    }
@@ -451,9 +459,14 @@
 
     var dfsLayoutThreshold = 10;  // controls the transition from depth-first search to breadth-first search in map layout
     var sigInst;
-    function renderMap() {
-	console.log ("Rendering map graph");
+
+    function initializeMap(firstNodeId) {
+
 	var graphXmlDoc = xmlDocFromString (graphXmlString);
+
+	if (sigInst)
+	    while (sigmaDiv.hasChildNodes())
+		sigmaDiv.removeChild (sigmaDiv.lastChild);
 
 	// Instantiate sigma.js and customize rendering
 	sigInst = sigma.init(sigmaDiv).drawingProperties({
@@ -477,6 +490,13 @@
 	// Parse the GEXF encoded graph
 	sigInst.parseGexfXmlDoc(graphXmlDoc);
 
+	// make the start node big
+	sigInst.iterNodes(function(n){
+	    n.size *= 3;
+	    n.color = "#806010";
+	}, [firstNodeId]);
+
+	// hook up some functions
 	function attributesToList(attr) {
 	    return '<ul>' +
 		attr.map(function(o){
@@ -522,50 +542,14 @@
 	}
 	
 	sigInst.bind('overnodes',showNodeInfo);
-//	sigInst.bind('outnodes',hideNodeInfo);
+	//	sigInst.bind('outnodes',hideNodeInfo);
 
-	// do a modified breadth-first sort of the nodes
-	// the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
-	// or while the queue size is below some threshold
-	var outgoing = {}, incoming = {}, nOut = {}, unmarked = {};
-	fs.debug.outgoing = outgoing;
-	fs.debug.incoming = incoming;
+	// Turn on the fish eye
+	sigInst.activateFishEye();
 
-	sigInst.iterNodes (function(node) {
-	    outgoing[node.id] = {};
-	    incoming[node.id] = {};
-	    nOut[node.id] = 0;
-	    unmarked[node.id] = 1;});
+	// show loose end text
+	debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
 
-	sigInst.iterEdges (function(edge) {
-	    outgoing[edge.source][edge.target] = edge;
-	    incoming[edge.target][edge.source] = edge;
-	    nOut[edge.source]++;});
-
-	var queue = [], bfsRank = {}, bfsCount = 0;
-	function visit(id) {
-	    if (unmarked[id]) {
-		queue.push(id);
-		bfsRank[id] = bfsCount++;
-		delete unmarked[id];
-		// the modified DFS step:
-		if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
-		    visitChildren(id);
-	    }
-	};
-	function visitChildren(source) {
-	    for (var target in outgoing[source])
-		visit (target);
-	};
-	var starts = ["start"];
-	while (starts.length) {
-	    visit (starts.shift());
-	    while (queue.length)
-		visitChildren (queue.shift());
-	    starts = Object.keys (unmarked);
-	}
-
-	// circular layout using BFS ranking
 	sigma.publicPrototype.circularLayout = function(sortFunc) {
 	    var R = 100,
 	    i = 0,
@@ -581,43 +565,61 @@
 	    
 	    return this.position(0,0,1).draw();
 	};
-	sigInst.circularLayout(function(a,b){ return bfsRank[a] - bfsRank[b]; });
-	
-	// Turn on the fish eye
-	sigInst.activateFishEye();
-
-	// Draw the graph
-	sigInst.draw();
-
-	// center the map on the current scene
-	fs.locateDebugger (activeNodeId);
-
-	// show loose end text
-	debugInfoDiv.innerHTML = fs.debug.looseEndHtml;
     }
 
-    var activeNode, activeNodeId;
-    var sizeScaleFactor = 5;
-    fs.locateDebugger = function(id) {
-	activeNodeId = id;
-	if (sigInst)
-	    if (id in fs.debug.outgoing) {
-		if (activeNode) {
-		    activeNode.active = false;
-		    activeNode.color = activeNode.trueColor;
-		    activeNode.size /= sizeScaleFactor;
-		    activeNode.displaySize /= sizeScaleFactor;
+    // called by scene function
+    fs.locateDebugger = function(firstNodeId) {
+
+	if (fs.debugging()) {
+	    initializeMap(firstNodeId);
+
+	    if (typeof firstNodeId == 'undefined')
+		firstNodeId = "start";
+
+	    // do a modified breadth-first sort of the nodes
+	    // the modification is to switch to depth-first for gotos (i.e. edges from nodes with outdegree one)
+	    // or while the queue size is below some threshold
+	    var outgoing = {}, incoming = {}, nOut = {}, unmarked = {};
+	    fs.debug.outgoing = outgoing;
+	    fs.debug.incoming = incoming;
+
+	    sigInst.iterNodes (function(node) {
+		outgoing[node.id] = {};
+		incoming[node.id] = {};
+		nOut[node.id] = 0;
+		unmarked[node.id] = 1;});
+
+	    sigInst.iterEdges (function(edge) {
+		outgoing[edge.source][edge.target] = edge;
+		incoming[edge.target][edge.source] = edge;
+		nOut[edge.source]++;});
+
+	    var queue = [], bfsRank = {}, bfsCount = 0;
+	    function visit(id) {
+		if (unmarked[id]) {
+		    queue.push(id);
+		    bfsRank[id] = bfsCount++;
+		    delete unmarked[id];
+		    // the modified DFS step:
+		    if (nOut[id] == 1 || queue.length < dfsLayoutThreshold)
+			visitChildren(id);
 		}
-		activeNode = sigInst.getNodes(id); 
-		activeNode.active = true;
-		activeNode.size *= sizeScaleFactor;
-		activeNode.displaySize *= sizeScaleFactor;
-		activeNode.trueColor = activeNode.color;
-		activeNode.color = "#808080";
-		// can't get the following to work at the moment, grrr...
-		// sigInst.zoomTo (activeNode.displayX, activeNode.displayY, 1) . draw(2,2,2);
-		sigInst.refresh();
+	    };
+	    function visitChildren(source) {
+		for (var target in outgoing[source])
+		    visit (target);
+	    };
+	    var starts = [firstNodeId];
+	    while (starts.length) {
+		visit (starts.shift());
+		while (queue.length)
+		    visitChildren (queue.shift());
+		starts = Object.keys (unmarked);
 	    }
+
+	    // circular layout using BFS ranking
+	    sigInst.circularLayout(function(a,b){ return bfsRank[a] - bfsRank[b]; });
+	}
     }
 
 })(FunkScene = {});

@@ -1,12 +1,10 @@
 FunkScene
 =========
 
-FunkScene is a dialect of JavaScript intended to encourage functional
-programming in the creation of choose-your-own (CYO) interactive fiction.
-
-In a certain trivial sense, most JavaScript programs are valid FunkScene programs. In addition,
-and more specifically, FunkScene provides a few macros to construct the staples of CYO fiction:
-passages of text _("scenes")_ with choices that lead to other scenes.
+FunkScene is a dialect of JavaScript for choose-your-own (CYO) interactive fiction.
+As well as the core JavaScript syntax (which remains available but largely out of sight),
+FunkScene provides a number of macros to construct the staples of CYO fiction:
+dynamic passages of text _("scenes")_ with choices that lead to other scenes.
 
 This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.
 
@@ -29,8 +27,10 @@ FunkScene borrows bits and pieces from several open source projects:
 * [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
 * [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
 
-An earlier prototype, [Schooz](https://github.com/ihh/schooz), developed the functional programming framework
-while also exploring some alternative UI ideas (such as dropdown menus) that were eventually omitted from this framework.
+An earlier prototype, [Schooz](https://github.com/ihh/schooz),
+started as an investigation of functional programming techniques for CYO.
+(A true CYO FP language might look a bit more like Logo+ChoiceScript+Markdown,
+rather than JavaScript+ChoiceScript+Markdown+lots of game-focused hacks.)
 
 The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js).
 

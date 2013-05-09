@@ -42,17 +42,19 @@
     function sceneFunction(continuation,includes,scene_desc,choices) {
 	var f = "(function() {\n";
 	if (FunkScene.debugging())
-	    f += "FunkScene.locateDebugger(\"" + currentScene() + "\");\n";
+	    f += "\tFunkScene.locateDebugger(\"" + currentScene() + "\");\n";
 	if (typeof(continuation) != 'undefined') {
             f += "var defaultContinuation = function(){defaultContinuation=undefined;return(" + continuation + ")();};\n";
 	}
 	f += "var __t=\"\",__c=[],__tc;\n";
 	if (typeof(includes) != 'undefined') {
+	    f += "FunkScene.disableDebugger();\n";
             for (var i = 0; i < includes.length; ++i) {
 		var text = includes[i][0], incl = includes[i][1];
 		if (typeof(text) != 'undefined') { f += text; }
 		if (typeof(incl) != 'undefined') { f += "__tc=(" + incl + ")();\n__t+=__tc[0];\n__c=__c.concat(__tc[1]);\n"; }
 	    }
+	    f += "FunkScene.enableDebugger();\n";
 	}
 	f += scene_desc;
 	f += "__c=__c.concat(" + renderList(choices) + ");\n";

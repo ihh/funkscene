@@ -16,13 +16,13 @@ html, body {
 }
 
 #debugContainer {
-    min-width: 1210px;
+    min-width: 1010px;
     margin: 0 20px 0 20px; /* top right bottom left */
     padding: 0;
 }
 
 #debugContainer #game {
-    width: 600px;
+    width: 500px;
     float: left;
 
     border-radius: 4px 0 4px 0;
@@ -36,7 +36,7 @@ html, body {
 }
 
 #debugContainer #debugger {
-    width: 600px;
+    width: 500px;
     float: right;
     margin: 0;
     padding: 0;

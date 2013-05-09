@@ -53,11 +53,11 @@ Aesthetics
 ----------
 
 A scene is always presented as a scene text followed by a choice list.
-There are currently no inline hyperlinks or dropdown menus in FunkScene.
+There are currently no inline hyperlinks or dropdown menus in FunkScene (although it would be straightforward to add them).
 While links encourage close examination of a text, and indeed add extra semantics, they can detract from the pace of a story and the balancing of choices.
 A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow.
 
-The design philosophy of FunkScene:
+The design principles of FunkScene:
 
 1. a simple wiki-like syntax for building CYO stories (building on predecessor languages such as ChoiceScript and Twine)
 2. an emphasis on choice lists (c.f. ChoiceScript) over hyperlinks (Twine) or drop-down menus (Schooz)

@@ -1,5 +1,8 @@
+// A little test FunkScene scene file, that trivially exercises many of the language features.
+
 // This should give you a cute death message if you enter it at the console from the first page:
 // FunkScene.restore ([9, [0,"name","Best Beloved"], 6, 0, 5, 0, 1, 0, 5, 0, 0])
+
 
 // OK, so we are in the outermost JavaScript scope right now.
 // Let's set some global variables:

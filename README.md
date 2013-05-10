@@ -30,10 +30,11 @@ FunkScene borrows bits and pieces from several open source projects:
 
 An earlier prototype, [Schooz](https://github.com/ihh/schooz),
 started as an investigation of functional programming techniques for CYO.
-(A true CYO FP language might look a bit more like Logo+ChoiceScript+Markdown,
-rather than JavaScript+ChoiceScript+Markdown+lots of game-focused hacks.)
+(A purists' CYO FP language, useful e.g. for didactic purposes, might look a bit more like Logo+ChoiceScript+Markdown,
+rather than JavaScript+ChoiceScript+Markdown+lots of game-oriented hacks.)
 
-The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js).
+The nascent debugger (such as it is) was influenced by InkleWriter and Twine,
+and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js) graph rendering library.
 
 The FunkScene Language
 ======================

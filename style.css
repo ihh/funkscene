@@ -37,7 +37,7 @@ html, body {
 
 #debugContainer #debugger {
     width: 500px;
-    float: right;
+    float: left;
     margin: 0;
     padding: 0;
 }

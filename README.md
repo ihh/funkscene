@@ -60,6 +60,7 @@ _My subjective view at the moment is that, while links encourage close examinati
 _A strict separation of scene and choices is restrictive in some ways, but it simplifies the syntax, and this helps the story flow._
 _The back-and-forth between narrator and player is a significant part of the feel and pacing that I'm going for._
 _I completely acknowledge that these are 100% subjective reasons and I'll put hyperlinks into FunkScene the moment a writer says they need it._
+_In fact, some extensions I'm contemplating right now could require link semantics, so that writer might be me._
 
 The design principles of FunkScene are something like this:
 

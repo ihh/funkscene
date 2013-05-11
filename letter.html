@@ -8,15 +8,31 @@
 <div id="debug"></div>
 
 Sire, the people are
+...
 <select>
-  <option value="1">...what to tell him?</option>
+  <option value="1">what to tell him?</option>
   <option value="2">That they are revolting against his cruel authority.</option>
   <option value="3">That they are delighted with his rule.</option>
 </select>
 
 <script type="text/javascript" src="lib/parser/letter.js"></script>
 <script type="text/javascript">
-var g = letterParser.parse("@revolting = {That they are revolting against his cruel authority. => sadly in open revolt.} @delighted = {That they are delighted with his rule. => ever more enamored with your dazzling Majesty.} @begin = {Let us begin the letter. => Sire, the people are {... => What to tell him? => @revolting|@delighted}}")
+
+	function buildErrorMessage(e) {
+	    return e.line !== undefined && e.column !== undefined
+		 ? "Line " + e.line + ", column " + e.column + ": " + e.message
+		 : e.message;
+	}
+
+	try {
+var text = "@start[Let us begin the letter.] = {Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}"
+// Alternative:
+// var text = "@start[Let us begin the letter.] = {Sire, the people are @people} @people[...|What to tell him?] = {That they are revolting against his cruel authority. => sadly in open revolt. | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}"
+
+	var g = letterParser.parse(text)
+	} catch (e) {
+	console.log (buildErrorMessage(e));
+	}
 
 </script>
 

@@ -514,8 +514,8 @@ Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" be
 	#CHOOSE A ditzy choice. #FOR #( Squee! #)
 	#CHOOSE A dumb choice. #FOR #( Woohoo! #)
 	Even more scene text.
-	#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
-	#CHOOSE A final choice. #FOR #( GAME OVER! #)
+	#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #OVER #)
+	#CHOOSE A final choice. #FOR #( GAME OVER! #OVER #)
 	#END
 	
 	#PAGE are_you_ready #( Are you ready?

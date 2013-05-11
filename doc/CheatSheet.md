@@ -255,8 +255,8 @@ including a [README](../README.html) with more detail on the language.
 	#CHOOSE A ditzy choice. #FOR #( Squee! #)
 	#CHOOSE A dumb choice. #FOR #( Woohoo! #)
 	Even more scene text.
-	#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
-	#CHOOSE A final choice. #FOR #( GAME OVER! #)
+	#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #OVER #)
+	#CHOOSE A final choice. #FOR #( GAME OVER! #OVER #)
 	#END
 	
 	#PAGE are_you_ready #( Are you ready?

@@ -31,7 +31,7 @@ including a <a href="../README.html">README</a> with more detail on the language
 #( You have been electrified. #)
 </code></pre>
 
-<h2>Anonymous scenes</h2>
+<h2>Anonymous sub-scenes</h2>
 
 <pre><code>#PAGE start
 #( You stand at the temple gates.
@@ -42,7 +42,7 @@ including a <a href="../README.html">README</a> with more detail on the language
  #CHOOSE No #FOR start #) #)
 </code></pre>
 
-<h2>Choice disabled but visible</h2>
+<h2>Choice disabled, but visible</h2>
 
 <pre><code>#IF &lt;expr&gt; #CHOOSE &lt;text&gt; #FOR &lt;page&gt;
 
@@ -271,8 +271,8 @@ Some more scene text.
 #CHOOSE A ditzy choice. #FOR #( Squee! #)
 #CHOOSE A dumb choice. #FOR #( Woohoo! #)
 Even more scene text.
-#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
-#CHOOSE A final choice. #FOR #( GAME OVER! #)
+#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #OVER #)
+#CHOOSE A final choice. #FOR #( GAME OVER! #OVER #)
 #END
 
 #PAGE are_you_ready #( Are you ready?

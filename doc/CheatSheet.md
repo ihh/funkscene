@@ -1,7 +1,8 @@
 
 # The FunkScene Language
 
-More at [funkscene.com](http://funkscene.com/).
+More at [funkscene.com](http://funkscene.com/),
+including a [README](../README.html) with more detail on the language.
 
 ## Describing scenes
 
@@ -89,7 +90,7 @@ More at [funkscene.com](http://funkscene.com/).
 	 #{ hair_status = "neat" #} #BACK #)
 	#ENDSCENE
 
-## Scheduling scenes for later
+## Using `#GOSUB` to schedule scenes for later
 
 	#PAGE start
 	#( Fight or flee?
@@ -125,14 +126,14 @@ More at [funkscene.com](http://funkscene.com/).
 	   #ONCE #CHOOSE I stuff my face at the Infinite Banquet.
 	   #FOR #( In time, food tastes like ashes. #BACK #) #)
 
-### Alternative form for `battle` scene
+### Placing scenes on the stack directly
 
 	#PAGE battle
 	#( You fight valiantly against the stronger opponent.
 	   #STACK heaven
 	   #GOTO death_blow #)
 
-### Yet another alternative form
+### Queueing scenes instead of stacking them
 
 	#PAGE battle
 	#( You fight valiantly against the stronger opponent.
@@ -213,7 +214,7 @@ More at [funkscene.com](http://funkscene.com/).
 	#GOTO free_fall
 	#ENDSCENE
 
-### Named explicit continuation
+### Named implicit continuation
 
 	#PAGE in_plane
 	#SCENE Are you ready?
@@ -411,13 +412,7 @@ More at [funkscene.com](http://funkscene.com/).
 	 #ELSE A young boy scurries back and forth with plates.
 	#ENDIF
 
-### Caveat
-
-`#IF` is for conditional display of text only.
-
-It is not a good way to control program flow.
-
-You cannot use `#GOSUB` statements inside a `#THEN` or `#ELSE` clause.
+NB: you cannot nest `#GOSUB` inside an `#IF` clause.
 
 
 ## Text input direct to variables

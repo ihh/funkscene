@@ -2,7 +2,7 @@ PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
 PARSERS = $(addprefix lib/parser/,$(subst .pegjs,.js,$(notdir $(wildcard grammar/*.pegjs))))
 
-all: parsers README.html CheatSheet.html img/icon pagedown
+all: parsers README.html doc/CheatSheet.html img/icon pagedown
 
 parsers: $(PARSERS)
 

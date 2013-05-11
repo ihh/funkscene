@@ -2,7 +2,8 @@
 <div>
 <h1>The FunkScene Language</h1>
 
-<p>More at <a href="http://funkscene.com/">funkscene.com</a>.</p>
+<p>More at <a href="http://funkscene.com/">funkscene.com</a>,
+including a <a href="../README.html">README</a> with more detail on the language.</p>
 
 <h2>Describing scenes</h2>
 
@@ -97,7 +98,7 @@
 #ENDSCENE
 </code></pre>
 
-<h2>Scheduling scenes for later</h2>
+<h2>Using <code>#GOSUB</code> to schedule scenes for later</h2>
 
 <pre><code>#PAGE start
 #( Fight or flee?
@@ -134,7 +135,7 @@ It's all over. #CONTINUE #)
    #FOR #( In time, food tastes like ashes. #BACK #) #)
 </code></pre>
 
-<h3>Alternative form for <code>battle</code> scene</h3>
+<h3>Placing scenes on the stack directly</h3>
 
 <pre><code>#PAGE battle
 #( You fight valiantly against the stronger opponent.
@@ -142,7 +143,7 @@ It's all over. #CONTINUE #)
    #GOTO death_blow #)
 </code></pre>
 
-<h3>Yet another alternative form</h3>
+<h3>Queueing scenes instead of stacking them</h3>
 
 <pre><code>#PAGE battle
 #( You fight valiantly against the stronger opponent.
@@ -440,13 +441,7 @@ The Principal will see you now.
 #ENDIF
 </code></pre>
 
-<h3>Caveat</h3>
-
-<p><code>#IF</code> is for conditional display of text only.</p>
-
-<p>It is not a good way to control program flow.</p>
-
-<p>You cannot use <code>#GOSUB</code> statements inside a <code>#THEN</code> or <code>#ELSE</code> clause.</p>
+<p>NB: you cannot nest <code>#GOSUB</code> inside an <code>#IF</code> clause.</p>
 
 <h2>Text input direct to variables</h2>
 

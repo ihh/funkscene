@@ -206,6 +206,8 @@ including a [README](../README.html) with more detail on the language.
 	#GOTO free_fall
 	#ENDSCENE
 
+The `#OVER` overrides any continuation and ends the game.
+
 ### Explicit continuation
 
 	#PAGE in_plane

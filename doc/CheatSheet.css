@@ -1,0 +1,16 @@
+div {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: 75%;
+
+    -moz-column-count:5; /* Firefox */
+    -webkit-column-count:5; /* Safari and Chrome */
+    column-count:5;
+
+    -moz-column-gap:20px; /* Firefox */
+    -webkit-column-gap:20px; /* Safari and Chrome */
+    column-gap:20px;
+
+    -moz-column-rule:3px outset #c0c0c0; /* Firefox */
+    -webkit-column-rule:3px outset #c0c0c0; /* Safari and Chrome */
+    column-rule:3px outset #c0c0c0;
+}

@@ -16,7 +16,7 @@ lib/parser/cazoo.js: grammar/cazoo.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
 
 %.html: %.md
-	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@
+	perl -e 'use Text::Markdown "markdown";print(-e "$*.header" ? `cat $*.header` : "");print markdown(join("",<>));print(-e "$*.footer" ? `cat $*.footer` : "")' $< >$@
 
 # Download icons made by lorc. Available at http://game-icons.net
 # Released under Creative Commons 3.0 BY license

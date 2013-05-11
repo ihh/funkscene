@@ -7,6 +7,7 @@ FunkScene provides a number of macros to construct the staples of CYO fiction:
 dynamic passages of text _("scenes")_ with choices that lead to other scenes.
 
 This is not a full tutorial, but a quick-start guide for experienced JavaScript programmers.
+There is also a [cheat sheet](http://funkscene.com/funkscene/doc/CheatSheet.html) that summarizes this guide.
 
 Source code
 -----------

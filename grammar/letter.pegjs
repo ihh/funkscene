@@ -26,9 +26,9 @@
 
     function pushLhs(sym) { lhsStack.push(sym); nonterms.push(sym); return true }
     function popLhs() { return lhsStack.pop() }
-    function currentLhs() { return lhsStack[lhsStack.length - 1] }
+    function currentLhs() { return getNontermObject (lhsStack[lhsStack.length - 1]) }
 
-    function addRule(rhs) { getNontermObject(currentLhs()).rules.push(rhs); return true }
+    function addRule(rhs) { currentLhs().rules.push(rhs); return true }
     function makeAnonId() { return ++anonNonterms; }
     function isAnonId(sym) { return /^[\d]+$/.test(sym) }
     function defaultPrompt(sym) { return isAnonId(sym) ? "Please choose an option..." : sym.replace(/_/g, ' ') }
@@ -47,13 +47,17 @@
 	for (var lhs in nontermObj) {
 	    for (var i = 0; i < nontermObj[lhs].rules.length; ++i) {
 		var rhs = nontermObj[lhs].rules[i];
-		for (var j = 0; j < rhs.length; ++j) {
-		    var sym = rhs[j];
-		    if (typeof(sym) == 'object')
-			rhsSymbol[sym.id] = true;
-		}
+		if (rhs instanceof Array)
+		    for (var j = 0; j < rhs.length; ++j) {
+			var sym = rhs[j];
+			if (typeof(sym) == 'object')
+			    rhsSymbol[sym.id] = true;
+		    }
+		else  // not an Array, must be a single Object
+		    rhsSymbol[rhs.id] = true;
 	    }
 	}
+
 	for (var sym in rhsSymbol) {
 	    if (!nontermObj[sym].rules.length) {
 		console.log ("Symbol @" + sym + " is never defined");
@@ -84,18 +88,14 @@
 	    start = nonterms[0];
 	    console.log ("The first symbol to be defined was @" + start + " so we'll use that as the root.");
 	}
-	return start;
-    }
 
-    function makeGrammar() {
-	return { nonterm: nontermObj,
-		 start: getStart() };
+	return nontermObj[start];
     }
 }
 
 
 start
- = spc* rule*  { return makeGrammar(); }
+ = spc* rule*  { return getStart(); }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }
@@ -104,17 +104,26 @@ rule
  = lhs:nonterm_symbol spc* &{return pushLhs(lhs)} "=" spc* "{" rhs:rhs "}" spc* {popLhs()}
 
 rhs
- = before:text "=>" prompt:text "=>" rhs_list  { var n = getNontermObject(currentLhs()); n.before = before; n.prompt = prompt }
- / prompt:text "=>" rhs_list  { getNontermObject(currentLhs()).prompt = prompt }
- / rhs_list
+ = before:text "=>" prompt:text "=>" spc* nonterm_rhs
+  { var lhs = currentLhs(); lhs.before = before; lhs.prompt = prompt }
+ / prompt:text "=>" spc* nonterm_rhs
+  { currentLhs().prompt = prompt }
+ / prompt:text "=>" spc* general_rhs
+  { currentLhs().prompt = prompt }
 
-rhs_list
- = rhs:sym_expr+ &{return addRule(rhs)} ("|" tail:rhs_list)?
+nonterm_rhs
+ = rhs:nonterm_expr spc* &{return addRule(rhs)} ("|" spc* tail:nonterm_rhs)?
+
+general_rhs
+ = rhs:sym_expr+  { addRule(rhs) }
 
 sym_expr
  = text
- / sym:nonterm_symbol  { return getNontermObject(sym) }
- / "{" &{return pushLhs(makeAnonId())} rhs:rhs "}" { return getNontermObject(popLhs()) }
+ / nonterm_expr
+
+nonterm_expr
+ = sym:nonterm_symbol  { return getNontermObject(sym) }
+ / "{" &{return pushLhs(makeAnonId())} rhs:rhs "}"  { return getNontermObject(popLhs()) }
 
 text
  = "\\" escaped:[#\{\}\|=\@] tail:text? { return escaped + tail; }

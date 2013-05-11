@@ -9,37 +9,44 @@
 // @start = {Let us begin the letter. => Sire, the people are @people_state}
 // @people_state = {What to tell him? => @revolting|@delighted}
 
-// If there is no hint, then a suitable default will be used
+// If there is no prompt, then a suitable default will be used
 // (derived from the nonterminal name, or generic "Please select..." text if the nonterminal is anonymous).
 
 // If a nonterminal is deterministic (has only one outgoing rule),
-// its hint text will be retained but it will be automatically transformed,
-// so programmer can use this to "override" default hint texts.
+// its prompt text will be retained but it will be automatically transformed,
+// so programmer can use this to "override" default prompt texts.
 
 
 {
     var anonNonterms = 0;
     var lhsStack = [];
-    var rules = {};
-    var hint = {};
     var nonterms = [];
+    var nontermObj = {};
     var defaultStart = "start";
 
-    function pushLhs(sym) { lhsStack.push(sym); rules[sym] = []; nonterms.push(sym); return true }
+    function pushLhs(sym) { lhsStack.push(sym); nonterms.push(sym); return true }
     function popLhs() { return lhsStack.pop() }
     function currentLhs() { return lhsStack[lhsStack.length - 1] }
 
-    function addRule(rhs) { rules[currentLhs()].push(rhs); return true }
+    function addRule(rhs) { getNontermObject(currentLhs()).rules.push(rhs); return true }
     function makeAnonId() { return ++anonNonterms; }
     function isAnonId(sym) { return /^[\d]+$/.test(sym) }
-    function defaultHint(sym) { return isAnonId(sym) ? "Please choose an option..." : sym.replace(/_/g, ' ') }
-    function makeSymbol(sym) { return { id: sym } }
+    function defaultPrompt(sym) { return isAnonId(sym) ? "Please choose an option..." : sym.replace(/_/g, ' ') }
+
+    function getNontermObject(sym) {
+	if (!(sym in nontermObj))
+	    nontermObj[sym] = { id: sym,
+				rules: [],
+				before: "",
+				prompt: defaultPrompt(sym) };
+	return nontermObj[sym];
+    }
 
     function getStart() {
 	var rhsSymbol = {};
-	for (var lhs in rules) {
-	    for (var i = 0; i < rules[lhs].length; ++i) {
-		var rhs = rules[lhs][i];
+	for (var lhs in nontermObj) {
+	    for (var i = 0; i < nontermObj[lhs].rules.length; ++i) {
+		var rhs = nontermObj[lhs].rules[i];
 		for (var j = 0; j < rhs.length; ++j) {
 		    var sym = rhs[j];
 		    if (typeof(sym) == 'object')
@@ -48,13 +55,13 @@
 	    }
 	}
 	for (var sym in rhsSymbol) {
-	    if (!(sym in rules)) {
+	    if (!nontermObj[sym].rules.length) {
 		console.log ("Symbol @" + sym + " is never defined");
 	    }
 	}
 
 	var notOnRhs = [];
-	for (var lhs in rules) {
+	for (var lhs in nontermObj) {
 	    if (!(lhs in rhsSymbol))
 		notOnRhs.push (lhs);
 	}
@@ -63,7 +70,7 @@
 	    console.log ("The following symbols are defined, but never used: " + notOnRhs.map(function(x){return"@"+x}).join(" "));
 
 	var start;
-	if (defaultStart in rules) {
+	if (defaultStart in nontermObj) {
 	    if (notOnRhs.length > 0)
 		console.log ("However, @" + defaultStart + " is defined, so we're using that as the root.");
 	    start = defaultStart;
@@ -79,11 +86,16 @@
 	}
 	return start;
     }
+
+    function makeGrammar() {
+	return { nonterm: nontermObj,
+		 start: getStart() };
+    }
 }
 
 
 start
- = spc* rule*  { return [rules, hint, getStart()]; }
+ = spc* rule*  { return makeGrammar(); }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }
@@ -92,16 +104,17 @@ rule
  = lhs:nonterm_symbol spc* &{return pushLhs(lhs)} "=" spc* "{" rhs:rhs "}" spc* {popLhs()}
 
 rhs
- = h:text "=>" rhs_list  { hint[currentLhs()] = h; }
- / rhs_list  { var lhs = currentLhs(); hint[lhs] = defaultHint(lhs); }
+ = before:text "=>" prompt:text "=>" rhs_list  { var n = getNontermObject(currentLhs()); n.before = before; n.prompt = prompt }
+ / prompt:text "=>" rhs_list  { getNontermObject(currentLhs()).prompt = prompt }
+ / rhs_list
 
 rhs_list
  = rhs:sym_expr+ &{return addRule(rhs)} ("|" tail:rhs_list)?
 
 sym_expr
  = text
- / sym:nonterm_symbol  { return makeSymbol(sym) }
- / "{" &{return pushLhs(makeAnonId())} rhs:rhs "}" { return makeSymbol(popLhs()) }
+ / sym:nonterm_symbol  { return getNontermObject(sym) }
+ / "{" &{return pushLhs(makeAnonId())} rhs:rhs "}" { return getNontermObject(popLhs()) }
 
 text
  = "\\" escaped:[#\{\}\|=\@] tail:text? { return escaped + tail; }

@@ -7,9 +7,17 @@
 <h1>Letter</h1>
 <div id="debug"></div>
 
+Sire, the people are
+<select>
+  <option value="1">...what to tell him?</option>
+  <option value="2">That they are revolting against his cruel authority.</option>
+  <option value="3">That they are delighted with his rule.</option>
+</select>
+
 <script type="text/javascript" src="lib/parser/letter.js"></script>
 <script type="text/javascript">
-letterParser.parse("@revolting = {That they are revolting against his cruel authority. => sadly in open revolt.} @delighted = {That they are delighted with his rule. => ever more enamored with your dazzling Majesty.} @begin = {Let us begin the letter. => Sire, the people are {What to tell him? => @revolting|@delighted}}")
+var g = letterParser.parse("@revolting = {That they are revolting against his cruel authority. => sadly in open revolt.} @delighted = {That they are delighted with his rule. => ever more enamored with your dazzling Majesty.} @begin = {Let us begin the letter. => Sire, the people are {... => What to tell him? => @revolting|@delighted}}")
+
 </script>
 
 </body>

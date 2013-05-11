@@ -273,7 +273,7 @@ including a [README](../README.html) with more detail on the language.
 	#SCENE
 	...
 
-#### Alternate form of conditional branch
+### Alternate form of conditional branch
 
 	#PAGE inside_temple
 	#SCENE

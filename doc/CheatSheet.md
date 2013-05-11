@@ -7,20 +7,28 @@ including a [README](../README.html) with more detail on the language.
 ## Describing scenes
 
 	#PAGE start
-	#SCENE You stand at the temple gates.
-	#CHOOSE I smash them open! #FOR electrified
-	#CHOOSE I walk away #FOR wise_choice
+	#SCENE Do you want to go to the temple?
+	#CHOOSE Yes #FOR temple
+	#CHOOSE No #FOR wise_choice
+	#ENDSCENE
+
+	#PAGE wise_choice
+	#SCENE A wise choice, my friend.
 	#ENDSCENE
 
 ### Abbreviated syntax
 
+	#PAGE temple
+	#(
+	  You stand at the temple gates.
+	  #CHOOSE I smash them open! #FOR electrified
+	  #CHOOSE I walk away #FOR wise_choice
+	#)
+
 	#PAGE electrified
 	#( You have been electrified. #)
 
-	#PAGE wise_choice
-	#( A wise choice, my friend. #)
-
-## Anonymous scenes
+## Anonymous sub-scenes
 
 	#PAGE start
 	#( You stand at the temple gates.
@@ -30,7 +38,7 @@ including a [README](../README.html) with more detail on the language.
 	 #CHOOSE Yes #FOR wise_choice
 	 #CHOOSE No #FOR start #) #)
 
-## Choice disabled but visible
+## Choice disabled, but visible
 
 	#IF <expr> #CHOOSE <text> #FOR <page>
 

@@ -8,19 +8,27 @@ including a <a href="../README.html">README</a> with more detail on the language
 <h2>Describing scenes</h2>
 
 <pre><code>#PAGE start
-#SCENE You stand at the temple gates.
-#CHOOSE I smash them open! #FOR electrified
-#CHOOSE I walk away #FOR wise_choice
+#SCENE Do you want to go to the temple?
+#CHOOSE Yes #FOR temple
+#CHOOSE No #FOR wise_choice
+#ENDSCENE
+
+#PAGE wise_choice
+#SCENE A wise choice, my friend.
 #ENDSCENE
 </code></pre>
 
 <h3>Abbreviated syntax</h3>
 
-<pre><code>#PAGE electrified
-#( You have been electrified. #)
+<pre><code>#PAGE temple
+#(
+  You stand at the temple gates.
+  #CHOOSE I smash them open! #FOR electrified
+  #CHOOSE I walk away #FOR wise_choice
+#)
 
-#PAGE wise_choice
-#( A wise choice, my friend. #)
+#PAGE electrified
+#( You have been electrified. #)
 </code></pre>
 
 <h2>Anonymous scenes</h2>

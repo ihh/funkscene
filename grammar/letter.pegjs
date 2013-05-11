@@ -17,45 +17,105 @@
 // so programmer can use this to "override" default hint texts.
 
 
+{
+    var anonNonterms = 0;
+    var lhsStack = [];
+    var rules = {};
+    var hint = {};
+    var nonterms = [];
+    var defaultStart = "start";
+
+    function pushLhs(sym) { lhsStack.push(sym); rules[sym] = []; nonterms.push(sym); return true }
+    function popLhs() { return lhsStack.pop() }
+    function currentLhs() { return lhsStack[lhsStack.length - 1] }
+
+    function addRule(rhs) { rules[currentLhs()].push(rhs); return true }
+    function makeAnonId() { return ++anonNonterms; }
+    function isAnonId(sym) { return /^[\d]+$/.test(sym) }
+    function defaultHint(sym) { return isAnonId(sym) ? "Please choose an option..." : sym.replace(/_/g, ' ') }
+    function makeSymbol(sym) { return { id: sym } }
+
+    function getStart() {
+	var rhsSymbol = {};
+	for (var lhs in rules) {
+	    for (var i = 0; i < rules[lhs].length; ++i) {
+		var rhs = rules[lhs][i];
+		for (var j = 0; j < rhs.length; ++j) {
+		    var sym = rhs[j];
+		    if (typeof(sym) == 'object')
+			rhsSymbol[sym.id] = true;
+		}
+	    }
+	}
+	for (var sym in rhsSymbol) {
+	    if (!(sym in rules)) {
+		console.log ("Symbol @" + sym + " is never defined");
+	    }
+	}
+
+	var notOnRhs = [];
+	for (var lhs in rules) {
+	    if (!(lhs in rhsSymbol))
+		notOnRhs.push (lhs);
+	}
+
+	if (notOnRhs.length > 0)
+	    console.log ("The following symbols are defined, but never used: " + notOnRhs.map(function(x){return"@"+x}).join(" "));
+
+	var start;
+	if (defaultStart in rules) {
+	    if (notOnRhs.length > 0)
+		console.log ("However, @" + defaultStart + " is defined, so we're using that as the root.");
+	    start = defaultStart;
+	} else if (notOnRhs.length) {
+	    start = notOnRhs[0];
+	    if (notOnRhs.length == 1)
+		console.log ("So, @" + start + " makes a natural choice for the start symbol. Use @" + defaultStart + " to override.");
+	    else
+		console.log ("The first of these symbols to be defined was @" + start + " so we'll use that as the root.");
+	} else if (nonterms.length) {
+	    start = nonterms[0];
+	    console.log ("The first symbol to be defined was @" + start + " so we'll use that as the root.");
+	}
+	return start;
+    }
+}
+
 
 start
- = body
+ = spc* rule*  { return [rules, hint, getStart()]; }
 
 nonterm_symbol
- = "@" symbol
+ = "@" s:symbol  { return s; }
 
 rule
- = nonterm_symbol spc* "=" spc* rhs spc*
+ = lhs:nonterm_symbol spc* &{return pushLhs(lhs)} "=" spc* "{" rhs:rhs "}" spc* {popLhs()}
 
 rhs
- = "{" hint:text "=>" rhs_list "}"
- / "{" rhs_list "}"
+ = h:text "=>" rhs_list  { hint[currentLhs()] = h; }
+ / rhs_list  { var lhs = currentLhs(); hint[lhs] = defaultHint(lhs); }
 
 rhs_list
- = text_and_nonterms "|" rhs_list
- / text_and_nonterms
+ = rhs:sym_expr+ &{return addRule(rhs)} ("|" tail:rhs_list)?
 
-text_and_nonterms
- = head:text_char tail:text_and_nonterms? { return head + tail; }
- / nonterm_symbol text_and_nonterms?
- / rhs text_and_nonterms?
+sym_expr
+ = text
+ / sym:nonterm_symbol  { return makeSymbol(sym) }
+ / "{" &{return pushLhs(makeAnonId())} rhs:rhs "}" { return makeSymbol(popLhs()) }
 
 text
- = head:text_char tail:text? { return head + tail; }
+ = "\\" escaped:[#\{\}\|=\@] tail:text? { return escaped + tail; }
+ / "\\\\" tail:text? { return "\\\\" + tail; }
+ / !"=>" "=" tail:text? { return "=" + tail; }
+ / comment tail:text? { return tail; }
+ / head:text_chars tail:text? { return head + tail; }
 
-text_char
- = !"=>" [^#\{\}\|]
+text_chars
+ = chars:[^#\{\}\|=\@]+  { return chars.join(""); }
 
 
 symbol
-  = first:[A-Za-z_] rest:symbol_tail? { return first + rest; }
-
-symbol_tail
- = parent:symbol_chars "." child:symbol { return parent + "." + child; }
- / symbol_chars
-
-symbol_chars
- = chars:[0-9A-Za-z_]* { return chars.join(""); }
+  = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
 
 spc
   = [ \t\n\r]
@@ -66,13 +126,13 @@ comment
   / single_line_comment
 
 multi_line_comment
-  = "#/*" (!"*/" source_character)* "*/"
+  = "/*" (!"*/" source_character)* "*/"
 
 multi_line_comment_no_line_terminator
-  = "#/*" (!("*/" / line_terminator) source_character)* "*/"
+  = "/*" (!("*/" / line_terminator) source_character)* "*/"
 
 single_line_comment
-  = "#//" (!line_terminator source_character)*
+  = "//" (!line_terminator source_character)*
 
 line_terminator
   = [\n\r\u2028\u2029]

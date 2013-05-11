@@ -1,0 +1,474 @@
+<h1>The FunkScene Language</h1>
+
+<p>More at <a href="http://funkscene.com/">funkscene.com</a>.</p>
+
+<h2>Describing scenes</h2>
+
+<pre><code>#PAGE start
+#SCENE You stand at the temple gates.
+#CHOOSE I smash them open! #FOR electrified
+#CHOOSE I walk away #FOR wise_choice
+#ENDSCENE
+</code></pre>
+
+<h3>Abbreviated syntax</h3>
+
+<pre><code>#PAGE electrified
+#( You have been electrified. #)
+
+#PAGE wise_choice
+#( A wise choice, my friend. #)
+</code></pre>
+
+<h2>Anonymous scenes</h2>
+
+<pre><code>#PAGE start
+#( You stand at the temple gates.
+#CHOOSE I smash them open! #FOR electrified
+#CHOOSE I walk away #FOR
+ #( Are you sure?
+ #CHOOSE Yes #FOR wise_choice
+ #CHOOSE No #FOR start #) #)
+</code></pre>
+
+<h2>Choice disabled but visible</h2>
+
+<pre><code>#IF &lt;expr&gt; #CHOOSE &lt;text&gt; #FOR &lt;page&gt;
+
+#IF &lt;expr&gt; #CHOOSE &lt;text&gt; #FOR #( &lt;scene&gt; #)
+</code></pre>
+
+<h2>Choice invisible when disabled</h2>
+
+<pre><code>#SECRETLY #IF &lt;expr&gt; #CHOOSE &lt;text&gt; #FOR &lt;page&gt;
+
+#SECRETLY #IF &lt;expr&gt; #CHOOSE &lt;text&gt; #FOR #( &lt;scene&gt; #)
+</code></pre>
+
+<h2>Beginnings, endings, middles</h2>
+
+<h3>Force player to take only choice</h3>
+
+<pre><code>#PAGE hanging_on
+#SCENE You hang on for as long as possible.
+  Eventually you have no choice but to...
+#CHOOSE ...let go #FOR #( You let go. #)
+#ENDSCENE
+</code></pre>
+
+<h3>Omit choices altogether</h3>
+
+<pre><code>#PAGE drink_wine
+#SCENE The wine burns the back of your throat.
+     Poison! You reach, but slip into blackness
+#GOTO handcuffed_to_chair
+#ENDSCENE
+</code></pre>
+
+<h3>Include another scene</h3>
+
+<pre><code>hair_status = "messy"
+
+#PAGE start
+#SCENE You stand before the temple gates.
+#INCLUDE messy_hair
+#CHOOSE I smash the gates! #FOR electrified
+#CHOOSE I walk away #FOR wise_choice
+#ENDSCENE
+
+#PAGE messy_hair
+#SCENE Your hair is very #[ hair_status #].
+#CHOOSE I brush my hair #FOR
+#( You preen.
+ #{ hair_status = "neat" #}
+ #GOTO #PREVIOUS #)
+#ENDSCENE
+</code></pre>
+
+<p><code>#GOTO #PREVIOUS</code> can be shortened to <code>#BACK</code>.</p>
+
+<pre><code>#PAGE messy_hair
+#SCENE Your hair is very #[ hair_status #].
+#CHOOSE I brush my hair #FOR
+#( You preen.
+ #{ hair_status = "neat" #} #BACK #)
+#ENDSCENE
+</code></pre>
+
+<h2>Scheduling scenes for later</h2>
+
+<pre><code>#PAGE start
+#( Fight or flee?
+   #CHOOSE Fight! #FOR battle
+   #CHOOSE Flee! #FOR flee #)
+
+// The following two scenes use GOSUB followed by GOTO:
+
+#PAGE battle
+#( You fight valiantly against the stronger opponent.
+   #GOSUB death_blow
+   #GOTO heaven #)
+
+#PAGE flee
+#( You turn to run, letting your guard down for a moment...
+   #GOSUB death_blow
+   #GOTO hell #)
+
+// The rest is just code to make this a complete game:
+
+#PAGE death_blow
+#( One slip is all it takes. A blow pierces your skull.
+It's all over. #CONTINUE #)
+
+#PAGE hell
+#( Cowards never prosper! Enjoy your Hell, roast chicken. #OVER #)
+
+#PAGE heaven
+#( Well, here you are in Heaven. Everything it's cracked up to be.
+   All whims yours to satisfy. But how will you indulge yourself?
+   #ONCE #CHOOSE I join the perpetual orgy.
+   #FOR #( After centuries, one tires of lust. #BACK #)
+   #ONCE #CHOOSE I stuff my face at the Infinite Banquet.
+   #FOR #( In time, food tastes like ashes. #BACK #) #)
+</code></pre>
+
+<h3>Alternative form for <code>battle</code> scene</h3>
+
+<pre><code>#PAGE battle
+#( You fight valiantly against the stronger opponent.
+   #STACK heaven
+   #GOTO death_blow #)
+</code></pre>
+
+<h3>Yet another alternative form</h3>
+
+<pre><code>#PAGE battle
+#( You fight valiantly against the stronger opponent.
+   #FLUSH
+   #QUEUE death_blow
+   #QUEUE heaven
+   #CONTINUE #)
+</code></pre>
+
+<h3>Chaining <code>#GOSUB</code> clauses together</h3>
+
+<pre><code>#PAGE battle
+#( You fight valiantly against the stronger opponent.
+   #GOSUB death_blow
+   #GOSUB in_limbo
+   #GOTO heaven #)
+</code></pre>
+
+<h3>Can't nest <code>#GOSUB</code> inside <code>#IF</code></h3>
+
+<pre><code>// This is bad code and WILL NOT COMPILE
+#SCENE
+ You are in the scullery.
+ #IF got_knife #THEN
+  "Hey! You with the knife!" says the Cook.
+  #// Following line will not work; can't use #GOSUB in #IF block
+  #GOSUB carrot_chopping_side_quest
+  Well, that was fun.
+ #ENDIF
+ You were made for greater things than this. Why not go upstairs?
+ #CHOOSE Yes, go upstairs #FOR posh_romance
+ #CHOOSE No, stay downstairs #FOR servant_action
+ #CHOOSE These possibilities constrain me unduly #FOR start_stabbing
+#ENDSCENE
+</code></pre>
+
+<h2>Implicit continuation</h2>
+
+<h3>Long form</h3>
+
+<pre><code>#PAGE in_plane
+#SCENE Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #GOTO jump #)
+#CHOOSE Just about. #FOR #( Good! #GOTO jump #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #GOTO jump #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+#ENDSCENE
+
+#PAGE jump
+#SCENE You pull the ripcord and jump...
+#GOTO free_fall
+#ENDSCENE
+</code></pre>
+
+<h3>Implicit continuation</h3>
+
+<pre><code>#PAGE in_plane
+#SCENE
+Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #)
+#CHOOSE Just about. #FOR #( Good! #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+You pull the ripcord and jump...
+#GOTO free_fall
+#ENDSCENE
+</code></pre>
+
+<h3>Explicit continuation</h3>
+
+<pre><code>#PAGE in_plane
+#SCENE Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #)
+#CHOOSE Just about. #FOR #( Good! #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+#GOTO jump
+#ENDSCENE
+
+#PAGE jump
+#SCENE You pull the ripcord and jump...
+#GOTO free_fall
+#ENDSCENE
+</code></pre>
+
+<h3>Named explicit continuation</h3>
+
+<pre><code>#PAGE in_plane
+#SCENE Are you ready?
+#CHOOSE Definitely! #FOR #( That's the spirit! #)
+#CHOOSE Just about. #FOR #( Good! #)
+#CHOOSE Maybe... #FOR #( I'll take that as a yes! #)
+#CHOOSE No. #FOR #( Alright, maybe another time. #OVER #)
+#PAGE jump
+You pull the ripcord and jump...
+#PAGE free_fall
+    You are in free fall.
+...
+#ENDSCENE
+</code></pre>
+
+<h3>Chained implicit continuations</h3>
+
+<pre><code>#PAGE start
+#SCENE
+Here we go.
+#GOSUB are_you_ready
+#GOSUB i_hope_so
+Better tell me your name.
+#INPUT Type your name: #TO name
+Hi, #$name.
+Time for some choices.
+#CHOOSE An irrelevant choice. #FOR #( Hope you're pleased. #)
+#CHOOSE Another irrelevant choice. #FOR #( Pointless. #)
+#CHOOSE Kill myself. #FOR #( First sensible thing you've said. #OVER #)
+Some more scene text.
+#CHOOSE A ditzy choice. #FOR #( Squee! #)
+#CHOOSE A dumb choice. #FOR #( Woohoo! #)
+Even more scene text.
+#CHOOSE A terminal choice. #FOR #( YOU ARE DEAD! #)
+#CHOOSE A final choice. #FOR #( GAME OVER! #)
+#END
+
+#PAGE are_you_ready #( Are you ready?
+  #CHOOSE Yes. #FOR #( Great! #CONTINUE #)
+  #CHOOSE No. #FOR #( That's too bad! #CONTINUE #) #)
+
+#PAGE i_hope_so #( Seriously, I hope you ARE ready. #CONTINUE #)
+</code></pre>
+
+<h3>Conditional branch</h3>
+
+<pre><code>#PAGE inside_temple
+#SCENE
+Finally, you are inside the temple. But is your soul pure?
+#IF #ACHIEVED penance #GOTO inner_sanctum
+Your skin begins to prickle and burn. Flames spring from your clothing.
+The reasons for spontaneous human combustion are unclear; it's not even
+clear if it is, indeed, a natural phenomenon. However, it's certainly a
+supernatural one, and it's also pretty clear the Gods don't like you.
+#ENDSCENE
+
+#PAGE inner_sanctum
+#SCENE
+...
+</code></pre>
+
+<h4>Alternate form of conditional branch</h4>
+
+<pre><code>#PAGE inside_temple
+#SCENE
+Finally, you are inside the temple. But is your soul pure?
+#GOTO (#ACHIEVED penance ? inner_sanctum : combustion)
+#ENDSCENE
+
+#PAGE combustion
+#SCENE
+Your skin begins to prickle and burn. Flames spring from your clothing.
+The reasons for spontaneous human combustion are unclear; it's not even
+clear if it is, indeed, a natural phenomenon. However, it's certainly a
+supernatural one, and it's also pretty clear the Gods don't like you.
+#ENDSCENE
+
+#PAGE inner_sanctum
+#SCENE
+...
+</code></pre>
+
+<h3>Explicit break</h3>
+
+<pre><code>...
+You fall asleep in a delirious stupor.
+#BREAK
+The next day, there is a strange itching around your thighs,
+accompanied by an ominous rash.
+...
+</code></pre>
+
+<h2>One-time choices</h2>
+
+<pre><code>#PAGE start
+#SCENE You're on the train to Hell.
+#ONCE #CHOOSE I play cards.
+#FOR #( You play a few billion games of cards...
+ Before long you're bored. #BACK #)
+#ONCE #CHOOSE I play dice.
+#FOR #( You play some dice games,
+ but quickly lose your money. #BACK #)
+#ONCE #CHOOSE Fornicate. #FOR #( CENSORED #BACK #)
+#CHOOSE Go to hell #FOR #( Welcome to Hell, sinner. #)
+#ENDSCENE
+</code></pre>
+
+<h3>Group of one-time choices</h3>
+
+<pre><code>#AS penance #CHOOSE As penance, I cross myself.
+#FOR #( You cross yourself, in penance. #BACK #)
+#AS penance #CHOOSE As penance, I regurgitate my last meal.
+#FOR #( You retch, purging yourself of evil. #BACK #)
+</code></pre>
+
+<h2>Cycling through scene texts</h2>
+
+<pre><code>#CYCLE The wind sighs.
+#NEXT A light rain spatters.
+#NEXT You feel a chill.
+#LOOP
+</code></pre>
+
+<h3>Stopping instead of looping</h3>
+
+<pre><code>#CYCLE You saunter into the lobby.
+#NEXT The bankers are pretending not to notice you.
+#NEXT This bank has gotten used to you.
+#STOP
+</code></pre>
+
+<h3>Access to current state of cycler</h3>
+
+<pre><code>#CYCLE(wind) The wind sighs.
+#NEXT A light rain spatters.
+#NEXT You feel a chill.
+#LOOP
+#SECRETLY #IF wind == 2
+#CHOOSE I pull my cloak tighter around me. #FOR
+#( Wimp. #BACK #)
+</code></pre>
+
+<h2>Cycling between choices</h2>
+
+<pre><code>Well, here you are in the waiting room of the Principal's Office.
+#CHOOSE I leave. #FOR #( You can't, I'm afraid. #)
+#CHOOSE I sit still. #FOR
+ #( You sit motionless for 17 seconds. An achievement. #)
+#ROTATE(pointless_action)
+  #// the (pointless_action) bit is unnecessary
+  #// unless you want to keep track
+#CHOOSE I twiddle my thumbs #FOR
+ #( Consider your thumbs twiddled. #BACK #)
+#CHOOSE I scratch my head #FOR
+ #( You scratch your head, and your neck for good measure. #BACK #)
+#CHOOSE I play with my keys #FOR
+ #( You rattle your keys a bit. #BACK #)
+#LOOP
+The Principal will see you now.
+</code></pre>
+
+<h2>Programmatically generated choice lists</h2>
+
+<pre><code>#PAGE start
+#SCENE You stand before the temple gates.
+#CHOICES
+ [["I smash the gates!", electrified],
+  ["I walk away", wise_choice]]
+#ENDSCENE
+</code></pre>
+
+<h3>Mixing <code>#CHOOSE...#FOR...</code> blocks with JavaScript code</h3>
+
+<pre><code>#PAGE start
+#SCENE You stand before the temple gates.
+#CHOICES
+ [["I smash the gates!", electrified],
+  #CHOOSE I walk away #FOR wise_choice
+ ]
+#ENDSCENE
+</code></pre>
+
+<h2>Embedding and interpolating code in text</h2>
+
+<pre><code>#EVAL &lt;expression&gt; #TEXT
+</code></pre>
+
+<h3>Shorter form</h3>
+
+<pre><code>#[ &lt;expression&gt; #]
+</code></pre>
+
+<h2>Contents of a JavaScript variable</h2>
+
+<pre><code>#$&lt;varname&gt;
+</code></pre>
+
+<h2>Execute JavaScript code</h2>
+
+<pre><code>#{ &lt;...statements...&gt; #}
+</code></pre>
+
+<h2>Conditional display of text</h2>
+
+<pre><code>You are in the scullery.
+#IF got_knife
+ #THEN A young serving-boy eyes your knife uneasily.
+ #ELSE A young boy scurries back and forth with plates.
+#ENDIF
+</code></pre>
+
+<h3>Caveat</h3>
+
+<p><code>#IF</code> is for conditional display of text only.</p>
+
+<p>It is not a good way to control program flow.</p>
+
+<p>You cannot use <code>#GOSUB</code> statements inside a <code>#THEN</code> or <code>#ELSE</code> clause.</p>
+
+<h2>Text input direct to variables</h2>
+
+<pre><code>name = "Adventurer"
+
+#PAGE start
+#SCENE How about you tell me your name?
+#INPUT Type your name: #TO name #GOTO thanks
+#ENDSCENE
+
+#PAGE thanks
+#SCENE Thanks, #$name !
+#GOTO next
+#ENDSCENE
+
+#PAGE next
+...
+</code></pre>
+
+<p>The general form is always</p>
+
+<pre><code>#PAGE &lt;name of page variable&gt;
+#SCENE &lt;...scene text...&gt;
+#INPUT &lt;...prompt text...&gt; #TO &lt;name of input variable&gt;
+#GOTO &lt;next page&gt;
+#ENDSCENE
+</code></pre>

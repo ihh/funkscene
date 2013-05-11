@@ -396,7 +396,7 @@ You may be tempted to do something like this. Don't:
 	#SCENE
 	 You are in the scullery.
 	 #IF got_knife #THEN
-	  "Hey! You! Girl with the knife!" says the Cook.
+	  "Hey! You with the knife!" says the Cook.
 	  #// The following line will not work; you can't use a #GOSUB in an #IF block
 	  #GOSUB carrot_chopping_side_quest
 	  Well, that was fun.
@@ -507,7 +507,7 @@ Note how you can also use `#GOSUB` and `#INPUT` as "hinges" or "conjunctions" be
 	Time for some choices.
 	#CHOOSE An irrelevant choice. #FOR #( Hope you're pleased with yourself. #)
 	#CHOOSE Another irrelevant choice. #FOR #( Completely pointless. #)
-	#CHOOSE Kill myself. #FOR #( First sensible thing you've said. #OVER #)
+	#CHOOSE Quit this game. #FOR #( First sensible thing you've said. #OVER #)
 	Some more scene text.
 	#CHOOSE A ditzy choice. #FOR #( Squee! #)
 	#CHOOSE A dumb choice. #FOR #( Woohoo! #)
@@ -630,12 +630,10 @@ To cycle between choices, you use a different keyword, `#ROTATE`:
 	#CHOOSE I sit perfectly still. #FOR #( You sit motionless for exactly 17 seconds. Quite an achievement. #)
 	#ROTATE(pointless_action)  #// the (pointless_action) bit is unnecessary unless you want to keep track
 	#CHOOSE I twiddle my thumbs #FOR #( Consider your thumbs twiddled. #BACK #)
-	#CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
-	#CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
+	#NEXT #CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
+	#NEXT #CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
 	#LOOP
 	The Principal will see you now.
-
-The `#NEXT` separator is optional when you use `#ROTATE` (it's not present in the above example).
 
 You can terminate the `#ROTATE` block with `#LOOP` or `#STOP`, just like with `#CYCLE`.
 If you prefix the initial `#ROTATE` with `#ONCE`, and end with `#STOP`, then the choice will disappear after the last rotation.

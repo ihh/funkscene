@@ -2,7 +2,7 @@ PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
 PARSERS = $(addprefix lib/parser/,$(subst .pegjs,.js,$(notdir $(wildcard grammar/*.pegjs))))
 
-all: parsers README.html img/icon pagedown
+all: parsers README.html CheatSheet.html img/icon pagedown
 
 parsers: $(PARSERS)
 
@@ -15,7 +15,7 @@ lib/parser/graph.js: grammar/graph.pegjs
 lib/parser/cazoo.js: grammar/cazoo.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
 
-README.html: README.md
+%.html: %.md
 	perl -e 'use Text::Markdown "markdown";print markdown(join("",<>))' $< >$@
 
 # Download icons made by lorc. Available at http://game-icons.net

@@ -31,10 +31,11 @@ FunkScene borrows bits and pieces from several open source projects:</p>
 
 <p>An earlier prototype, <a href="https://github.com/ihh/schooz">Schooz</a>,
 started as an investigation of functional programming techniques for CYO.
-(A true CYO FP language might look a bit more like Logo+ChoiceScript+Markdown,
-rather than JavaScript+ChoiceScript+Markdown+lots of game-focused hacks.)</p>
+(A purists' CYO FP language, useful e.g. for didactic purposes, might look a bit more like Logo+ChoiceScript+Markdown,
+rather than JavaScript+ChoiceScript+Markdown+lots of game-oriented hacks.)</p>
 
-<p>The nascent debugger (such as it is) was influenced by InkleWriter and Twine, and uses Alexis Jacomy's <a href="https://github.com/jacomyal/sigma.js">sigma.js</a>.</p>
+<p>The nascent debugger (such as it is) was influenced by InkleWriter and Twine,
+and uses Alexis Jacomy's <a href="https://github.com/jacomyal/sigma.js">sigma.js</a> graph rendering library.</p>
 
 <h1>The FunkScene Language</h1>
 
@@ -395,7 +396,7 @@ You may be tempted to do something like this. Don't:</p>
 #SCENE
  You are in the scullery.
  #IF got_knife #THEN
-  "Hey! You! Girl with the knife!" says the Cook.
+  "Hey! You with the knife!" says the Cook.
   #// The following line will not work; you can't use a #GOSUB in an #IF block
   #GOSUB carrot_chopping_side_quest
   Well, that was fun.
@@ -509,7 +510,7 @@ Hi, #$name.
 Time for some choices.
 #CHOOSE An irrelevant choice. #FOR #( Hope you're pleased with yourself. #)
 #CHOOSE Another irrelevant choice. #FOR #( Completely pointless. #)
-#CHOOSE Kill myself. #FOR #( First sensible thing you've said. #OVER #)
+#CHOOSE Quit this game. #FOR #( First sensible thing you've said. #OVER #)
 Some more scene text.
 #CHOOSE A ditzy choice. #FOR #( Squee! #)
 #CHOOSE A dumb choice. #FOR #( Woohoo! #)
@@ -636,13 +637,11 @@ only appears when the text about feeling a chill has been shown.</p>
 #CHOOSE I sit perfectly still. #FOR #( You sit motionless for exactly 17 seconds. Quite an achievement. #)
 #ROTATE(pointless_action)  #// the (pointless_action) bit is unnecessary unless you want to keep track
 #CHOOSE I twiddle my thumbs #FOR #( Consider your thumbs twiddled. #BACK #)
-#CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
-#CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
+#NEXT #CHOOSE I scratch my head #FOR #( You scratch your head, and your neck for good measure. #BACK #)
+#NEXT #CHOOSE I play with my keys #FOR #( You rattle your keys a bit. #BACK #)
 #LOOP
 The Principal will see you now.
 </code></pre>
-
-<p>The <code>#NEXT</code> separator is optional when you use <code>#ROTATE</code> (it's not present in the above example).</p>
 
 <p>You can terminate the <code>#ROTATE</code> block with <code>#LOOP</code> or <code>#STOP</code>, just like with <code>#CYCLE</code>.
 If you prefix the initial <code>#ROTATE</code> with <code>#ONCE</code>, and end with <code>#STOP</code>, then the choice will disappear after the last rotation.</p>

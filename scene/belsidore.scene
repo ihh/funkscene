@@ -77,12 +77,12 @@ You, #$name, stand before the gates of the Temple of Belsidore. Beside the gate 
 #// Currently there can only be one option per rotation,
 #// but the #NEXT separator allows for the future possibility of
 #// different numbers of choices on each rotation:
-#ROTATE(suicide_method)
- #CHOOSE I kill myself #FOR #( Done. #OVER #)
+#ROTATE(quit_method)
+ #CHOOSE I tire of this #FOR #( Fine. #OVER #)
 #NEXT
- #CHOOSE I end it all #FOR #( You got it. #OVER #)
+ #CHOOSE I'm over this #FOR #( You got it. #OVER #)
 #NEXT
- #CHOOSE I jump off a ledge #FOR #( Bye. #OVER #)
+ #CHOOSE I'm outta here #FOR #( Bye. #OVER #)
 #LOOP
 
 #// A choice that you can only make once:

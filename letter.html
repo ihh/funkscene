@@ -1,10 +1,10 @@
 <html>
   <head>
 
-<title>Letter</title>
+<title>The Letter</title>
 </head>
 <body>
-<h1>Letter</h1>
+<h1>The Letter</h1>
 
 <span id="letter"></span>
 
@@ -17,8 +17,8 @@ var text = "@start = [Let us begin the letter.]{Sire, the people are @people} @p
 // Alternative:
 // var text = "@start = [Let us begin the letter.]{Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}"
 
-var g = new LetterWriter.Letter(text)
-g.attach()
+var g = new LetterWriter.Grammar(text)
+var l = g.letter()
 
 </script>
 

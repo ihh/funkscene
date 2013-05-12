@@ -95,12 +95,12 @@
 	    console.log ("The first symbol to be defined was @" + start + " so we'll use that as the root.");
 	}
 
-	return nontermObj[start];
+	return start;
     }
 }
 
 start
- = spc* rule*  { return getStart(); }
+ = spc* rule*  { return [nontermObj, getStart()]; }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }

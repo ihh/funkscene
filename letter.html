@@ -15,24 +15,15 @@ Sire, the people are
   <option value="3">That they are delighted with his rule.</option>
 </select>
 
+<script type="text/javascript" src="lib/letter.js"></script>
 <script type="text/javascript" src="lib/parser/letter.js"></script>
 <script type="text/javascript">
 
-	function buildErrorMessage(e) {
-	    return e.line !== undefined && e.column !== undefined
-		 ? "Line " + e.line + ", column " + e.column + ": " + e.message
-		 : e.message;
-	}
-
-	try {
 var text = "@start[Let us begin the letter.] = {Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}"
 // Alternative:
 // var text = "@start[Let us begin the letter.] = {Sire, the people are @people} @people[...|What to tell him?] = {That they are revolting against his cruel authority. => sadly in open revolt. | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}"
 
-	var g = letterParser.parse(text)
-	} catch (e) {
-	console.log (buildErrorMessage(e));
-	}
+var g = LetterWriter.parser.parse(text)
 
 </script>
 

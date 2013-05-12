@@ -13,7 +13,7 @@ lib/parser/graph.js: grammar/graph.pegjs
 	$(PEGJS) -e FunkScene.graphGenerator --track-line-and-column $< $@
 
 lib/parser/letter.js: grammar/letter.pegjs
-	$(PEGJS) -e letterParser --track-line-and-column $< $@
+	$(PEGJS) -e LetterWriter.parser --track-line-and-column $< $@
 
 lib/parser/cazoo.js: grammar/cazoo.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@

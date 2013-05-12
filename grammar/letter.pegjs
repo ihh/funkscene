@@ -22,10 +22,11 @@
     function popLhs() { return lhsStack.pop() }
     function currentLhs() { return getNontermObject (lhsStack[lhsStack.length - 1]) }
 
-    function addRule(rhs,hint) { currentLhs().rules.push([hint,rhs]); return true }
+    function addRule(hint,rhs) { currentLhs().addRule(hint,rhs); return true }
     function makeAnonId() { return ++anonNonterms; }
-    function isAnonId(sym) { return /^[\d]+$/.test(sym) }
-    function defaultPrompt(sym) { return isAnonId(sym) ? "Select an option..." : sym.replace(/_/g, ' ') }
+    
+    function isAnonId (sym) { return /^[\d]+$/.test(sym) }
+    function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
 
     function setLhsDefaults(placeholder,prompt) {
 	var lhs = currentLhs();
@@ -36,35 +37,30 @@
 	return true;
     }
 
+    function makeTerm(text) {
+	return new LetterWriter.Term(text)
+    }
+
     function getNontermObject(sym) {
 	if (!(sym in nontermObj))
-	    nontermObj[sym] = { id: sym,
-				rules: [],
-				placeholder: "",
-				prompt: defaultPrompt(sym) };
+	    nontermObj[sym] = new LetterWriter.Nonterm(sym,defaultPrompt(sym));
 	return nontermObj[sym];
     }
 
     function makeNontermReference(sym,placeholder,prompt) {
-	var nonterm = getNontermObject(sym);
-	return { nonterminal: nonterm,
-		 placeholder: typeof(placeholder) == 'undefined' ? nonterm.placeholder : placeholder,
-		 prompt: typeof(prompt) == 'undefined' ? nonterm.prompt : prompt };
+	return getNontermObject(sym).makeReference(placeholder,prompt)
     }
 
     function getStart() {
 	var rhsSymbol = {};
 	for (var lhs in nontermObj) {
 	    for (var i = 0; i < nontermObj[lhs].rules.length; ++i) {
-		var rhs = nontermObj[lhs].rules[i][1];
-		if (rhs instanceof Array)
-		    for (var j = 0; j < rhs.length; ++j) {
-			var sym = rhs[j];
-			if (typeof(sym) == 'object')
-			    rhsSymbol[sym.nonterminal.id] = true;
-		    }
-		else  // not an Array, must be a single Object
-		    rhsSymbol[rhs.id] = true;
+		var rhs = nontermObj[lhs].rules[i].rhs;
+		for (var j = 0; j < rhs.length; ++j) {
+		    var sym = rhs[j];
+		    if (sym instanceof LetterWriter.NontermReference)
+			rhsSymbol[sym.nonterminal.id] = true;
+		}
 	    }
 	}
 
@@ -118,14 +114,14 @@ rhs_list
  = rhs (spc* "|" spc* rhs_list)?
 
 rhs
- = hint:hint? symbols:sym_expr+  { addRule(symbols,hint) }
+ = hint:hint? symbols:sym_expr+  { addRule(hint,symbols) }
 
 hint
  = text:text "=>" { return text }
 
 sym_expr
  = pp:placeholder_prompt spc* sym:nonterm_or_anon  { return makeNontermReference(sym,pp[0],pp[1]) }
- / text
+ / text:text  { return makeTerm(text) }
 
 nonterm_or_anon
  = nonterm_symbol

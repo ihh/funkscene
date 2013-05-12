@@ -1,21 +1,31 @@
 <html>
   <head>
+    <!-- Stylesheets -->
+    <link href="style.css" rel="stylesheet" type="text/css">
 
-<title>The Letter</title>
-</head>
-<body>
-<h1>The Letter</h1>
+    <title>The Letter</title>
+  </head>
+  <body>
 
-<span id="letter"></span>
+    <!-- Game container -->
+    <div id="gameContainer">
+      <div id="undo" class="letter undo"></div>
+      <h1>The Letter</h1>
 
-<!-- LetterWriter library & parser -->
-<script type="text/javascript" src="lib/letter.js"></script>
-<script type="text/javascript" src="lib/parser/letter.js"></script>
+      <span id="letter">
+	<!-- Preloading animation from http://preloaders.net/ -->
+	<br> Loading... <br> <br> <img src="img/loading.gif">
+      </span>
+    </div>
 
-<script type="text/javascript">
-var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
-var l = g.newLetter()
-</script>
+    <!-- LetterWriter library & parser -->
+    <script type="text/javascript" src="lib/letter.js"></script>
+    <script type="text/javascript" src="lib/parser/letter.js"></script>
 
-</body>
+    <script type="text/javascript">
+      var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+      var l = g.newLetter()
+    </script>
+
+  </body>
 </html>

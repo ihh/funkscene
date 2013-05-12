@@ -10,13 +10,13 @@ html, body {
 }
 
 #gameContainer {
-    max-width: 600px;
+    max-width: 700px;
     margin: 10px auto; 
     padding: 0 10px;
 }
 
 #debugContainer {
-    min-width: 1010px;
+    min-width: 1200px;
     margin: 0 20px 0 20px; /* top right bottom left */
     padding: 0;
 }
@@ -408,3 +408,29 @@ html, body {
     -o-user-select: none;
     user-select: none;
 }
+
+/* Undo DIV for LetterWriter */
+.letter .undo {
+    float: right;
+    padding: .1em;
+}
+
+.letter .undoMeter {
+    background: #eee;
+    position: relative;
+    border: 1px solid;
+    border-radius: 3px;
+    height: .5em;
+}
+
+.letter .undoMeter > span {
+    display: block;
+    height: 100%;
+    background: #844;
+}
+
+.letter .undoSpacer {
+    height: .25em;
+    width: 100%;
+}
+

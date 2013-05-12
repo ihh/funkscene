@@ -21,19 +21,20 @@
     function pushLhs(sym) { lhsStack.push(sym); nonterms.push(sym); return true }
     function popLhs() { return lhsStack.pop() }
     function currentLhs() { return getNontermObject (lhsStack[lhsStack.length - 1]) }
+    function addRule(hint,rhs,count) { currentLhs().addRule(hint,rhs,count); return true }
 
-    function addRule(hint,rhs) { currentLhs().addRule(hint,rhs); return true }
     function makeAnonId() { return ++anonNonterms; }
-    
     function isAnonId (sym) { return /^[\d]+$/.test(sym) }
     function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
 
-    function setLhsDefaults(placeholder,prompt) {
+    function setLhsDefaults(placeholder,prompt,maxUsage) {
 	var lhs = currentLhs();
 	if (typeof(placeholder) != 'undefined')
 	    lhs.placeholder = placeholder;
 	if (typeof(prompt) != 'undefined')
 	    lhs.prompt = prompt;
+	if (typeof(maxUsage) != 'undefined' && maxUsage > 0)
+	    lhs.maxUsage = maxUsage;
 	return true;
     }
 
@@ -107,17 +108,25 @@ nonterm_symbol
 
 rule
  = lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
-   "=" spc* pp:placeholder_prompt spc* &{return setLhsDefaults(pp[0],pp[1])}
+   n:max_count? "=" spc* pp:placeholder_prompt spc* &{return setLhsDefaults(pp[0],pp[1],n)}
    "{" rhs:rhs_list "}" spc* {popLhs()}
 
 rhs_list
  = rhs (spc* "|" spc* rhs_list)?
 
 rhs
- = hint:hint? symbols:sym_expr+  { addRule(hint,symbols) }
+ = hc:hint_with_count symbols:sym_expr+  { addRule(hc[0],symbols,hc[1]) }
 
-hint
- = text:text "=>" { return text }
+hint_with_count
+ = text:text n:max_count spc* "=>" { return [text, n] }
+ / text:text "=>" { return [text, undefined] }
+ / { return ["", undefined] }
+
+max_count
+ = "[" spc* n:positive_integer spc* "]" spc*  { return n }
+
+positive_integer
+ = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
  = pp:placeholder_prompt spc* sym:nonterm_or_anon  { return makeNontermReference(sym,pp[0],pp[1]) }

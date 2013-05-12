@@ -123,7 +123,7 @@ hint_with_count
  / { return ["", undefined] }
 
 max_count
- = "[" spc* n:positive_integer spc* "]" spc*  { return n }
+ = "[" spc* "max" spc+ n:positive_integer spc* "]" spc*  { return n }
 
 positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }

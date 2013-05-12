@@ -20,10 +20,41 @@
       <br>
       <br>
       <br>
-      <div id="reveal" style="display: none">
-	<i>Well, looks like you finished the letter.</i>
-      </div>
     </div>
+
+      <div id="reveal" style="display: none">
+	<small>
+	<i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuild()">rebuild</a>.</i>
+	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
+	</small>
+	<br>
+	<textarea id="template" rows="50" columns="80" style="float: bottom; width: 100%; min-height: 400px; vertical-align: text-top">
+	</textarea>
+	<small>
+	<br> <i>Template language syntax:</i>
+	<br>
+	<code style="padding-left: 1em; white-space: pre">
+           <i>template</i>: <i>rule</i>+
+               <i>rule</i>: <i>nonterm-identifier</i> "=" <i>nonterm-descriptor</i>
+ <i>nonterm-identifier</i>: "@" <i>identifier</i>
+ <i>nonterm-descriptor</i>: <i>optional-prompt</i>? "{" <i>rule-list</i> "}"
+    <i>optional-prompt</i>: "[" <i>prompt</i> "]"
+                     / "["  <i>placeholder</i> "|" <i>prompt</i> "]"
+          <i>rule-list</i>: <i>rule</i> "|" <i>rule-list</i>
+                     / <i>rule</i>
+               <i>rule</i>: <i>optional-hint</i>? <i>grammar-symbol</i>+
+      <i>optional-hint</i>: <i>text</i> "=>"
+     <i>grammar-symbol</i>: <i>nonterm-identifier</i>
+                     / <i>nonterm-descriptor</i>
+                     / <i>text</i>
+        <i>placeholder</i>: <i>text</i>
+             <i>prompt</i>: <i>text</i>
+	</code>
+	<br> <i>Here</i> <code>identifier</code> <i>is a standard C-like variable name and</i> <code>text</code> <i>is any text
+	  (in which quotes do not need to be escaped, but any of the characters "</i><code>@#=&lt;&gt;\[]{}</code><i>" must be escaped by preceding with a backslash character "</i><code>\</code><i>").</i>
+	</small>
+	
+      </div>
 
     <!-- LetterWriter library & parser -->
     <script type="text/javascript" src="lib/letter.js"></script>
@@ -31,7 +62,16 @@
 
     <script type="text/javascript">
       var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+      var editor = document.getElementById("template")
+      editor.value = g.template
       var l = g.newLetter()
+
+      function rebuild() {
+        l.clear()
+        g = new LetterWriter.Grammar(editor.value)
+        l = g.newLetter()
+        l.conceal = function() { }   // turn off conceal, don't hide edit box
+      }
     </script>
 
   </body>

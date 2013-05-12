@@ -1,11 +1,11 @@
 // Example:
 
-// @start[Let us begin the letter.] = {Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}
+// @start = [Let us begin the letter.]{Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}
 
 // Alternative:
 
-// @start[Let us begin the letter.] = {Sire, the people are @people}
-// @people[...|What to tell him?] = {That they are revolting against his cruel authority. => sadly in open revolt. | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}
+// @start = [Let us begin the letter.]{Sire, the people are @people}
+// @people = [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt. | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}
 
 // If there is no prompt, then a suitable default will be used
 // (derived from the nonterminal name, or generic "Please select..." text if the nonterminal is anonymous).
@@ -107,8 +107,8 @@ nonterm_symbol
 
 rule
  = lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
-   pp:placeholder_prompt spc* &{return setLhsDefaults(pp[0],pp[1])}
-   "=" spc* "{" rhs:rhs_list "}" spc* {popLhs()}
+   "=" spc* pp:placeholder_prompt spc* &{return setLhsDefaults(pp[0],pp[1])}
+   "{" rhs:rhs_list "}" spc* {popLhs()}
 
 rhs_list
  = rhs (spc* "|" spc* rhs_list)?

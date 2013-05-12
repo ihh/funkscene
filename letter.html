@@ -11,15 +11,10 @@
 <!-- LetterWriter library & parser -->
 <script type="text/javascript" src="lib/letter.js"></script>
 <script type="text/javascript" src="lib/parser/letter.js"></script>
+
 <script type="text/javascript">
-
-var text = "@start = [Let us begin the letter.]{Sire, the people are @people} @people = [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt. <br> They are @people | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}"
-// Alternative:
-// var text = "@start = [Let us begin the letter.]{Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}"
-
-var g = new LetterWriter.Grammar(text)
-var l = g.letter()
-
+var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+var l = g.newLetter()
 </script>
 
 </body>

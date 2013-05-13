@@ -123,7 +123,7 @@ nonterm_modifier
  / "commit" spc* { return { commit: true } }
 
 rhs_list
- = rhs (spc* "|" spc* rhs_list)?
+ = rhs ("|" spc* rhs_list)?
 
 rhs
  = hc:hint_with_count symbols:sym_expr+ { addRule(hc[0],symbols,hc[1]) }
@@ -143,7 +143,7 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = pp:placeholder_prompt spc* sym:nonterm_or_anon  { return makeNontermReference(sym,pp[0],pp[1]) }
+ = pp:placeholder_prompt sym:nonterm_or_anon  { return makeNontermReference(sym,pp[0],pp[1]) }
  / text:text  { return makeTerm(text) }
 
 nonterm_or_anon
@@ -151,8 +151,8 @@ nonterm_or_anon
  / "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
 
 placeholder_prompt
- = "[" placeholder:text "|" prompt:text "]" { return [placeholder, prompt]; }
- / "[" prompt:text "]" { return [undefined, prompt]; }
+ = "[" placeholder:text "|" prompt:text "]" spc* { return [placeholder, prompt]; }
+ / "[" prompt:text "]" spc* { return [undefined, prompt]; }
  / { return [undefined, undefined]; }
 
 text

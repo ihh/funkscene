@@ -27,7 +27,7 @@
     function isAnonId (sym) { return /^[\d]+$/.test(sym) }
     function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
 
-    function setLhsDefaults(placeholder,prompt,maxUsage) {
+    function setNontermProperties(placeholder,prompt,maxUsage,modifiers) {
 	var lhs = currentLhs();
 	if (typeof(placeholder) != 'undefined')
 	    lhs.placeholder = placeholder;
@@ -35,6 +35,8 @@
 	    lhs.prompt = prompt;
 	if (typeof(maxUsage) != 'undefined' && maxUsage > 0)
 	    lhs.maxUsage = maxUsage;
+	for (var i = 0; i < modifiers.length; ++i)
+	    extend (lhs, modifiers[i]);
 	return true;
     }
 
@@ -107,15 +109,19 @@ nonterm_symbol
  = "@" s:symbol  { return s; }
 
 rule
- = lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
-   n:max_count? "=" spc* pp:placeholder_prompt spc* &{return setLhsDefaults(pp[0],pp[1],n)}
-   "{" rhs:rhs_list "}" spc* {popLhs()}
+ = mods:nonterm_modifier* lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
+   n:max_count? "=>" spc* pp:placeholder_prompt spc* &{return setNontermProperties(pp[0],pp[1],n,mods)}
+   rhs_list spc* {popLhs()}
+
+nonterm_modifier
+ = "pause" spc*  { return { pause: true } }
+ / "commit" spc* { return { commit: true } }
 
 rhs_list
  = rhs (spc* "|" spc* rhs_list)?
 
 rhs
- = hc:hint_with_count symbols:sym_expr+  { addRule(hc[0],symbols,hc[1]) }
+ = "{" hc:hint_with_count symbols:sym_expr+ "}"  { addRule(hc[0],symbols,hc[1]) }
 
 hint_with_count
  = text:text n:max_count spc* "=>" { return [text, n] }
@@ -123,7 +129,10 @@ hint_with_count
  / { return ["", undefined] }
 
 max_count
- = "[" spc* "max" spc+ n:positive_integer spc* "]" spc*  { return n }
+ = "[" spc* "most" spc+ n:positive_integer spc* "]" spc*  { return n }
+ / "[" spc* "once" spc* "]" spc*  { return 1 }
+ / "[" spc* "twice" spc* "]" spc*  { return 2 }
+ / "[" spc* "thrice" spc* "]" spc*  { return 3 }
 
 positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }

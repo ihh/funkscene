@@ -1,2 +1,3 @@
-@start = [Let us begin the letter.]{Sire, the people are @people}
-@people = [...|What to tell him?]{That they are revolting against his cruel authority. [max 3]=> sadly in open revolt. They are @people | That they are delighted with his rule. => ever more enamored of your dazzling Majesty.}
+@start => [Let us begin the letter.]{Sire, the people are @people}
+@people => [...|What to tell him?]{That they are revolting against his cruel authority. [most 2]=> sadly in open revolt. They are @people}
+         | {That they are delighted with his rule. => ever more enamored of your dazzling Majesty.}

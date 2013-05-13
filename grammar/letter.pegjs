@@ -133,7 +133,7 @@ param_decl
  = "param" spc+ param_list spc*
 
 param_list
-    = p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
+    = p:param_symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
 
 param_value
     = "=" spc* v:weight  { return v }
@@ -242,8 +242,12 @@ product_expr
 
 primary_expr
   = n:weight       { return function(ltr){return n} }
-  / x:symbol       { return function(ltr){return ltr.paramValue[x]} }
+  / ("!" spc* / ("not"i spc+)) x:param_symbol { return function(ltr){return 1 - ltr.paramValue[x]} }
+  / x:param_symbol { return function(ltr){return ltr.paramValue[x]} }
   / "(" spc* e:sum_expr spc* ")"  { return e; }
+
+param_symbol
+  = s:symbol q:"?"?  { return s + q }
 
 weight
  = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }

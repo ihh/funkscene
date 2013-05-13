@@ -1,4 +1,4 @@
-param Faithfulness {obedient=>faithful} = 1
+param Faithful? {Opportunistic=>Faithful} = 1
 @start => [Let us begin the letter.]{Sire, the people are @people @closing}
 pause @people => [...|What to tell him?]{That they are revolting against his cruel authority. [most 2]=>
  sadly in [How to put this...]
@@ -6,4 +6,4 @@ pause @people => [...|What to tell him?]{That they are revolting against his cru
          | That they are delighted with his rule. => ever more enamored of your dazzling Majesty.}
 commit @closing => [Better end politely.]{Be servile => I remain your most @faithful servant, Lord Tarquin.}
 
-random @faithful => {Faithfulness=>faithful|(1-Faithfulness)=>obedient}
+random @faithful => {Faithful?=>faithful|not Faithful?=>diligent}

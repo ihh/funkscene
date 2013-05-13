@@ -21,6 +21,7 @@
       <br>
       <br>
     </div>
+      <div id="editor"></div>
 
       <div id="reveal" style="display: none">
 	<small>
@@ -64,9 +65,10 @@
 
     <script type="text/javascript">
       var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
-      var editor = document.getElementById("template")
-      editor.value = g.toCanonicalString()
+      var template = document.getElementById("template")
+      template.value = g.toCanonicalString()
       var l = g.newLetter()
+      var e = g.newEditor()
 
       function rebuild() {
         l.clear()

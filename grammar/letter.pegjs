@@ -126,7 +126,7 @@ rhs_list
  = rhs ("|" spc* rhs_list)?
 
 rhs
- = hc:hint_with_count symbols:sym_expr+ { addRule(hc[0],symbols,hc[1]) }
+ = hc:hint_with_count symbols:sym_expr* { addRule(hc[0],symbols,hc[1]) }
 
 hint_with_count
  = text:text n:max_count spc* "=>" { return [text, n] }

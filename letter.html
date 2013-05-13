@@ -3,6 +3,9 @@
     <!-- Stylesheets -->
     <link href="style.css" rel="stylesheet" type="text/css">
 
+    <!-- JQuery CSS -->
+    <link href="jquery/css/ui-lightness/jquery-ui-1.10.3.custom.css" rel="stylesheet">
+
     <title>The Letter</title>
   </head>
   <body>
@@ -23,7 +26,7 @@
     </div>
       <div id="editor"></div>
 
-      <div id="reveal" style="display: none">
+      <div id="reveal"> <!-- style="display: none" -->
 	<small>
 	<i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuild()">rebuild</a>.</i>
 	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
@@ -31,46 +34,24 @@
 	<br>
 	<textarea id="template" rows="50" columns="80" style="width: 100%; min-height: 400px; vertical-align: text-top">
 	</textarea>
-	<small>
-	<br> <i>Template language syntax:</i>
-	<br>
-	<code style="padding-left: 1em; white-space: pre">
-           <i>template</i>: (<i>param-block</i> | <i>rule-block</i>)+
-        <i>param-block</i>: "param" <i>param-list</i>
-         <i>param-list</i>: <i>param-declaration</i> ("," <i>param-list</i>)?
-  <i>param-declaration</i>: <i>param-identifier</i> ("{" <i>min-descriptor</i> "=>" <i>max-descriptor</i> "}")? ("=" <i>probability-value</i>)?
-   <i>param-identifier</i>: <i>identifier</i>
-     <i>min-descriptor</i>: <i>text</i>
-     <i>max-descriptor</i>: <i>text</i>
-         <i>rule-block</i>: <i>nonterm-modifier</i>* <i>nonterm-identifier</i> <i>optional-max-usage</i>? "=>" <i>nonterm-descriptor</i>
- <i>nonterm-identifier</i>: "@" <i>identifier</i>
- <i>nonterm-descriptor</i>: <i>optional-prompt</i>? "{" <i>rule-list</i> "}"
-   <i>nonterm-modifier</i>: "pause" / "commit" / "random"
-    <i>optional-prompt</i>: "[" <i>prompt</i> "]"
-                     / "["  <i>placeholder</i> "|" <i>prompt</i> "]"
-          <i>rule-list</i>: <i>rule</i> "|" <i>rule-list</i>
-                     / <i>rule</i>
-               <i>rule</i>: <i>optional-hint</i>? <i>grammar-symbol</i>+
-      <i>optional-hint</i>: <i>text</i> <i>optional-max-usage</i>? "=>"
-     <i>grammar-symbol</i>: <i>nonterm-identifier</i>
-                     / <i>nonterm-descriptor</i>
-                     / <i>text</i>
- <i>optional-max-usage</i>: "[most " <i>integer</i> "]" / "[once]" / "[twice]" / "[thrice]"
-        <i>placeholder</i>: <i>text</i>
-             <i>prompt</i>: <i>text</i>
-	</code>
-	<br> <i>Here</i> <code>probability</code> <i>is a nonnegative numeric constant, </i> <code>identifier</code> <i>is a standard C-like variable name and</i> <code>text</code> <i>is any text
-	  (in which quotes do not need to be escaped, but any of the characters "</i><code>@#=&lt;&gt;\[]{}</code><i>" must be escaped by preceding with a backslash character "</i><code>\</code><i>").</i>
-	<br> <i>For</i> <code>random</code> <i>rules, the</i> <code>optional-hint</code> <i>is interpreted as an arithmetic expression that yields the relative frequency with which the rule is randomly chosen. This expression may involve player-tweakable parameters, which must be declared using </i> <code>param</code> <i>.</i>
-	</small>
+	<small><br><div id="TemplateSyntax"></div></small>
 	
       </div>
+
+    <!-- JQuery UI -->
+    <script src="jquery/js/jquery-1.9.1.js"></script>
+    <script src="jquery/js/jquery-ui-1.10.3.custom.js"></script>
 
     <!-- LetterWriter library & parser -->
     <script type="text/javascript" src="lib/letter.js"></script>
     <script type="text/javascript" src="lib/parser/letter.js"></script>
 
     <script type="text/javascript">
+      var xhr = new XMLHttpRequest();
+      xhr.open ("GET", "doc/TemplateSyntax.html", false);
+      xhr.send();
+      $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
+
       var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
       var template = document.getElementById("template")
       template.value = g.toCanonicalString()

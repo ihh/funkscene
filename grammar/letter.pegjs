@@ -25,7 +25,7 @@
 
     function addParam(p,v,min,max) {
 	params.push(p);
-	paramInitVal[p] = v;
+	paramInitVal[p] = v > 1 ? 1 : v;
 	paramMin[p] = min;
 	paramMax[p] = max;
 	return true;
@@ -246,5 +246,6 @@ primary_expr
   / "(" spc* e:sum_expr spc* ")"  { return e; }
 
 weight
- = n:[0-9]+               { return parseFloat (n.join("")); }
+ = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }
+ / n:[0-9]+               { return parseFloat (n.join("")); }
  / h:[0-9]* "." t:[0-9]+  { return parseFloat (h + "." + t.join("")); }

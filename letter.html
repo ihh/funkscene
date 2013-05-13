@@ -20,9 +20,12 @@
 	<br> Loading... <br> <br> <img src="img/loading.gif">
       </span>
 
-      <br>
-      <br>
-      <br>
+      <br><br><br><br>
+      <div id="slidersParent" style="display:none">
+	<div id="sliders"></div>
+      </div>
+
+      <br><br><br>
     </div>
       <div id="editor"></div>
 
@@ -47,16 +50,18 @@
     <script type="text/javascript" src="lib/parser/letter.js"></script>
 
     <script type="text/javascript">
+      var g, l, e, template;
+      $(function(){
       var xhr = new XMLHttpRequest();
       xhr.open ("GET", "doc/TemplateSyntax.html", false);
       xhr.send();
       $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
 
-      var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
-      var template = document.getElementById("template")
+      g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+      template = document.getElementById("template")
       template.value = g.toCanonicalString()
-      var l = g.newLetter()
-      var e = g.newEditor()
+      l = g.newLetter()
+      e = g.newEditor()
 
       function rebuild() {
         l.clear()
@@ -64,6 +69,8 @@
         l = g.newLetter()
         l.conceal = function() { }   // turn off conceal, don't hide edit box
       }
+
+      });
     </script>
 
   </body>

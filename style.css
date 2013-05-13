@@ -9,6 +9,52 @@ html, body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
+/* Sliders for LetterWriter (overriding JQuery font) */
+.sliderlabel {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: small;
+}
+
+.slidermin {
+    position: absolute;
+    left:0px;
+    top:20px;
+}
+
+.slidermax {
+    position: absolute;
+    right: 0px;
+    top: 20px;
+}
+
+.sliderparam {
+    width: 13%;
+    float: left;
+    text-align: right;
+    overflow: auto;
+    vertical-align: text-top;
+    font-size: small;
+}
+
+.slider {
+    width: 85%;
+    float: right;
+}
+
+.sliderparent {
+    height: 3em;
+}
+
+#sliders {
+    border: 1px inset #fff;
+    border-radius: 4px 0 4px 0;
+    box-shadow: 0 0 2px #888;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 10px 20px 10px 20px;
+}
+
+/* Game */
 #gameContainer {
     max-width: 700px;
     margin: 10px auto; 
@@ -513,3 +559,4 @@ html, body {
     background: white;
     margin: 1px 1% 1px 1%;
 }
+

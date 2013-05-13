@@ -136,7 +136,7 @@ param_list
     = p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
 
 param_value
-    = "=" spc* v:probability  { return v }
+    = "=" spc* v:weight  { return v }
     / { return 0.5 }
 
 param_range
@@ -241,11 +241,10 @@ product_expr
   / primary_expr
 
 primary_expr
-  = n:probability       { return function(ltr){return n} }
-  / x:symbol            { return function(ltr){return ltr.paramValue[x]} }
+  = n:weight       { return function(ltr){return n} }
+  / x:symbol       { return function(ltr){return ltr.paramValue[x]} }
   / "(" spc* e:sum_expr spc* ")"  { return e; }
 
-probability
- = "1" ("." "0"*)?    { return 1; }
- / "0" ("." "0"*)?    { return 0; }
- / "0"? "." t:[0-9]+  { return parseFloat ("0." + t.join("")); }
+weight
+ = n:[0-9]+               { return parseFloat (n.join("")); }
+ / h:[0-9]* "." t:[0-9]+  { return parseFloat (h + "." + t.join("")); }

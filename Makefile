@@ -2,7 +2,16 @@ PEGJS = $(HOME)/node_modules/pegjs/bin/pegjs
 
 PARSERS = $(addprefix lib/parser/,$(subst .pegjs,.js,$(notdir $(wildcard grammar/*.pegjs))))
 
-all: parsers README.html doc/CheatSheet.html img/icon pagedown
+all: jquery parsers README.html doc/CheatSheet.html img/icon pagedown
+
+pegjs:
+	npm install pegjs
+
+jquery:
+	rm -rf $@
+	wget http://jqueryui.com/resources/download/jquery-ui-1.10.3.zip
+	unzip jquery-ui-1.10.3.zip
+	mv jquery-ui-1.10.3 $@
 
 parsers: $(PARSERS)
 

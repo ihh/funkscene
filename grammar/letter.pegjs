@@ -46,7 +46,7 @@
 
     function getNontermObject(sym) {
 	if (!(sym in nontermObj))
-	    nontermObj[sym] = new LetterWriter.Nonterm(sym,defaultPrompt(sym));
+	    nontermObj[sym] = new LetterWriter.Nonterm(sym,defaultPrompt(sym),isAnonId(sym));
 	return nontermObj[sym];
     }
 

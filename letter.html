@@ -65,7 +65,7 @@
     <script type="text/javascript">
       var g = LetterWriter.Grammar.newFromUrl("template/king.letter")
       var editor = document.getElementById("template")
-      editor.value = g.template
+      editor.value = g.toCanonicalString()
       var l = g.newLetter()
 
       function rebuild() {

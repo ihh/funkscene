@@ -36,7 +36,7 @@
 	if (typeof(maxUsage) != 'undefined' && maxUsage > 0)
 	    lhs.maxUsage = maxUsage;
 	for (var i = 0; i < modifiers.length; ++i)
-	    extend (lhs, modifiers[i]);
+	    LetterWriter.extend (lhs, modifiers[i]);
 	return true;
     }
 
@@ -55,17 +55,26 @@
     }
 
     function getStart() {
+	var isSource = {};
+	for (var lhs in nontermObj)
+	    isSource[lhs] = {}
 	var rhsSymbol = {};
 	for (var lhs in nontermObj) {
 	    for (var i = 0; i < nontermObj[lhs].rules.length; ++i) {
 		var rhs = nontermObj[lhs].rules[i].rhs;
 		for (var j = 0; j < rhs.length; ++j) {
 		    var sym = rhs[j];
-		    if (sym instanceof LetterWriter.NontermReference)
-			rhsSymbol[sym.nonterminal.id] = true;
+		    if (sym instanceof LetterWriter.NontermReference) {
+			var id = sym.nonterminal.id;
+			rhsSymbol[id] = true;
+			isSource[id][lhs] = true;
+		    }
 		}
 	    }
 	}
+
+	for (var sym in rhsSymbol)
+	    nontermObj[sym].sources = Object.keys(isSource[sym]).map(function(sym){return nontermObj[sym]});
 
 	for (var sym in rhsSymbol) {
 	    if (!nontermObj[sym].rules.length) {
@@ -98,12 +107,14 @@
 	    console.log ("The first symbol to be defined was @" + start + " so we'll use that as the root.");
 	}
 
-	return start;
+	return nontermObj[start];
     }
 }
 
 start
- = spc* rule*  { return [nontermObj, getStart()]; }
+ = spc* rule*  { return { nonterm: nontermObj,
+			  start: getStart(),
+			  nonterms: nonterms.map(function(id){return nontermObj[id]}) } }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }
@@ -111,7 +122,7 @@ nonterm_symbol
 rule
  = mods:nonterm_modifier* lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
    n:max_count? "=>" spc* pp:placeholder_prompt spc* &{return setNontermProperties(pp[0],pp[1],n,mods)}
-   rhs_list spc* {popLhs()}
+   "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
  = "pause" spc*  { return { pause: true } }
@@ -121,7 +132,7 @@ rhs_list
  = rhs (spc* "|" spc* rhs_list)?
 
 rhs
- = "{" hc:hint_with_count symbols:sym_expr+ "}"  { addRule(hc[0],symbols,hc[1]) }
+ = hc:hint_with_count symbols:sym_expr+ { addRule(hc[0],symbols,hc[1]) }
 
 hint_with_count
  = text:text n:max_count spc* "=>" { return [text, n] }

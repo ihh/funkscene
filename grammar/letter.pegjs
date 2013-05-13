@@ -12,11 +12,24 @@
 
 
 {
+    var params = [];
+    var paramInitVal = {};
+    var paramMin = {};
+    var paramMax = {};
+
     var anonNonterms = 0;
     var lhsStack = [];
     var nonterms = [];
     var nontermObj = {};
     var defaultStart = "start";
+
+    function addParam(p,v,min,max) {
+	params.push(p);
+	paramInitVal[p] = v;
+	paramMin[p] = min;
+	paramMax[p] = max;
+	return true;
+    }
 
     function pushLhs(sym) { lhsStack.push(sym); nonterms.push(sym); return true }
     function popLhs() { return lhsStack.pop() }
@@ -106,9 +119,29 @@
 }
 
 start
- = spc* rule*  { return { nonterm: nontermObj,
-			  start: getStart(),
-			  nonterms: nonterms.map(function(id){return nontermObj[id]}) } }
+ = spc* statement*  { return { nonterm: nontermObj,
+			       start: getStart(),
+			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
+			       params: params,
+			       paramInitVal: paramInitVal,
+			       paramMin: paramMin,
+			       paramMax: paramMax } }
+
+statement = param_decl / rule
+
+param_decl
+ = "param" spc+ param_list spc*
+
+param_list
+    = p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
+
+param_value
+    = "=" spc* v:probability  { return v }
+    / { return 0.5 }
+
+param_range
+    = "{" min:text "=>" max:text "}"  { return [min,max] }
+    / { return ["Never","Always"] }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }
@@ -121,6 +154,7 @@ rule
 nonterm_modifier
  = "pause" spc*  { return { pause: true } }
  / "commit" spc* { return { commit: true } }
+ / "random" spc* { return { random: true } }
 
 rhs_list
  = rhs ("|" spc* rhs_list)?
@@ -190,3 +224,28 @@ line_terminator
 
 source_character
   = .
+
+// Used to parse "hints" for randomized nonterminals as probabilistic weights
+sum_expr
+  = l:product_expr spc* "+" spc* r:sum_expr
+      { return function(ltr){return l(ltr) + r(ltr)} }
+  / l:product_expr spc* "-" spc* r:sum_expr
+      { return function(ltr){return l(ltr) - r(ltr)} }
+  / product_expr
+
+product_expr
+  = l:primary_expr spc* "*" spc* r:product_expr
+  { return function(ltr){return l(ltr) * r(ltr)} }
+  / l:primary_expr spc* "/" spc* r:product_expr
+  { return function(ltr){return l(ltr) / r(ltr)} }
+  / primary_expr
+
+primary_expr
+  = n:probability       { return function(ltr){return n} }
+  / x:symbol            { return function(ltr){return ltr.paramValue[x]} }
+  / "(" spc* e:sum_expr spc* ")"  { return e; }
+
+probability
+ = "1" ("." "0"*)?    { return 1; }
+ / "0" ("." "0"*)?    { return 0; }
+ / "0"? "." t:[0-9]+  { return parseFloat ("0." + t.join("")); }

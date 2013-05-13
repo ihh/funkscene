@@ -1,6 +1,9 @@
+param f{obedient=>faithful} = 1
 @start => [Let us begin the letter.]{Sire, the people are @people @closing}
 pause @people => [...|What to tell him?]{That they are revolting against his cruel authority. [most 2]=>
  sadly in [How to put this...]
  { Revolution [once] => open revolt | Rebellion [once] => rebellion}. They are @people
          | That they are delighted with his rule. => ever more enamored of your dazzling Majesty.}
-commit @closing => [Better end politely.]{Be servile => I remain your most faithful servant, Lord Tarquin.}
+commit @closing => [Better end politely.]{Be servile => I remain your most @faithful servant, Lord Tarquin.}
+
+random @faithful => {f=>faithful|(1-f)=>obedient}

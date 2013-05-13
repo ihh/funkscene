@@ -468,21 +468,22 @@ html, body {
     background: yellow;
     width: 100%;
     margin: 2px 2px 0px 2px;
-    min-height: 100px;
+    min-height: 200px;
     position: relative;
 }
 
 .nonterminal>.properties {
     width: 19%;
-    min-height: 96px;
+    min-height: 196px;
     float: left;
     background: green;
     margin: 2px 1px 2px 2px;
+    font-size: small;
 }
 
 .nonterminal>.expansions {
     width: 79%;
-    min-height: 96px;
+    min-height: 196px;
     float: right;
     background: blue;
     margin: 2px 2px 2px 1px;

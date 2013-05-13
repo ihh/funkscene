@@ -35,9 +35,10 @@
 	<br>
 	<code style="padding-left: 1em; white-space: pre">
            <i>template</i>: <i>rule</i>+
-               <i>rule</i>: <i>nonterm-identifier</i> <i>optional-max-usage</i>? "=" <i>nonterm-descriptor</i>
+               <i>rule</i>: <i>nonterm-modifier</i>* <i>nonterm-identifier</i> <i>optional-max-usage</i>? "=" <i>nonterm-descriptor</i>
  <i>nonterm-identifier</i>: "@" <i>identifier</i>
  <i>nonterm-descriptor</i>: <i>optional-prompt</i>? "{" <i>rule-list</i> "}"
+   <i>nonterm-modifier</i>: "pause" / "commit"
     <i>optional-prompt</i>: "[" <i>prompt</i> "]"
                      / "["  <i>placeholder</i> "|" <i>prompt</i> "]"
           <i>rule-list</i>: <i>rule</i> "|" <i>rule-list</i>
@@ -47,7 +48,7 @@
      <i>grammar-symbol</i>: <i>nonterm-identifier</i>
                      / <i>nonterm-descriptor</i>
                      / <i>text</i>
- <i>optional-max-usage</i>: "[max " <i>integer</i> "]"
+ <i>optional-max-usage</i>: "[most " <i>integer</i> "]"
         <i>placeholder</i>: <i>text</i>
              <i>prompt</i>: <i>text</i>
 	</code>

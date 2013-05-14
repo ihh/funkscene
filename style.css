@@ -517,6 +517,8 @@ html, body {
 
 .nonterminal {
     margin: 2px 2px 0px 2px;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
 }
 
 .nonterminal>.properties {
@@ -531,7 +533,7 @@ html, body {
     width: 98%;
     float: left;
     background: orange;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.properties>.property>.propname {
@@ -540,15 +542,15 @@ html, body {
     clear: left;
     text-align: right;
     background: pink;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.properties>.property>.propvalue {
-    width: 68%;
+    width: 70%;
     float: left;
     text-align: left;
-    background: white;
-    margin: 1px 1% 1px 1%;
+    background: floralwhite;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.expansions {
@@ -563,7 +565,7 @@ html, body {
     width: 98%;
     float: left;
     background: orange;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 
@@ -573,7 +575,7 @@ html, body {
     clear: left;
     text-align: left;
     background: olive;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.expansions>.rule>.rhs {
@@ -581,7 +583,7 @@ html, body {
     float: left;
     text-align: left;
     background: teal;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.expansions>.rule>.limit {
@@ -589,9 +591,22 @@ html, body {
     float: left;
     text-align: left;
     background: skyblue;
-    margin: 1px 1% 1px 1%;
+    margin: 1px 1px 1px 1px;
 }
 
 .nonterminal>.expansions>.rule>.title {
     background: peru;
+}
+
+.nonterminal form {
+    margin: 0px;
+    padding: 0px;
+}
+
+.nonterminal form>input {
+    width: 100%;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
+    margin: 0px;
+    padding: 0px;
 }

@@ -22,6 +22,8 @@
     var nonterms = [];
     var nontermObj = {};
 
+    function extend(a,b) { return LetterWriter.extend(a,b) }
+
     function addParam(p,v,min,max) {
 	params.push(p);
 	paramInitVal[p] = v > 1 ? 1 : v;
@@ -40,16 +42,29 @@
     function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
     function defaultStart() { return LetterWriter.defaultStart() }
 
-    function setNontermProperties(placeholder,prompt,maxUsage,modifiers) {
+    function setNontermProperties(props) {
 	var lhs = currentLhs();
-	if (typeof(placeholder) != 'undefined')
-	    lhs.placeholder = placeholder;
-	if (typeof(prompt) != 'undefined')
-	    lhs.prompt = prompt;
-	if (typeof(maxUsage) != 'undefined' && maxUsage > 0)
-	    lhs.maxUsage = maxUsage;
-	for (var i = 0; i < modifiers.length; ++i)
-	    LetterWriter.extend (lhs, modifiers[i]);
+	if ("placeholder" in props)
+	    lhs.placeholder = props.placeholder;
+	if ("prompt" in props)
+	    lhs.prompt = props.prompt;
+	if (("maxUsage" in props) && props.maxUsage > 0)
+	    lhs.maxUsage = props.maxUsage;
+	if ("modifiers" in props)
+	    for (var i = 0; i < props.modifiers.length; ++i)
+		extend (lhs, props.modifiers[i]);
+
+	if (lhs.random) {
+	    if (lhs.commit) {
+		console.log ("In @" + lhs.id + ": can't commit at randomized choices. Clearing 'commit', keeping 'random'")
+		lhs.commit = false
+	    }
+	    if (lhs.pause) {
+		console.log ("In @" + lhs.id + ": can't pause at randomized choices. Clearing 'pause', keeping 'random'")
+		lhs.pause = false
+	    }
+	}
+
 	return true;
     }
 
@@ -63,8 +78,8 @@
 	return nontermObj[sym];
     }
 
-    function makeNontermReference(sym,placeholder,prompt) {
-	return getNontermObject(sym).makeReference(placeholder,prompt)
+    function makeNontermReference(sym,props) {
+	return getNontermObject(sym).makeReference(props)
     }
 
     function getStart() {
@@ -78,6 +93,19 @@
 		    if (sym instanceof LetterWriter.NontermReference) {
 			var id = sym.nonterminal.id;
 			rhsSymbol[id] = true;
+
+			// do some qualifier validation, now that all the nonterminal properties have been declared
+			if (sym.nonterminal.random) {
+			    if (sym.commit()) {
+				console.log ("In rule for @" + lhs + ": can't commit at randomized choice (@" + id + "). Ignoring '!' modifier")
+				delete sym.props.commit
+			    }
+
+			    if (sym.pause()) {
+				console.log ("In rule for @" + lhs + ": can't pause at randomized choice (@" + id + "). Ignoring ';' modifier")
+				delete sym.props.pause
+			    }
+			}
 		    }
 		}
 	    }
@@ -147,8 +175,9 @@ nonterm_symbol
  = "@" s:symbol  { return s; }
 
 rule
- = mods:nonterm_modifier* lhs:nonterm_symbol spc* &{return pushLhs(lhs)}
-   n:max_count? "=>" spc* pp:placeholder_prompt spc* &{return setNontermProperties(pp[0],pp[1],n,mods)}
+ = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifiers spc* &{return pushLhs(lhs)}
+   n:max_count? "=>" spc* pp:placeholder_prompt spc*
+   &{return setNontermProperties(extend(extend({maxUsage:n,modifiers:mods},q),pp))}
    "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
@@ -180,7 +209,7 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = pp:placeholder_prompt sym:nonterm_or_anon  { return makeNontermReference(sym,pp[0],pp[1]) }
+ = pp:placeholder_prompt sym:nonterm_or_anon q:sym_modifiers { return makeNontermReference(sym,extend(pp,q)) }
  / text:text  { return makeTerm(text) }
 
 nonterm_or_anon
@@ -188,9 +217,20 @@ nonterm_or_anon
  / "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
 
 placeholder_prompt
- = "[" placeholder:text "|" prompt:text "]" spc* { return [placeholder, prompt]; }
- / "[" prompt:text "]" spc* { return [undefined, prompt]; }
- / { return [undefined, undefined]; }
+ = "[" placeholder:text "|" prompt:text "]" spc* { return {placeholder:placeholder, prompt:prompt}; }
+ / "[" prompt:text "]" spc* { return {prompt:prompt}; }
+ / { return {}; }
+
+sym_modifiers
+ = p:pause_modifier c:commit_modifier  { return extend(p,c) }
+
+pause_modifier
+ = ";" { return { pause: true } }
+ / "" { return {} }
+
+commit_modifier
+ = "!" { return { commit: true } }
+ / "" { return {} }
 
 text
  = "\\" escaped:[#\[\]\{\}\|=\@] tail:text? { return escaped + tail; }

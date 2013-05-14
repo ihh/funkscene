@@ -156,7 +156,7 @@ tool_property_list
  / p:tool_property          { var h = new Cazoo.Tool(); h[p[0]] = p[1]; return h; }
 
 tool_property
- = "type" v:optionally_directed_symbol_value  { return ["state", v]; }  // hack to avoid using "type" as a member field
+ = "type" v:optionally_directed_symbol_value  { return ["state", v]; }  // hack to avoid using "type" as a member field, which caused mysterious problems (TODO: investigate this!)
  / "rate" numeric_value
  / "radius" numeric_value
  / "reserve" numeric_value

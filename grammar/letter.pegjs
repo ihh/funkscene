@@ -13,10 +13,6 @@
 
 {
     var params = [];
-    var paramInitVal = {};
-    var paramMin = {};
-    var paramMax = {};
-
     var anonNonterms = 0;
     var lhsStack = [];
     var nonterms = [];
@@ -25,10 +21,7 @@
     function extend(a,b) { return LetterWriter.extend(a,b) }
 
     function addParam(p,v,min,max) {
-	params.push(p);
-	paramInitVal[p] = v > 1 ? 1 : v;
-	paramMin[p] = min;
-	paramMax[p] = max;
+	params.push (new LetterWriter.Param(p,v,min,max))
 	return true;
     }
 
@@ -139,10 +132,7 @@ start
  = spc* statement*  { return { nonterm: nontermObj,
 			       start: getStart(),
 			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
-			       params: params,
-			       paramInitVal: paramInitVal,
-			       paramMin: paramMin,
-			       paramMax: paramMax } }
+			       params: params } }
 
 statement = param_decl / rule
 

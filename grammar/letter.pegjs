@@ -79,7 +79,7 @@
     }
 
     function makeNontermReference(sym,props) {
-	return getNontermObject(sym).makeReference(props)
+	return getNontermObject(sym).makeReference(props).sanitizeQualifiers()
     }
 
     function getStart() {
@@ -93,19 +93,8 @@
 		    if (sym instanceof LetterWriter.NontermReference) {
 			var id = sym.nonterminal.id;
 			rhsSymbol[id] = true;
-
 			// do some qualifier validation, now that all the nonterminal properties have been declared
-			if (sym.nonterminal.random) {
-			    if (sym.commit()) {
-				console.log ("In rule for @" + lhs + ": can't commit at randomized choice (@" + id + "). Ignoring '!' modifier")
-				delete sym.props.commit
-			    }
-
-			    if (sym.pause()) {
-				console.log ("In rule for @" + lhs + ": can't pause at randomized choice (@" + id + "). Ignoring ';' modifier")
-				delete sym.props.pause
-			    }
-			}
+			sym.sanitizeQualifiers()
 		    }
 		}
 	    }

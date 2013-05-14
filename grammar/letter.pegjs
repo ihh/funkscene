@@ -21,6 +21,8 @@
     function extend(a,b) { return LetterWriter.extend(a,b) }
 
     function addParam(p,v,min,max) {
+	if (/^not$/i.test(p))
+	    throw "You cannot have a parameter called 'not', because 'not' is a reserved keyword. Can you use another parameter name?";
 	params.push (new LetterWriter.Param(p,v,min,max))
 	return true;
     }

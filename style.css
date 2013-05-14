@@ -515,6 +515,10 @@ html, body {
     padding-left: 0em;
 }
 
+#editorList div>h3 {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
 .nonterminal {
     margin: 2px 2px 0px 2px;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
@@ -568,7 +572,6 @@ html, body {
     margin: 1px 1px 1px 1px;
 }
 
-
 .nonterminal>.expansions>.rule>.hint {
     width: 20%;
     float: left;
@@ -604,6 +607,22 @@ html, body {
 }
 
 .nonterminal form>input {
+    width: 100%;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
+    margin: 0px;
+    padding: 0px;
+}
+
+.nonterminal>.properties textarea {
+    width: 100%;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
+    margin: 0px;
+    padding: 0px;
+}
+
+.nonterminal>.expansions textarea {
     width: 100%;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size:small;

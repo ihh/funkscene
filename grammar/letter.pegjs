@@ -162,6 +162,9 @@ rhs_list
 rhs
  = hc:hint_with_count symbols:sym_expr* { addRule(hc[0],symbols,hc[1]) }
 
+ui_rhs
+ = symbols:sym_expr* { return symbols }
+
 hint_with_count
  = text:text n:max_count spc* "=>" { return [text, n] }
  / text:text "=>" { return [text, undefined] }

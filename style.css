@@ -516,16 +516,11 @@ html, body {
 }
 
 .nonterminal {
-    background: yellow;
-    width: 100%;
     margin: 2px 2px 0px 2px;
-    min-height: 200px;
-    position: relative;
 }
 
 .nonterminal>.properties {
     width: 19%;
-    min-height: 196px;
     float: left;
     background: green;
     margin: 2px 1px 2px 2px;
@@ -534,7 +529,6 @@ html, body {
 
 .nonterminal>.expansions {
     width: 79%;
-    min-height: 196px;
     float: right;
     background: blue;
     margin: 2px 2px 2px 1px;
@@ -542,14 +536,12 @@ html, body {
 
 .nonterminal>.properties>.property {
     width: 98%;
-    min-height: 10px;
     float: left;
     background: orange;
     margin: 1px 1% 1px 1%;
 }
 
 .nonterminal>.properties>.property>.propname {
-    min-height: 10px;
     width: 28%;
     float: left;
     text-align: right;
@@ -564,4 +556,5 @@ html, body {
     background: white;
     margin: 1px 1% 1px 1%;
 }
+
 

@@ -21,7 +21,6 @@
     var lhsStack = [];
     var nonterms = [];
     var nontermObj = {};
-    var defaultStart = "start";
 
     function addParam(p,v,min,max) {
 	params.push(p);
@@ -39,6 +38,7 @@
     function makeAnonId() { return ++anonNonterms; }
     function isAnonId (sym) { return /^[\d]+$/.test(sym) }
     function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
+    function defaultStart() { return LetterWriter.defaultStart() }
 
     function setNontermProperties(placeholder,prompt,maxUsage,modifiers) {
 	var lhs = currentLhs();
@@ -91,7 +91,7 @@
 
 	var notOnRhs = [];
 	for (var lhs in nontermObj) {
-	    if (!(lhs in rhsSymbol) && lhs != defaultStart)
+	    if (!(lhs in rhsSymbol) && lhs != defaultStart())
 		notOnRhs.push (lhs);
 	}
 
@@ -99,14 +99,14 @@
 	    console.log ("The following symbols are defined, but never used: " + notOnRhs.map(function(x){return"@"+x}).join(" "));
 
 	var start;
-	if (defaultStart in nontermObj) {
+	if (defaultStart() in nontermObj) {
 	    if (notOnRhs.length > 0)
-		console.log ("However, @" + defaultStart + " is defined, so we're using that as the root.");
-	    start = defaultStart;
+		console.log ("However, @" + defaultStart() + " is defined, so we're using that as the root.");
+	    start = defaultStart();
 	} else if (notOnRhs.length) {
 	    start = notOnRhs[0];
 	    if (notOnRhs.length == 1)
-		console.log ("So, @" + start + " makes a natural choice for the start symbol. Use @" + defaultStart + " to override.");
+		console.log ("So, @" + start + " makes a natural choice for the start symbol. Use @" + defaultStart() + " to override.");
 	    else
 		console.log ("The first of these symbols to be defined was @" + start + " so we'll use that as the root.");
 	} else if (nonterms.length) {

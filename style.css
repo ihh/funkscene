@@ -510,6 +510,11 @@ html, body {
     padding: 0;
 }
 
+#editorList {
+    list-style-type: none;
+    padding-left: 0em;
+}
+
 .nonterminal {
     background: yellow;
     width: 100%;

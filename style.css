@@ -620,6 +620,7 @@ html, body {
     font-size:small;
     margin: 0px;
     padding: 0px;
+    resize: vertical;
 }
 
 .nonterminal>.expansions textarea {
@@ -628,4 +629,5 @@ html, body {
     font-size:small;
     margin: 0px;
     padding: 0px;
+    resize: vertical;
 }

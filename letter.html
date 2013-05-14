@@ -22,18 +22,21 @@
 
       <br><br><br><br>
       <div id="slidersParent" style="display:none">
-	<div id="sliders"></div>
       </div>
 
       <br><br><br>
     </div>
 
+
+
+    <div id="editor">
+      <small><i><a href="#" onclick="rebuild()">Restart</a></i>
       <div id="editorList"></div>
- 
+    </div>
 
       <div id="reveal">
 	<small>
-	<i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuild()">rebuild</a>.</i>
+	<i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildFromText()">rebuild</a>.</i>
 	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
 	</small>
 	<br>
@@ -54,27 +57,32 @@
     <script type="text/javascript" src="lib/parser/letter.js"></script>
 
     <script type="text/javascript">
-      var g, l, e, template;
-      $(function(){
-      var xhr = new XMLHttpRequest();
-      xhr.open ("GET", "doc/TemplateSyntax.html", false);
-      xhr.send();
-      $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
+var g, l, e, template;
+template = document.getElementById("template")
 
-      g = LetterWriter.Grammar.newFromUrl("template/king.letter")
-      template = document.getElementById("template")
-      template.value = g.toCanonicalString()
-      l = g.newLetter()
-      e = g.newEditor()
+function rebuildFromText() {
+    g = new LetterWriter.Grammar(template.value)
+    rebuild()
+}
 
-      function rebuild() {
-        l.clear()
-        g = new LetterWriter.Grammar(editor.value)
-        l = g.newLetter()
-        l.conceal = function() { }   // turn off conceal, don't hide edit box
-      }
+function rebuild() {
+    l.clear()
+    l = g.clone().newLetter()
+    l.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
+}
 
-      });
+$(function(){
+    var xhr = new XMLHttpRequest();
+    xhr.open ("GET", "doc/TemplateSyntax.html", false);
+    xhr.send();
+    $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
+
+    g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+    template.value = g.toCanonicalString()
+    l = g.clone().newLetter()
+    e = g.newEditor()
+
+});
     </script>
 
   </body>

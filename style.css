@@ -527,13 +527,6 @@ html, body {
     font-size: small;
 }
 
-.nonterminal>.expansions {
-    width: 79%;
-    float: right;
-    background: blue;
-    margin: 2px 2px 2px 1px;
-}
-
 .nonterminal>.properties>.property {
     width: 98%;
     float: left;
@@ -544,6 +537,7 @@ html, body {
 .nonterminal>.properties>.property>.propname {
     width: 28%;
     float: left;
+    clear: left;
     text-align: right;
     background: pink;
     margin: 1px 1% 1px 1%;
@@ -551,10 +545,53 @@ html, body {
 
 .nonterminal>.properties>.property>.propvalue {
     width: 68%;
-    float: right;
+    float: left;
     text-align: left;
     background: white;
     margin: 1px 1% 1px 1%;
 }
 
+.nonterminal>.expansions {
+    width: 79%;
+    float: right;
+    background: blue;
+    margin: 2px 2px 2px 1px;
+    font-size: small;
+}
 
+.nonterminal>.expansions>.expansion {
+    width: 98%;
+    float: left;
+    background: orange;
+    margin: 1px 1% 1px 1%;
+}
+
+
+.nonterminal>.expansions>.rule>.hint {
+    width: 20%;
+    float: left;
+    clear: left;
+    text-align: left;
+    background: olive;
+    margin: 1px 1% 1px 1%;
+}
+
+.nonterminal>.expansions>.rule>.rhs {
+    width: 70%;
+    float: left;
+    text-align: left;
+    background: teal;
+    margin: 1px 1% 1px 1%;
+}
+
+.nonterminal>.expansions>.rule>.limit {
+    width: 4%;
+    float: left;
+    text-align: left;
+    background: skyblue;
+    margin: 1px 1% 1px 1%;
+}
+
+.nonterminal>.expansions>.rule>.title {
+    background: peru;
+}

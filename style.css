@@ -519,6 +519,29 @@ html, body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
+.editorSlider {
+    width: 80%;
+    float: right;
+}
+
+.editorSliderLabel {
+    text-align: right;
+}
+
+.editorSliderAndLabel {
+    width: 55%;
+    float: right;
+}
+
+.editorSliderContainer {
+    border: 1px inset #fff;
+    border-radius: 4px 0 4px 0;
+    box-shadow: 0 0 2px #888;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 10px 20px 10px 20px;
+}
+
 .nonterminal {
     margin: 2px 2px 0px 2px;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;

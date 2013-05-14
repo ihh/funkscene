@@ -273,5 +273,5 @@ param_symbol
 
 weight
  = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }
- / n:[0-9]+               { return parseFloat (n.join("")); }
  / h:[0-9]* "." t:[0-9]+  { return parseFloat (h + "." + t.join("")); }
+ / n:[0-9]+               { return parseFloat (n.join("")); }

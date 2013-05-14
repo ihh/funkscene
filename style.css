@@ -565,14 +565,13 @@ html, body {
     font-size: small;
 }
 
-.nonterminal>.expansions>.expansion {
-    width: 98%;
+.nonterminal>.expansions>.addlink {
     float: left;
-    background: orange;
-    margin: 1px 1px 1px 1px;
+    clear: left;
+    background: thistle;
 }
 
-.nonterminal>.expansions>.rule>.hint {
+.nonterminal>.expansions>.rules>.rule>.hint {
     width: 20%;
     float: left;
     clear: left;
@@ -581,7 +580,7 @@ html, body {
     margin: 1px 1px 1px 1px;
 }
 
-.nonterminal>.expansions>.rule>.rhs {
+.nonterminal>.expansions>.rules>.rule>.rhs {
     width: 70%;
     float: left;
     text-align: left;
@@ -589,7 +588,7 @@ html, body {
     margin: 1px 1px 1px 1px;
 }
 
-.nonterminal>.expansions>.rule>.limit {
+.nonterminal>.expansions>.rules>.rule>.limit {
     width: 4%;
     float: left;
     text-align: left;
@@ -597,7 +596,14 @@ html, body {
     margin: 1px 1px 1px 1px;
 }
 
-.nonterminal>.expansions>.rule>.title {
+.nonterminal>.expansions>.rules>.rule>.delete {
+    float: left;
+    text-align: left;
+    background: gold;
+    margin: 1px 1px 1px 1px;
+}
+
+.nonterminal>.expansions>.rules>.rule>.title {
     background: peru;
 }
 

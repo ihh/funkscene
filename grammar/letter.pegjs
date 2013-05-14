@@ -249,24 +249,21 @@ source_character
 
 // Used to parse "hints" for randomized nonterminals as probabilistic weights
 sum_expr
-  = l:product_expr spc* "+" spc* r:sum_expr
-      { return function(ltr){return l(ltr) + r(ltr)} }
-  / l:product_expr spc* "-" spc* r:sum_expr
-      { return function(ltr){return l(ltr) - r(ltr)} }
+    = l:product_expr spc* op:("+"/"-") spc* r:sum_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
   / product_expr
 
 product_expr
-  = l:primary_expr spc* "*" spc* r:product_expr
-  { return function(ltr){return l(ltr) * r(ltr)} }
-  / l:primary_expr spc* "/" spc* r:product_expr
-  { return function(ltr){return l(ltr) / r(ltr)} }
+    = l:primary_expr spc* op:("*"/"/") spc* r:product_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+    / ("!" spc* / ("not"i spc+)) l:product_expr
+{ return new LetterWriter.ParamFunc ({op:"!",l:l}) }
   / primary_expr
 
 primary_expr
-  = n:weight       { return function(ltr){return n} }
-  / ("!" spc* / ("not"i spc+)) x:param_symbol { return function(ltr){return 1 - ltr.paramValue[x]} }
-  / x:param_symbol { return function(ltr){return ltr.paramValue[x]} }
-  / "(" spc* e:sum_expr spc* ")"  { return e; }
+    = n:weight       { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
+    / x:param_symbol { return new LetterWriter.ParamFunc ({op:"?",param:x}) }
+    / "(" spc* e:sum_expr spc* ")"  { return e; }
 
 param_symbol
   = s:symbol q:"?"?  { return s + q }

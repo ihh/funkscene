@@ -158,7 +158,7 @@ param_value
 
 param_range
     = "{" min:text "=>" max:text "}"  { return [min,max] }
-    / { return ["No","Yes"] }
+    / { return ["Never","Always"] }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }

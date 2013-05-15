@@ -37,28 +37,27 @@
     function defaultPrompt (sym) { return isAnonId(sym) ? undefined : sym.replace(/_/g, ' ') }
     function defaultStart() { return LetterWriter.defaultStart() }
 
-    function setNontermProperties(props) {
-	var lhs = currentLhs();
+    function setNontermProperties(nonterm,props) {
 	if ("preamble" in props)
-	    lhs.preamble = props.preamble;
+	    nonterm.preamble = props.preamble;
 	if ("placeholder" in props)
-	    lhs.placeholder = props.placeholder;
+	    nonterm.placeholder = props.placeholder;
 	if ("prompt" in props)
-	    lhs.prompt = props.prompt;
+	    nonterm.prompt = props.prompt;
 	if (("maxUsage" in props) && props.maxUsage > 0)
-	    lhs.maxUsage = props.maxUsage;
+	    nonterm.maxUsage = props.maxUsage;
 	if ("modifiers" in props)
 	    for (var i = 0; i < props.modifiers.length; ++i)
-		extend (lhs, props.modifiers[i]);
+		extend (nonterm, props.modifiers[i]);
 
-	if (lhs.random) {
-	    if (lhs.commit) {
-		console.log ("In @" + lhs.id + ": can't commit at randomized choices. Clearing 'commit', keeping 'random'")
-		lhs.commit = false
+	if (nonterm.random) {
+	    if (nonterm.commit) {
+		console.log ("In @" + nonterm.id + ": can't commit at randomized choices. Clearing 'commit', keeping 'random'")
+		nonterm.commit = false
 	    }
-	    if (lhs.pause) {
-		console.log ("In @" + lhs.id + ": can't pause at randomized choices. Clearing 'pause', keeping 'random'")
-		lhs.pause = false
+	    if (nonterm.pause) {
+		console.log ("In @" + nonterm.id + ": can't pause at randomized choices. Clearing 'pause', keeping 'random'")
+		nonterm.pause = false
 	    }
 	}
 
@@ -77,6 +76,12 @@
 
     function makeNontermReference(sym,props) {
 	return getNontermObject(sym).makeReference(props).sanitizeQualifiers()
+    }
+
+    function makeAnonNontermReference(sym,props) {
+	var anon = getNontermObject(sym)
+	setNontermProperties(anon,props)
+	return anon.makeReference({}).sanitizeQualifiers()
     }
 
     function getStart() {
@@ -160,7 +165,7 @@ nonterm_symbol
 rule
  = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifiers spc* &{return pushLhs(lhs)}
    n:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
-   &{return setNontermProperties(extend(extend({maxUsage:n,modifiers:mods},q),ppp))}
+   &{return setNontermProperties(currentLhs(),extend(extend({maxUsage:n,modifiers:mods},q),ppp))}
    "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
@@ -192,12 +197,12 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = ppp:preamble_placeholder_prompt sym:nonterm_or_anon q:sym_modifiers { return makeNontermReference(sym,extend(ppp,q)) }
+ = ppp:preamble_placeholder_prompt sym:nonterm_symbol q:sym_modifiers { return makeNontermReference(sym,extend(ppp,q)) }
+ / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifiers { return makeAnonNontermReference(sym,extend(ppp,q)) }
  / text:text  { return makeTerm(text) }
 
-nonterm_or_anon
- = nonterm_symbol
- / "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
+anonymous_nonterm
+ = "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
 
 preamble_placeholder_prompt
  = "[" preamble:text "|" placeholder:text? "|" prompt:text "]" spc* { return {preamble:preamble, placeholder:placeholder, prompt:prompt}; }

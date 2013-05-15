@@ -69,9 +69,10 @@
     }
 
     function getNontermObject(sym) {
+	sym = "" + sym;  // force string
 	if (!(sym in nontermObj))
-	    nontermObj[sym] = new LetterWriter.Nonterm(sym,defaultPrompt(sym),isAnonId(sym));
-	return nontermObj[sym];
+	    nontermObj[sym.toLowerCase()] = new LetterWriter.Nonterm(sym,defaultPrompt(sym),isAnonId(sym));
+	return nontermObj[sym.toLowerCase()];
     }
 
     function makeNontermReference(sym,props) {
@@ -160,7 +161,7 @@ param_range
     / { return [LetterWriter.defaultNever,LetterWriter.defaultAlways] }
 
 nonterm_symbol
- = "@" s:symbol  { return s; }
+    = "@" s:symbol  { return s.toLowerCase(); }
 
 rule
  = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifiers spc* &{return pushLhs(lhs)}
@@ -272,7 +273,7 @@ product_expr
 
 primary_expr
     = n:weight  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / x:symbol  { return new LetterWriter.ParamFunc ({op:"?",param:x}) }
+    / x:symbol  { return new LetterWriter.ParamFunc ({op:"?",param:x.toLowerCase()}) }
     / "(" spc* e:sum_expr spc* ")"  { return e; }
 
 weight

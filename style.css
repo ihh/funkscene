@@ -580,6 +580,7 @@ h5 {
     margin: 2px 2px 0px 2px;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size:small;
+    position:relative;
 }
 
 .nonterminal>.main {
@@ -590,6 +591,19 @@ h5 {
     margin: 1px 1px 1px 1px;
     clear: both;
     width: 100%;
+}
+
+.nonterminal>.deleteNonterminal {
+    float: right;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
+    font-style:italic;
+    position:absolute;
+    bottom:0;
+    right:0;
+    white-space: nowrap;
+    text-align:right;
+    padding: 1em;
 }
 
 .nonterminal>.properties {
@@ -663,7 +677,7 @@ h5 {
     margin: 1px 1px 1px 1px;
 }
 
-.nonterminal>.expansions>.rules>.rule>.delete {
+.nonterminal>.expansions>.rules>.rule>.deleteRule {
     width: 7%;
     float: left;
     text-align: left;

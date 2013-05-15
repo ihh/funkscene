@@ -1,9 +1,12 @@
 
 /*  Main body */
+html, body {
+    border: 0px;
+}
+
 html, body, select, select>option {
     margin: 0px; 
     padding: 0px;
-    border: 0px;
     background-color: #f0f0f0;
     color: black;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;

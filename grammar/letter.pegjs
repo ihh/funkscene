@@ -39,6 +39,8 @@
 
     function setNontermProperties(props) {
 	var lhs = currentLhs();
+	if ("preamble" in props)
+	    lhs.preamble = props.preamble;
 	if ("placeholder" in props)
 	    lhs.placeholder = props.placeholder;
 	if ("prompt" in props)
@@ -157,8 +159,8 @@ nonterm_symbol
 
 rule
  = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifiers spc* &{return pushLhs(lhs)}
-   n:max_count? "=>" spc* pp:placeholder_prompt spc*
-   &{return setNontermProperties(extend(extend({maxUsage:n,modifiers:mods},q),pp))}
+   n:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
+   &{return setNontermProperties(extend(extend({maxUsage:n,modifiers:mods},q),ppp))}
    "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
@@ -190,15 +192,16 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = pp:placeholder_prompt sym:nonterm_or_anon q:sym_modifiers { return makeNontermReference(sym,extend(pp,q)) }
+ = ppp:preamble_placeholder_prompt sym:nonterm_or_anon q:sym_modifiers { return makeNontermReference(sym,extend(ppp,q)) }
  / text:text  { return makeTerm(text) }
 
 nonterm_or_anon
  = nonterm_symbol
  / "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
 
-placeholder_prompt
- = "[" placeholder:text "|" prompt:text "]" spc* { return {placeholder:placeholder, prompt:prompt}; }
+preamble_placeholder_prompt
+ = "[" preamble:text "|" placeholder:text "|" prompt:text "]" spc* { return {preamble:preamble, placeholder:placeholder, prompt:prompt}; }
+ / "[" placeholder:text "|" prompt:text "]" spc* { return {placeholder:placeholder, prompt:prompt}; }
  / "[" prompt:text "]" spc* { return {prompt:prompt}; }
  / { return {}; }
 

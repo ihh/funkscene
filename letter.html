@@ -21,8 +21,7 @@
       </span>
 
       <br><br><br><br>
-      <div id="slidersParent" style="display:none">
-      </div>
+      <div id="slidersParent" style="display:none"></div>
 
       <br><br><br>
     </div>
@@ -30,8 +29,11 @@
 
 
     <div id="editor">
-      <small><i><a href="#" onclick="rebuild()">Restart Writer</a></i>
+      <small><i><a href="#" onclick="rebuild()">Restart</a></i>
+	<h4>Sliders</h4>
       <div id="editorParams"></div>
+      <i><a href="#" id="addSliderLink">Add another slider</a></i>
+	<h4>Phrasebook</h4>
       <div id="editorList"></div>
     </div>
 
@@ -41,7 +43,7 @@
 	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
 	</small>
 	<br>
-	<textarea id="template" rows="50" columns="80" style="width: 100%; min-height: 400px; vertical-align: text-top">
+	<textarea id="template" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
 	</textarea>
 	<small><br><div id="TemplateSyntax"></div></small>
       </div>

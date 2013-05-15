@@ -142,7 +142,7 @@ param_decl
  = "param" spc+ param_list spc*
 
 param_list
-    = p:param_symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
+    = p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
 
 param_value
     = "=" spc* v:weight  { return v }
@@ -150,7 +150,7 @@ param_value
 
 param_range
     = "{" min:text "=>" max:text "}"  { return [min,max] }
-    / { return ["Never","Always"] }
+    / { return [LetterWriter.defaultNever,LetterWriter.defaultAlways] }
 
 nonterm_symbol
  = "@" s:symbol  { return s; }
@@ -263,12 +263,9 @@ product_expr
   / primary_expr
 
 primary_expr
-    = n:weight       { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / x:param_symbol { return new LetterWriter.ParamFunc ({op:"?",param:x}) }
+    = n:weight  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
+    / x:symbol  { return new LetterWriter.ParamFunc ({op:"?",param:x}) }
     / "(" spc* e:sum_expr spc* ")"  { return e; }
-
-param_symbol
-  = s:symbol q:"?"?  { return s + q }
 
 weight
  = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }

@@ -504,6 +504,15 @@ html, body {
     width: 100%;
 }
 
+/* Editor headings */
+h4 {
+    -webkit-margin-before: 0em;
+    -webkit-margin-after: 0em;
+
+    -moz-margin-before: 0em;
+    -moz-margin-after: 0em;
+}
+
 /* NontermEditor */
 #editor {
     margin: 0 20px 0 20px; /* top right bottom left */
@@ -521,15 +530,22 @@ html, body {
 
 .editorSlider {
     width: 80%;
-    float: right;
+    float: left;
 }
 
 .editorSliderLabel {
     text-align: right;
+    float: right;
 }
 
 .editorSliderAndLabel {
-    width: 55%;
+    width: 90%;
+    float: left;
+    clear: left;
+}
+
+.editorSliderDeleteLink {
+    padding-left: 20px;
     float: right;
 }
 
@@ -539,7 +555,7 @@ html, body {
     box-shadow: 0 0 2px #888;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    padding: 10px 20px 10px 20px;
+    padding: 1em 2em 2em 2em;
 }
 
 .nonterminal {
@@ -595,7 +611,7 @@ html, body {
 }
 
 .nonterminal>.expansions>.rules>.rule>.hint {
-    width: 20%;
+    width: 18%;
     float: left;
     clear: left;
     text-align: left;
@@ -604,7 +620,7 @@ html, body {
 }
 
 .nonterminal>.expansions>.rules>.rule>.rhs {
-    width: 70%;
+    width: 65%;
     float: left;
     text-align: left;
     background: teal;
@@ -620,6 +636,7 @@ html, body {
 }
 
 .nonterminal>.expansions>.rules>.rule>.delete {
+    width: 7%;
     float: left;
     text-align: left;
     background: gold;

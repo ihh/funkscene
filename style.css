@@ -582,7 +582,7 @@ h5 {
     font-size:small;
 }
 
-.nonterminal>.preamble {
+.nonterminal>.main {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: medium;
     float: left;

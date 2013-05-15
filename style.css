@@ -582,6 +582,16 @@ h4 {
     font-size:small;
 }
 
+.nonterminal>.preamble {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size: medium;
+    float: left;
+    background: lavenderblush;
+    margin: 1px 1px 1px 1px;
+    clear: both;
+    width: 100%;
+}
+
 .nonterminal>.properties {
     width: 19%;
     float: left;

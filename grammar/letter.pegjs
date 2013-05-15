@@ -200,7 +200,7 @@ nonterm_or_anon
  / "{" &{return pushLhs(makeAnonId())} rhs_list "}"  { return popLhs(); }
 
 preamble_placeholder_prompt
- = "[" preamble:text "|" placeholder:text "|" prompt:text "]" spc* { return {preamble:preamble, placeholder:placeholder, prompt:prompt}; }
+ = "[" preamble:text "|" placeholder:text? "|" prompt:text "]" spc* { return {preamble:preamble, placeholder:placeholder, prompt:prompt}; }
  / "[" placeholder:text "|" prompt:text "]" spc* { return {placeholder:placeholder, prompt:prompt}; }
  / "[" prompt:text "]" spc* { return {prompt:prompt}; }
  / { return {}; }

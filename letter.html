@@ -43,7 +43,7 @@
 	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
 	</small>
 	<br>
-	<textarea id="template" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
+	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
 	</textarea>
 	<small><br><div id="TemplateSyntax"></div></small>
       </div>
@@ -61,7 +61,7 @@
 
     <script type="text/javascript">
 var g, l, e, template;
-template = document.getElementById("template")
+template = document.getElementById("editorTemplate")
 
 function rebuildFromText() {
     g = new LetterWriter.Grammar(template.value)

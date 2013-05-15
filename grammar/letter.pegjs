@@ -251,12 +251,12 @@ source_character
 
 // Used to parse "hints" for randomized nonterminals as probabilistic weights
 sum_expr
-    = l:product_expr spc* op:("+"/"-") spc* r:sum_expr
+    = l:product_expr spc* op:("+"/"-"/"or"i) spc* r:sum_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
   / product_expr
 
 product_expr
-    = l:primary_expr spc* op:("*"/"/") spc* r:product_expr
+    = l:primary_expr spc* op:("*"/"/"/"and"i/"vs"i) spc* r:product_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
     / ("!" spc* / ("not"i spc+)) l:product_expr
 { return new LetterWriter.ParamFunc ({op:"!",l:l}) }

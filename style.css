@@ -1,12 +1,20 @@
 
 /*  Main body */
-html, body {
+html, body, select, select>option {
     margin: 0px; 
     padding: 0px;
     border: 0px;
     background-color: #f0f0f0;
     color: black;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+select, select>option {
+    font-size: medium;
+}
+
+textarea {
+    font-family: "Courier", monospace;
 }
 
 /* Sliders for LetterWriter (overriding JQuery font) */
@@ -556,6 +564,13 @@ h4 {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     padding: 1em 2em 2em 2em;
+}
+
+.editorSliderContainer form>input {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    font-size:small;
+    margin: 0px;
+    padding: 0px;
 }
 
 .nonterminal {

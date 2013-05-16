@@ -11,22 +11,26 @@
   <body>
 
     <!-- Game container -->
-    <div id="gameContainer">
-      <div id="undo" class="letter undo"></div>
-      <h1>The Letter</h1>
+    <div id="letterDebugger">
+      <div id="parseTreeContainer">Parse tree</div>
+      <div id="gameAndMapContainer">
+	<div id="gameContainer">
+	  <div id="undo" class="letter undo"></div>
+	  <h1>The Letter</h1>
+	
+	  <span id="letter">
+	    <!-- Preloading animation from http://preloaders.net/ -->
+	    <br> Loading... <br> <br> <img src="img/loading.gif">
+	  </span>
 
-      <span id="letter">
-	<!-- Preloading animation from http://preloaders.net/ -->
-	<br> Loading... <br> <br> <img src="img/loading.gif">
-      </span>
+	  <br><br><br><br>
+	  <div id="slidersParent" style="display:none"></div>
 
-      <br><br><br><br>
-      <div id="slidersParent" style="display:none"></div>
-
-      <br><br><br>
+	  <br><br><br>
+	</div>
+	<div id="mapContainer">Map</div>
+      </div>
     </div>
-
-
 
     <div id="editor">
       <small><i><a href="#" onclick="rebuild()">Restart</a></i></small>

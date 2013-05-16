@@ -1,3 +1,4 @@
+/* Common stuff */
 
 /*  Main body */
 html, body {
@@ -65,13 +66,14 @@ textarea {
     padding: 10px 20px 10px 20px;
 }
 
-/* Game */
+/* Basic FunkScene game */
 #gameContainer {
     max-width: 700px;
     margin: 10px auto; 
     padding: 0 10px;
 }
 
+/* FunkScene game + debugger */
 #debugContainer {
     min-width: 1200px;
     margin: 0 20px 0 20px; /* top right bottom left */
@@ -466,6 +468,11 @@ textarea {
     user-select: none;
 }
 
+
+
+
+/* LetterWriter */
+
 /* Fade-in for LetterWriter */
 /* Unfortunately this does not seem to work, so we do the fade manually */
 
@@ -528,6 +535,7 @@ h5 {
 #editor {
     margin: 0 20px 0 20px; /* top right bottom left */
     padding: 0;
+    clear: both;
 }
 
 #editorList {
@@ -724,4 +732,45 @@ body>.ui-tooltip {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: small;
     font-style: italic;
+}
+
+/* LetterWriter debugger */
+#letterDebugger {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#letterDebugger>#parseTreeContainer {
+    width: 20%;
+    float: left;
+    background: red;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#letterDebugger>#gameAndMapContainer {
+    width: 80%;
+    float: left;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#letterDebugger>#gameAndMapContainer>#gameContainer {
+    width: 50%;
+    float: left;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+#letterDebugger>#gameAndMapContainer>#mapContainer {
+    width: 50%;
+    float: left;
+    background: blue;
+    margin: 0;
+    padding: 0;
+    border: 0;
 }

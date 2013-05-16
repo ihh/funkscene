@@ -624,8 +624,7 @@ function Graph() {
           e[k] = +params[k];
           break;
         case 'color':
-          e[k] = params[k].toString();
-          break;
+        case 'arrow':
         case 'type':
           e[k] = params[k].toString();
           break;
@@ -655,6 +654,7 @@ function Graph() {
       'target': edge['target']['id'],
       'size': edge['size'],
       'type': edge['type'],
+      'arrow': edge['arrow'],
       'weight': edge['weight'],
       'displaySize': edge['displaySize'],
       'label': edge['label'],
@@ -693,6 +693,7 @@ function Graph() {
           break;
         case 'color':
         case 'label':
+        case 'arrow':
         case 'type':
           edge[k] = (copy[k] || '').toString();
           break;
@@ -876,9 +877,9 @@ function Graph() {
       node['displaySize'] = node['displaySize'] * sizeRatio;
     });
 
-    sizeRatio = Math.pow(ratio, self.p.edgesPowRatio);
     parseEdges && self.edges.forEach(function(edge) {
-      edge['displaySize'] = edge['displaySize'] * sizeRatio;
+      edge['displaySize'] = edge['displaySize'] * Math.pow(ratio, self.p.edgesPowRatio);
+      edge['arrowDisplaySize'] = edge['displaySize'] * 3 * sizeRatio;     // (edge['displaySize']+1) * 2.5 * sizeRatio;
     });
 
     return self;
@@ -1672,6 +1673,7 @@ function Plotter(nodesCtx, edgesCtx, labelsCtx, hoverCtx, graph, w, h) {
     edgeColor: 'source',
     defaultEdgeColor: '#aaa',
     defaultEdgeType: 'line',
+    defaultEdgeArrow: 'none',
     // ------
     // NODES:
     // ------
@@ -1874,10 +1876,8 @@ function Plotter(nodesCtx, edgesCtx, labelsCtx, hoverCtx, graph, w, h) {
    * @return {Plotter} Returns itself.
    */
   function drawEdge(edge) {
-    var x1 = edge['source']['displayX'];
-    var y1 = edge['source']['displayY'];
-    var x2 = edge['target']['displayX'];
-    var y2 = edge['target']['displayY'];
+    var sourceCoordinates = [edge['source']['displayX'], edge['source']['displayY']]; // using array for coordinates so we can easily modify/return from applyArrow()
+    var targetCoordinates = [edge['target']['displayX'], edge['target']['displayY']]; // using array for coordinates so we can easily modify/return from applyArrow()
     var color = edge['color'];
 
     if (!color) {
@@ -1901,22 +1901,44 @@ function Plotter(nodesCtx, edgesCtx, labelsCtx, hoverCtx, graph, w, h) {
     switch (edge['type'] || self.p.defaultEdgeType) {
       case 'curve':
         ctx.strokeStyle = color;
+
+        var controlPointX = (sourceCoordinates[0] + targetCoordinates[0]) / 2 + (targetCoordinates[1] - sourceCoordinates[1]) / 4;
+        var controlPointY = (sourceCoordinates[1] + targetCoordinates[1]) / 2 + (sourceCoordinates[0] - targetCoordinates[0]) / 4;
+
+        if (isArrowDrawRequired('source', edge['arrow'])) {
+          sourceCoordinates = applyArrow(ctx, sourceCoordinates, edge['source']['displaySize'], controlPointX, controlPointY, edge['arrowDisplaySize']);  // assignment is redundant here but makes it clear that this call mutates sourceCoordinates
+        }
+        
+        if (isArrowDrawRequired('target', edge['arrow'])) {
+          targetCoordinates = applyArrow(ctx, targetCoordinates, edge['target']['displaySize'], controlPointX, controlPointY, edge['arrowDisplaySize']);  // assignment is redundant here but makes it clear that this call mutates targetCoordinates
+        }
+
         ctx.lineWidth = edge['displaySize'] / 3;
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.quadraticCurveTo((x1 + x2) / 2 + (y2 - y1) / 4,
-                             (y1 + y2) / 2 + (x1 - x2) / 4,
-                             x2,
-                             y2);
+        ctx.moveTo(sourceCoordinates[0], sourceCoordinates[1]);
+        ctx.quadraticCurveTo(controlPointX,
+                             controlPointY,
+                             targetCoordinates[0],
+                             targetCoordinates[1]);
+        
         ctx.stroke();
         break;
       case 'line':
       default:
         ctx.strokeStyle = color;
+
+        if (isArrowDrawRequired('source', edge['arrow'])) {
+          sourceCoordinates = applyArrow(ctx, sourceCoordinates, edge['source']['displaySize'], targetCoordinates[0], targetCoordinates[1], edge['arrowDisplaySize']);  // assignment is redundant here but makes it clear that this call mutates sourceCoordinates
+        }
+        
+        if (isArrowDrawRequired('target', edge['arrow'])) {
+          targetCoordinates = applyArrow(ctx, targetCoordinates, edge['target']['displaySize'], sourceCoordinates[0], sourceCoordinates[1], edge['arrowDisplaySize']);  // assignment is redundant here but makes it clear that this call mutates targetCoordinates
+        }
+
         ctx.lineWidth = edge['displaySize'] / 3;
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
+        ctx.moveTo(sourceCoordinates[0], sourceCoordinates[1]);
+        ctx.lineTo(targetCoordinates[0], targetCoordinates[1]);
 
         ctx.stroke();
         break;
@@ -2170,7 +2192,45 @@ function Plotter(nodesCtx, edgesCtx, labelsCtx, hoverCtx, graph, w, h) {
     height = h;
 
     return self;
-  }
+  };
+
+  /**
+   * Helper function that tells us if a 'source'/'target' arrow setting applies, based on active edge/plotter settings.
+   * @param  {string}  arrowheadLocation  'source' or 'target'.
+   * @param  {string}  edgeArrowSetting   arrow setting ('none','source','target','both') on the edge itself, if any.
+   * @return {boolean} Returns true if draw is required for the passed-in arrowheadLocation.
+   */
+  function isArrowDrawRequired(arrowheadLocation, edgeArrowSetting) {
+    return (edgeArrowSetting == arrowheadLocation || edgeArrowSetting == 'both' || (!edgeArrowSetting && (self.p.defaultEdgeArrow == arrowheadLocation || self.p.defaultEdgeArrow == 'both')));
+  };
+
+  /**
+   * Helper function that draws an arrowhead at a node's border based on the node's center coordinates and size, as well as a set of "control" coordinates. Future implementations could add a nodeShape parm to this function. For efficiency, nodeCoordinates parm is mutated according to calculated arrowhead tip coordinates.
+   * @param {CanvasRenderingContext2D} ctx  The context within which to draw arrows.
+   * @param {Array} nodeCoordinates         [x,y] coordinate of center of node. THIS FUNCTION ADJUSTS THE COORDINATES IN THIS ARRAY TO MATCH THE INTERSECTION BETWEEN THE NODE BORDER AND THE LINE FROM THE CENTER OF THE NODE TO THE CONTROL COORDINATES. Parm mutation here favors performance but may be considered bad form in the general case.
+   * @param {number} nodeSize               The size of the node. For circle nodes (the only supported node shape as of 2013-05-14), size is radius.
+   * @param {number} controlX               x-coordinate of the control point.
+   * @param {number} controlY               y-coordinate of the control point.
+   * @param {number} size                   length of arrowhead.
+   * @return {Array} Returns the mutated (arrowhead) coordinates.
+   */
+  function applyArrow(ctx, nodeCoordinates, nodeSize, controlX, controlY, size) {
+    // calculate and re-assign edge connection coordinates (at node border instead of node center)
+    var xDiff = nodeCoordinates[0]-controlX;
+    var yDiff = nodeCoordinates[1]-controlY;
+
+    var ratio = nodeSize/Math.sqrt(xDiff*xDiff+yDiff*yDiff);
+
+    nodeCoordinates[0] = nodeCoordinates[0]-xDiff*ratio;
+    nodeCoordinates[1] = nodeCoordinates[1]-yDiff*ratio;
+
+    // draw arrowhead
+    ctx.lineWidth=0;
+    ctx.fillStyle=ctx.strokeStyle;
+    sigma.tools.drawArrowhead(ctx, nodeCoordinates[0], nodeCoordinates[1], size, sigma.tools.getIncidenceAngle(controlX, controlY, nodeCoordinates[0], nodeCoordinates[1]));
+    
+    return nodeCoordinates;
+  };
 
   this.task_drawLabel = task_drawLabel;
   this.task_drawEdge = task_drawEdge;
@@ -3500,6 +3560,34 @@ sigma.tools.drawRoundRect = function(ctx, x, y, w, h, ellipse, corners) {
   ctx.lineTo(x, y + e);
 };
 
+/**
+ * Draws a filled arrowhead shape to the corresponding canvas.
+ * @param  {CanvasRenderingContext2D} ctx  The context within which to draw the arrowhead.
+ * @param  {number} x0                     The x-coordinate of the tip of the arrowhead.
+ * @param  {number} y0                     The y-coordinate of the tip of the arrowhead.
+ * @param  {number} size                   The length of the arrowhead.
+ * @param  {number} rotationAngle          The angle of rotation of the arrowhead, in degrees.
+ * @return {undefined} 
+ */
+sigma.tools.drawArrowhead = function(ctx, x0, y0, size, rotationAngle) {
+  var ARROW_SHARPNESS = 22;  // angle between one side of arrowhead and shaft
+
+  ctx.beginPath();
+
+  ctx.moveTo(x0, y0);
+
+  // (Math.PI / 180) === 0.017453292519943295 
+  var x1 = x0 + Math.cos(0.017453292519943295 * (ARROW_SHARPNESS + rotationAngle)) * size; 
+  var y1 = y0 + Math.sin(0.017453292519943295 * (ARROW_SHARPNESS + rotationAngle)) * size; 
+  var x2 = x0 + Math.cos(0.017453292519943295 * (rotationAngle - ARROW_SHARPNESS)) * size; 
+  var y2 = y0 + Math.sin(0.017453292519943295 * (rotationAngle - ARROW_SHARPNESS)) * size; 
+
+  ctx.lineTo(x1, y1);
+  ctx.quadraticCurveTo((x0 + x1 + x2) / 3, (y0 + y1 + y2) / 3, x2, y2);
+  ctx.lineTo(x0, y0);
+  ctx.fill();
+};
+
 sigma.tools.getRGB = function(s, asArray) {
   s = s.toString();
   var res = {
@@ -3553,6 +3641,17 @@ sigma.tools.toHex = function(n) {
          '0123456789ABCDEF'.charAt(n % 16);
 };
 
+/**
+ * Provides the angle of incidence of the end point of a line or quadratic curve, in degrees. 
+ * @param  {number} x1  The x-coordinate of the start point of the line or control point of the quadratic curve.
+ * @param  {number} y1  The y-coordinate of the start point of the line or control point of the quadratic curve.
+ * @param  {number} x2  The x-coordinate of the line or quadratic curve end point.
+ * @param  {number} y2  The y-coordinate of the line or quadratic curve end point.
+ * @return {number}     Returns the angle of incidence of the end point of the line or quadratic curve cooresponding to the coordinate parms, in degrees.
+ */
+sigma.tools.getIncidenceAngle = function(x1, y1, x2, y2) {
+    return (x1 <= x2 ? 180 : 0) + Math.atan(((y2 - y1) / (x2 - x1))) * 180 / Math.PI;
+};
 sigma.publicPrototype = SigmaPublic.prototype;
 })();
 

@@ -743,8 +743,8 @@ body>.ui-tooltip {
 
 #letterDebugger>#editorParseTree {
     width: 20%;
+    min-height: 600px;
     float: left;
-    background: red;
     margin: 0;
     padding: 0;
     border: 0;

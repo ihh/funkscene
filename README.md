@@ -19,25 +19,6 @@ If you want to modify the compiler you will need [PegJS](http://pegjs.majda.cz/)
 
 The minimal [demo code](https://github.com/ihh/funkscene/blob/master/scene/belsidore.scene) is usually running at [tinyurl.com/funkscene](http://tinyurl.com/funkscene).
 
-Acknowledgements
-----------------
-
-As well as the abovementioned [PegJS](http://pegjs.majda.cz/),
-FunkScene borrows bits and pieces from several open source projects:
-
-* [Dan Fabulich's CSS](http://www.choiceofgames.com/make-your-own-games/choicescript-intro/) at choiceofgames.com
- * ChoiceScript was a major influence; citing the CSS does poor justice. No other code was directly ripped, but the basic CYO-DSL structure is highly ChoiceScriptEsque
-* [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
-* [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
-
-An earlier prototype, [Schooz](https://github.com/ihh/schooz),
-started as an investigation of functional programming techniques for CYO.
-(A purists' CYO FP language, useful e.g. for didactic purposes, might look a bit more like Logo+ChoiceScript+Markdown,
-rather than JavaScript+ChoiceScript+Markdown+lots of game-oriented hacks.)
-
-The nascent debugger (such as it is) was influenced by InkleWriter and Twine,
-and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js) graph rendering library.
-
 The FunkScene Language
 ======================
 
@@ -777,4 +758,26 @@ Several helper functions and data structures are defined as methods and members 
 * The `restore` method can be used to replay a history.
 * The `continuationScene` method can be overridden to implement a different system for scheduling scenes with `#CONTINUE`.
 * The `sceneTextToHtml` method can be overridden to implement a different text markup.
+
+
+Acknowledgements
+----------------
+
+As well as the abovementioned [PegJS](http://pegjs.majda.cz/),
+FunkScene borrows bits and pieces from several Open Source and/or Creative Commons-licensed projects:
+
+* [Dan Fabulich's CSS](http://www.choiceofgames.com/make-your-own-games/choicescript-intro/) at choiceofgames.com
+ * ChoiceScript was a major influence; citing the CSS does poor justice. No other code was directly ripped, but the basic CYO-DSL structure is highly ChoiceScriptEsque
+* [lorc's free collection of game icons](http://game-icons.net/) at game-icons.net
+* [Chris Coyier's CSS3 progress bars](http://css-tricks.com/css3-progress-bars/) at css-tricks.com
+* The loading animation is from http://preloaders.net/
+* The warning icon is from http://www.small-icons.com/stock-icons/16x16-free-toolbar-icons.htm
+
+An earlier prototype, [Schooz](https://github.com/ihh/schooz),
+started as an investigation of functional programming techniques for CYO.
+(A purists' CYO FP language, useful e.g. for didactic purposes, might look a bit more like Logo+ChoiceScript+Markdown,
+rather than JavaScript+ChoiceScript+Markdown+lots of game-oriented hacks.)
+
+The nascent debugger (such as it is) was influenced by InkleWriter and Twine,
+and uses Alexis Jacomy's [sigma.js](https://github.com/jacomyal/sigma.js) graph rendering library.
 

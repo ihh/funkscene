@@ -5,7 +5,7 @@ html, body {
     border: 0px;
 }
 
-html, body, select, select>option {
+html, body, select, select>option, ul, ul>li {
     margin: 0px; 
     padding: 0px;
     background-color: #f0f0f0;

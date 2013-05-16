@@ -741,7 +741,7 @@ body>.ui-tooltip {
     border: 0;
 }
 
-#letterDebugger>#parseTreeContainer {
+#letterDebugger>#editorParseTree {
     width: 20%;
     float: left;
     background: red;
@@ -766,10 +766,10 @@ body>.ui-tooltip {
     border: 0;
 }
 
-#letterDebugger>#gameAndMapContainer>#mapContainer {
+#letterDebugger>#gameAndMapContainer>#editorMap {
     width: 50%;
+    min-height: 600px;
     float: left;
-    background: blue;
     margin: 0;
     padding: 0;
     border: 0;

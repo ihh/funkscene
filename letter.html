@@ -6,13 +6,16 @@
     <!-- JQuery UI theme -->
     <link href="jquery/themes/base/jquery-ui.css" rel="stylesheet">
 
+    <!-- sigma.js graph library -->
+    <script type="text/javascript" src="sigma/sigma.concat.js"></script>
+
     <title>The Letter</title>
   </head>
   <body>
 
     <!-- Game container -->
     <div id="letterDebugger">
-      <div id="parseTreeContainer">Parse tree</div>
+      <div id="editorParseTree">Parse tree</div>
       <div id="gameAndMapContainer">
 	<div id="gameContainer">
 	  <div id="undo" class="letter undo"></div>
@@ -28,7 +31,7 @@
 
 	  <br><br><br>
 	</div>
-	<div id="mapContainer">Map</div>
+	<div id="editorMap">Map</div>
       </div>
     </div>
 
@@ -68,7 +71,7 @@ var g, l, e, template;
 template = document.getElementById("editorTemplate")
 
 function rebuildFromText() {
-    g = new LetterWriter.Grammar(template.value)
+    g = new LetterWriter.Grammar(template.value).normalize()
     e.remove()
     e = g.newEditor()
     rebuild()
@@ -86,7 +89,7 @@ $(function(){
     xhr.send();
     $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
 
-    g = LetterWriter.Grammar.newFromUrl("template/king.letter")
+    g = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
     template.value = g.toCanonicalString()
     l = g.clone().newLetter()
     e = g.newEditor()

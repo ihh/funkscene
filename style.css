@@ -656,14 +656,27 @@ h5 {
 
 .nonterminal>.expansions>.addlink {
     float: left;
-    clear: left;
     background: thistle;
+}
+
+.hintWarning {
+    width: 16px;
+    height: 16px;
+    float: left;
+    clear: left;
+    background: yellow;
+}
+
+.rhsWarning {
+    width: 16px;
+    height: 16px;
+    float: left;
+    background: yellow;
 }
 
 .nonterminal>.expansions>.rules>.rule>.hint {
     width: 18%;
     float: left;
-    clear: left;
     text-align: left;
     background: olive;
     margin: 1px 1px 1px 1px;

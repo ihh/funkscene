@@ -19,6 +19,16 @@ select, select>option {
 
 textarea {
     font-family: "Courier", monospace;
+
+    border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+input {
+    border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
 
 /* Sliders for LetterWriter (overriding JQuery font) */
@@ -595,7 +605,7 @@ h5 {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: medium;
     float: left;
-    background: lavenderblush;
+    background: lemonchiffon;
     margin: 1px 1px 1px 1px;
     clear: both;
     width: 100%;
@@ -617,16 +627,26 @@ h5 {
 .nonterminal>.properties {
     width: 19%;
     float: left;
-    background: green;
-    margin: 2px 1px 2px 2px;
     font-size: small;
+/*
+    background: green;
+    margin: 1px 1px 1px 1px;
+*/
+    background: moccasin;
+    border: 1px solid;
+    border-radius: 4px 0 4px 0;
+    box-shadow: 0 0 2px #888;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
 
 .nonterminal>.properties>.property {
     width: 98%;
     float: left;
+/*
     background: orange;
     margin: 1px 1px 1px 1px;
+*/
 }
 
 .nonterminal>.properties>.property>.propname {
@@ -634,29 +654,43 @@ h5 {
     float: left;
     clear: left;
     text-align: right;
+/*
     background: pink;
     margin: 1px 1px 1px 1px;
+*/
 }
 
 .nonterminal>.properties>.property>.propvalue {
-    width: 70%;
+    width: 66%;
     float: left;
     text-align: left;
+/*
     background: floralwhite;
     margin: 1px 1px 1px 1px;
+*/
 }
 
 .nonterminal>.expansions {
     width: 79%;
     float: right;
+    font-size: small;
+/*
     background: blue;
     margin: 2px 2px 2px 1px;
-    font-size: small;
+*/
+    background: moccasin;
+    border: 1px solid;
+    border-radius: 4px 0 4px 0;
+    box-shadow: 0 0 2px #888;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
 
 .nonterminal>.expansions>.addlink {
     float: left;
+/*
     background: thistle;
+*/
 }
 
 .hintWarning {
@@ -664,50 +698,80 @@ h5 {
     height: 16px;
     float: left;
     clear: left;
+    padding-right: 1px;
+    padding-left: 4px;
+/*
     background: yellow;
+*/
 }
 
 .rhsWarning {
     width: 16px;
     height: 16px;
     float: left;
+    padding-right: 1px;
+    padding-left: 4px;
+/*
     background: yellow;
+*/
 }
 
 .nonterminal>.expansions>.rules>.rule>.hint {
     width: 18%;
     float: left;
     text-align: left;
+/*
     background: olive;
-    margin: 1px 1px 1px 1px;
+*/
+    margin: 1px 0 1px 0;
+}
+
+.playerHint {
+    background: palegoldenrod;
+}
+
+.computerHint {
+    background: lavender;
 }
 
 .nonterminal>.expansions>.rules>.rule>.rhs {
     width: 65%;
     float: left;
     text-align: left;
+/*
     background: teal;
-    margin: 1px 1px 1px 1px;
+*/
+    margin: 1px 0 1px 0;
+}
+
+.nonterminal>.expansions>.rules>.rule>.rhs textarea {
+    background: lemonchiffon;
 }
 
 .nonterminal>.expansions>.rules>.rule>.limit {
     width: 4%;
     float: left;
     text-align: left;
+/*
     background: skyblue;
     margin: 1px 1px 1px 1px;
+*/
 }
 
 .nonterminal>.expansions>.rules>.rule>.deleteRule {
     width: 7%;
     float: left;
     text-align: left;
+/*
     background: gold;
     margin: 1px 1px 1px 1px;
+*/
 }
 
 .nonterminal>.expansions>.rules>.rule>.title {
+/*
     background: peru;
+*/
 }
 
 .nonterminal form {

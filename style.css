@@ -601,28 +601,48 @@ h5 {
     position:relative;
 }
 
-.nonterminal>.NontermControl {
+.NontermControl {
     clear: both;
     min-height: 1em;
 }
 
-.nonterminal>.NontermControl>.NontermControlName {
-    width: 6em;
+.NontermControl>.NontermControlName {
+    width: 8%;
     float: left;
     margin: 0;
     padding: 0;
     text-align:right;
 }
 
-.nonterminal>.NontermControl>.NontermControlValue {
+.NontermControl>.NontermControlValue {
     min-height: 1em;
-    min-width: 1em;
+    min-width: 90%;
     float: left;
     margin: 0;
     padding: 0;
 }
 
-.nonterminal>.NontermControl>.NontermControlWarning {
+.idPropertyEditor { clear: none; width: 20% }
+.idPropertyEditor>.NontermControlName { min-width: 40% }
+.idPropertyEditor>.NontermControlValue { min-width: 20% }
+
+.pausePropertyEditor { clear: none; float: left; width: 10% }
+.pausePropertyEditor>.NontermControlName { min-width: 40% }
+.pausePropertyEditor>.NontermControlValue { min-width: 50% }
+
+.commitPropertyEditor { clear: none; float: left; width: 10% }
+.commitPropertyEditor>.NontermControlName { min-width: 40% }
+.commitPropertyEditor>.NontermControlValue { min-width: 50% }
+
+.maxUsagePropertyEditor { clear: none; float: left; width: 20% }
+.maxUsagePropertyEditor>.NontermControlName { min-width: 20% }
+.maxUsagePropertyEditor>.NontermControlValue { min-width: 20% }
+
+.randomPropertyEditor { clear: none; float: left; width: 10% }
+.randomPropertyEditor>.NontermControlName { min-width: 40% }
+.randomPropertyEditor>.NontermControlValue { min-width: 50% }
+
+.NontermControl>.NontermControlWarning {
     width: 16px;
     height: 16px;
     float: left;
@@ -634,7 +654,7 @@ h5 {
 }
 
 
-.nonterminal>.main {
+.NontermControl>.NontermControlValue>textarea {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: medium;
     float: left;
@@ -644,7 +664,7 @@ h5 {
     width: 100%;
 }
 
-.nonterminal>.deleteNonterminal {
+.deleteNonterminal {
     float: right;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size:small;
@@ -657,73 +677,35 @@ h5 {
     padding: 1em;
 }
 
-.nonterminal>.properties {
-    width: 19%;
-    float: left;
-    font-size: small;
-/*
-    background: green;
-    margin: 1px 1px 1px 1px;
-*/
-    background: moccasin;
-    border: 1px solid;
-    border-radius: 4px 0 4px 0;
-    box-shadow: 0 0 2px #888;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-}
-
-.nonterminal>.properties>.property {
-    width: 98%;
-    float: left;
-/*
-    background: orange;
-    margin: 1px 1px 1px 1px;
-*/
-}
-
-.nonterminal>.properties>.property>.propname {
-    width: 28%;
+.nonterminal>.rules {
     float: left;
     clear: left;
-    text-align: right;
-/*
-    background: pink;
-    margin: 1px 1px 1px 1px;
-*/
+    width:100%;
 }
 
-.nonterminal>.properties>.property>.propvalue {
-    width: 66%;
-    float: left;
-    text-align: left;
-/*
-    background: floralwhite;
-    margin: 1px 1px 1px 1px;
-*/
-}
-
-.nonterminal>.expansions {
-    width: 79%;
-    float: right;
-    font-size: small;
-/*
-    background: blue;
-    margin: 2px 2px 2px 1px;
-*/
-    background: moccasin;
+.nonterminal>.rules>.rule {
     border: 1px solid;
     border-radius: 4px 0 4px 0;
     box-shadow: 0 0 2px #888;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
+    padding: 0 0 2em 0
 }
 
-.nonterminal>.expansions>.addlink {
-    float: left;
-/*
-    background: thistle;
-*/
+.addRule {
+    float: right;
+    clear: both;
+    font-style: italic;
+    font-size: small;
+}
+
+.deleteRule {
+    width: 7%;
+    float: right;
+    text-align: right;
+    font-size: small;
+    font-style: italic;
+    padding: 0 1em 0 0
 }
 
 .hintWarning {
@@ -749,16 +731,6 @@ h5 {
 */
 }
 
-.nonterminal>.expansions>.rules>.rule>.hint {
-    width: 18%;
-    float: left;
-    text-align: left;
-/*
-    background: olive;
-*/
-    margin: 1px 0 1px 0;
-}
-
 .playerHint {
     background: palegoldenrod;
 }
@@ -767,44 +739,14 @@ h5 {
     background: lavender;
 }
 
-.nonterminal>.expansions>.rules>.rule>.rhs {
-    width: 65%;
-    float: left;
-    text-align: left;
-/*
-    background: teal;
-*/
-    margin: 1px 0 1px 0;
-}
-
-.nonterminal>.expansions>.rules>.rule>.rhs textarea {
+.rules>.rule>.rhs textarea {
     background: lemonchiffon;
 }
 
-.nonterminal>.expansions>.rules>.rule>.limit {
+.rules>.rule>.limit {
     width: 4%;
     float: left;
     text-align: left;
-/*
-    background: skyblue;
-    margin: 1px 1px 1px 1px;
-*/
-}
-
-.nonterminal>.expansions>.rules>.rule>.deleteRule {
-    width: 7%;
-    float: left;
-    text-align: left;
-/*
-    background: gold;
-    margin: 1px 1px 1px 1px;
-*/
-}
-
-.nonterminal>.expansions>.rules>.rule>.title {
-/*
-    background: peru;
-*/
 }
 
 .nonterminal form {
@@ -813,29 +755,10 @@ h5 {
 }
 
 .nonterminal form>input {
-    width: 100%;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size:small;
     margin: 0px;
     padding: 0px;
-}
-
-.nonterminal>.properties textarea {
-    width: 100%;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size:small;
-    margin: 0px;
-    padding: 0px;
-    resize: vertical;
-}
-
-.nonterminal>.expansions textarea {
-    width: 100%;
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size:small;
-    margin: 0px;
-    padding: 0px;
-    resize: vertical;
 }
 
 body>.ui-tooltip {

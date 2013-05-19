@@ -9,11 +9,12 @@
      <i>min-descriptor</i>: <i>text</i>
      <i>max-descriptor</i>: <i>text</i>
          <i>rule-block</i>: <i>nonterm-modifier</i>* <i>nonterm-identifier</i> <i>optional-max-usage</i>? "=>" <i>nonterm-descriptor</i>
- <i>nonterm-identifier</i>: "@" <i>identifier</i> <i>pause-modifier</i>? <i>commit-modifier</i>?
+ <i>nonterm-identifier</i>: "@" <i>identifier</i> <i>pause-modifier</i>? <i>commit-modifier</i>? <i>random-modifier</i>?
  <i>nonterm-descriptor</i>: <i>optional-prompt</i>? "{" <i>rule-list</i> "}"
    <i>nonterm-modifier</i>: "pause" | "commit" | "random"
      <i>pause-modifier</i>: ";"
     <i>commit-modifier</i>: "!"
+    <i>random-modifier</i>: "?"
     <i>optional-prompt</i>: "[" <i>prompt</i> "]"
                      | "["  <i>placeholder</i> "|" <i>prompt</i> "]"
           <i>rule-list</i>: <i>rule</i> "|" <i>rule-list</i>

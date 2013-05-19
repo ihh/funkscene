@@ -46,9 +46,12 @@
 	    nonterm.prompt = props.prompt;
 	if (("maxUsage" in props) && props.maxUsage > 0)
 	    nonterm.maxUsage = props.maxUsage;
-	if ("modifiers" in props)
-	    for (var i = 0; i < props.modifiers.length; ++i)
-		extend (nonterm, props.modifiers[i]);
+	if ("pause" in props)
+	    nonterm.pause = props.pause;
+	if ("commit" in props)
+	    nonterm.commit = props.commit;
+	if ("random" in props)
+	    nonterm.random = props.random;
 
 	if (nonterm.random) {
 	    if (nonterm.commit) {
@@ -164,9 +167,9 @@ nonterm_symbol
     = "@" s:symbol  { return s.toLowerCase(); }
 
 rule
- = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifiers spc* &{return pushLhs(lhs)}
+ = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifier* spc* &{return pushLhs(lhs)}
    n:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
-   &{return setNontermProperties(currentLhs(),extend(extend({maxUsage:n,modifiers:mods},q),ppp))}
+   &{return setNontermProperties(currentLhs(),extend(extend(extend({maxUsage:n},mods.reduce(LetterWriter.extend,{})),q.reduce(LetterWriter.extend,{})),ppp))}
    "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
@@ -198,8 +201,8 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = ppp:preamble_placeholder_prompt sym:nonterm_symbol q:sym_modifiers { return makeNontermReference(sym,extend(ppp,q)) }
- / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifiers { return makeAnonNontermReference(sym,extend(ppp,q)) }
+ = ppp:preamble_placeholder_prompt sym:nonterm_symbol q:sym_modifier* { return makeNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
+ / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifier* { return makeAnonNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
  / text:text  { return makeTerm(text) }
 
 anonymous_nonterm
@@ -211,16 +214,17 @@ preamble_placeholder_prompt
  / "[" prompt:text? "]" spc* { return {prompt:prompt}; }
  / { return {}; }
 
-sym_modifiers
- = p:pause_modifier c:commit_modifier  { return extend(p,c) }
+sym_modifier
+ = pause_modifier / commit_modifier / random_modifier
 
 pause_modifier
  = ";" { return { pause: true } }
- / "" { return {} }
 
 commit_modifier
  = "!" { return { commit: true } }
- / "" { return {} }
+
+random_modifier
+ = "?" { return { random: true } }
 
 text
  = "\\" escaped:[#\[\]\{\}\|=\@] tail:text? { return escaped + tail; }

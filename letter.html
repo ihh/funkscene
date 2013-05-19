@@ -67,32 +67,34 @@
     <script type="text/javascript" src="lib/parser/letter.js"></script>
 
     <script type="text/javascript">
-var g, l, e, template;
+var grammar, letter, editor, template;
 template = document.getElementById("editorTemplate")
 
 function rebuildFromText() {
-    g = new LetterWriter.Grammar(template.value).normalize()
-    e.remove()
-    e = g.newEditor()
+    grammar = new LetterWriter.Grammar(template.value).normalize()
+    editor.remove()
+    editor = grammar.newEditor()
     rebuild()
 }
 
 function rebuild() {
-    l.clear()
-    l = g.clone().newLetter()
-    l.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
+    letter.clear()
+    letter = grammar.clone().newLetter()
+    letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
 }
 
 $(function(){
     var xhr = new XMLHttpRequest();
     xhr.open ("GET", "doc/TemplateSyntax.html", false);
     xhr.send();
-    $("#TemplateSyntax")[0].innerHTML = xhr.responseText;
+    $("#TemplateSyntax").append(xhr.responseText)
 
-    g = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
-    template.value = g.toCanonicalString()
-    l = g.clone().newLetter()
-    e = g.newEditor()
+    grammar = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
+    template.value = grammar.toCanonicalString()
+    letter = grammar.clone().newLetter()
+    editor = grammar.newEditor()
+
+//    $("#editorTemplate").change(rebuildFromText)
 
 });
     </script>

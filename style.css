@@ -17,6 +17,19 @@ select, select>option {
     font-size: medium;
 }
 
+input[type='checkbox'] {
+    -webkit-appearance:none;
+    width:2em;
+    height:2em;
+    background:white;
+    border-radius:4px;
+    border:1px solid #555;
+   
+}
+input[type='checkbox']:checked {
+    background: darkgoldenrod;
+}
+
 textarea {
     font-family: "Courier", monospace;
 
@@ -602,24 +615,46 @@ h5 {
 }
 
 .NontermControl {
-    clear: both;
     min-height: 1em;
 }
 
 .NontermControl>.NontermControlName {
-    width: 8%;
-    float: left;
     margin: 0;
     padding: 0;
     text-align:right;
+    float: left;
 }
 
 .NontermControl>.NontermControlValue {
-    min-height: 1em;
-    min-width: 90%;
     float: left;
     margin: 0;
     padding: 0;
+    min-height: 1em;
+}
+
+.nonterminal>.NontermControl {
+    clear: both;
+}
+
+.nonterminal>.NontermControl>.NontermControlName {
+    width: 8%;
+}
+
+.nonterminal>.NontermControl>.NontermControlValue {
+    min-width: 90%;
+}
+
+
+.rule>.NontermControl {
+    clear: both;
+}
+
+.rule>.NontermControl>.NontermControlName {
+    width: 8%;
+}
+
+.rule>.NontermControl>.NontermControlValue {
+    min-width: 90%;
 }
 
 
@@ -628,51 +663,37 @@ h5 {
     min-height: 3em;
 }
 
-.NontermProperties>.NontermControl {
+.NontermProperties>.NontermPropertiesColumn {
+    width: 20%;
+    float: left;
+    clear: none;
+}
+
+.NontermPropertiesColumn>.NontermControl {
     clear: none;
     float: left;
     height: 2em;
-    width: 30%;
+    width: 100%;
 }
 
-.NontermProperties>.NontermControl>.NontermControlName {
+.NontermPropertiesColumn>.NontermControl>.NontermControlName {
     width: 40%;
     float: left;
 }
 
-.NontermProperties>.NontermControl>.NontermControlValue {
+.NontermPropertiesColumn>.NontermControl>.NontermControlValue {
     width: 40%;
     float: left;
+    clear: none;
 }
 
-/*
-.idPropertyEditor { clear: none; width: 20% }
-.idPropertyEditor>.NontermControlName { min-width: 40% }
-.idPropertyEditor>.NontermControlValue { min-width: 20% }
-
-.pausePropertyEditor { clear: none; float: left; width: 10% }
-.pausePropertyEditor>.NontermControlName { min-width: 40% }
-.pausePropertyEditor>.NontermControlValue { min-width: 50% }
-
-.commitPropertyEditor { clear: none; float: left; width: 10% }
-.commitPropertyEditor>.NontermControlName { min-width: 40% }
-.commitPropertyEditor>.NontermControlValue { min-width: 50% }
-
-.maxUsagePropertyEditor { clear: none; float: left; width: 20% }
-.maxUsagePropertyEditor>.NontermControlName { min-width: 20% }
-.maxUsagePropertyEditor>.NontermControlValue { min-width: 20% }
-
-.randomPropertyEditor { clear: none; float: left; width: 10% }
-.randomPropertyEditor>.NontermControlName { min-width: 40% }
-.randomPropertyEditor>.NontermControlValue { min-width: 50% }
-*/
-
-.NontermControl>.NontermControlWarning {
+.NontermControlWarning {
     width: 16px;
     height: 16px;
     float: left;
-    padding-right: 4px;
-    padding-left: 1px;
+    padding-left: 4px;
+    padding-right: 1px;
+    padding-top: 4px;
 /*
     background: yellow;
 */
@@ -687,6 +708,7 @@ h5 {
     margin: 1px 1px 1px 1px;
     clear: both;
     width: 100%;
+    resize: vertical;
 }
 
 .deleteNonterminal {
@@ -766,6 +788,7 @@ h5 {
 
 .rules>.rule>.rhs textarea {
     background: lemonchiffon;
+    resize: vertical;
 }
 
 .rules>.rule>.limit {

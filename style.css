@@ -622,6 +622,30 @@ h5 {
     padding: 0;
 }
 
+
+.NontermProperties {
+    width: 100%;
+    min-height: 3em;
+}
+
+.NontermProperties>.NontermControl {
+    clear: none;
+    float: left;
+    height: 2em;
+    width: 30%;
+}
+
+.NontermProperties>.NontermControl>.NontermControlName {
+    width: 40%;
+    float: left;
+}
+
+.NontermProperties>.NontermControl>.NontermControlValue {
+    width: 40%;
+    float: left;
+}
+
+/*
 .idPropertyEditor { clear: none; width: 20% }
 .idPropertyEditor>.NontermControlName { min-width: 40% }
 .idPropertyEditor>.NontermControlValue { min-width: 20% }
@@ -641,6 +665,7 @@ h5 {
 .randomPropertyEditor { clear: none; float: left; width: 10% }
 .randomPropertyEditor>.NontermControlName { min-width: 40% }
 .randomPropertyEditor>.NontermControlValue { min-width: 50% }
+*/
 
 .NontermControl>.NontermControlWarning {
     width: 16px;

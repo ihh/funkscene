@@ -69,11 +69,13 @@
     <script type="text/javascript">
 var grammar, letter, editor, template;
 template = document.getElementById("editorTemplate")
+var editorArgs = {tooltips:false}
+//editorArgs = {}
 
 function rebuildFromText() {
     grammar = new LetterWriter.Grammar(template.value).normalize()
     editor.remove()
-    editor = grammar.newEditor()
+    editor = grammar.newEditor(editorArgs)
     rebuild()
 }
 
@@ -92,7 +94,7 @@ $(function(){
     grammar = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
     template.value = grammar.toCanonicalString()
     letter = grammar.clone().newLetter()
-    editor = grammar.newEditor()
+    editor = grammar.newEditor(editorArgs)
 
 //    $("#editorTemplate").change(rebuildFromText)
 

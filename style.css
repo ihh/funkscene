@@ -632,10 +632,6 @@ h5 {
     min-height: 1em;
 }
 
-.incomingPropertyEditor>.NontermControlValue {
-    font-style: italic;
-}
-
 .nonterminal>.NontermControl {
     clear: both;
 }

@@ -736,7 +736,8 @@ h5 {
     box-shadow: 0 0 2px #888;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    padding: 0 0 2em 0
+    padding: 0 0 2em 0;
+    background: #FFEDD1;
 }
 
 .addRule {
@@ -762,9 +763,6 @@ h5 {
     clear: left;
     padding-right: 1px;
     padding-left: 4px;
-/*
-    background: yellow;
-*/
 }
 
 .rhsWarning {
@@ -773,9 +771,6 @@ h5 {
     float: left;
     padding-right: 1px;
     padding-left: 4px;
-/*
-    background: yellow;
-*/
 }
 
 .playerHint {
@@ -808,6 +803,24 @@ h5 {
     margin: 0px;
     padding: 0px;
 }
+
+.placeholderPropertyEditor>.NontermControlValue>textarea {
+    background: #FFFAE6;  /* lemonchiffon, half saturation, hue slightly redder */
+}
+
+.promptPropertyEditor>.NontermControlValue>textarea {
+    background: palegoldenrod;
+}
+
+.hintPropertyEditor>.NontermControlValue>textarea {
+    background: palegoldenrod;
+}
+
+.rhsPropertyEditor>.NontermControlValue>textarea {
+    background: #FFF69A
+}
+
+
 
 body>.ui-tooltip {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;

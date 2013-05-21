@@ -564,9 +564,6 @@ comment
 multi_line_comment
   = "#/*" (!"*/" source_character)* "*/"
 
-multi_line_comment_no_line_terminator
-  = "#/*" (!("*/" / line_terminator) source_character)* "*/"
-
 single_line_comment
   = "#//" (!line_terminator source_character)*
 

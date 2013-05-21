@@ -251,9 +251,6 @@ comment
 multi_line_comment
   = "/*" (!"*/" source_character)* "*/"
 
-multi_line_comment_no_line_terminator
-  = "/*" (!("*/" / line_terminator) source_character)* "*/"
-
 single_line_comment
   = "//" (!line_terminator source_character)*
 
@@ -278,8 +275,12 @@ product_expr
 
 primary_expr
     = n:weight  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / "$" x:symbol  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
+    / param_expr
     / "(" spc* e:sum_expr spc* ")"  { return e; }
+
+param_expr
+    = "$" x:symbol  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
+    / "${" x:symbol "}"  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
 
 weight
  = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }

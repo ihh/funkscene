@@ -225,7 +225,7 @@ text
  = "\\" escaped:[#\[\]\{\}\|=\@\$] tail:text? { return escaped + tail; }
  / "\\\\" tail:text? { return "\\\\" + tail; }
  / !"=>" "=" tail:text? { return "=" + tail; }
- / !"$"[A-Za-z_] "$" tail:text? { return "$" + tail; }
+ / !("$" [A-Za-z_]) "$" tail:text? { return "$" + tail; }
  / comment tail:text? { return tail; }
  / head:text_chars tail:text? { return head + tail; }
 
@@ -304,13 +304,15 @@ linespc
 
 // Used within RHS of rules
 param_assignment
-    = id:param_identifier linespc* "=" linespc* expr:param_expr (line_terminator / ";")
-{ return new LetterWriter.ParamAssignment ({id:id,value:expr}) }
+    = id:param_identifier linespc* "=>" linespc* expr:param_expr (line_terminator / ";" / !source_character)
+{ return new LetterWriter.ParamAssignment ({id:id,value:expr,local:true}) }
+    / id:param_identifier linespc* "=" linespc* expr:param_expr (line_terminator / ";" / !source_character)
+{ return new LetterWriter.ParamAssignment ({id:id,value:expr,local:false}) }
 
 param_expansion
     = id:clothed_param_id
 { return new LetterWriter.ParamReference (id) }
-    / id:bare_param_id spc
+    / id:bare_param_id
 { return new LetterWriter.ParamReference (id) }
 
 param_expr
@@ -320,20 +322,23 @@ param_expr
 cat_string_expr
     = l:primary_string_expr linespc* op:"." linespc* r:cat_string_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+    / primary_string_expr
 
 primary_string_expr
     = param_identifier
     / s:string_literal  { return new LetterWriter.ParamFunc ({op:"'",value:s}) }
 
 string_literal
-    = "\"" s:double_quoted_text "\"" { return s }
-    / "'" s:single_quoted_text "'" { return s }
+    = "\"" s:double_quoted_text? "\"" { return s }
+    / "'" s:single_quoted_text? "'" { return s }
 
 double_quoted_text
-    = "\\" escaped:["] tail:double_quoted_text? { return escaped + tail; }
+    = "\\\\" tail:double_quoted_text? { return "\\" + tail; }
+    / "\\" escaped:["] tail:double_quoted_text? { return escaped + tail; }
     / chars:[^"]+ tail:double_quoted_text? { return chars.join("") + tail; }
 
 single_quoted_text
-    = "\\" escaped:['] tail:single_quoted_text? { return escaped + tail; }
+    = "\\\\" tail:single_quoted_text? { return "\\" + tail; }
+    / "\\" escaped:['] tail:single_quoted_text? { return escaped + tail; }
     / chars:[^']+ tail:single_quoted_text? { return chars.join("") + tail; }
 

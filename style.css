@@ -44,6 +44,11 @@ input {
     -webkit-border-radius: 4px;
 }
 
+.undefinedParameter {
+    color: red;
+    font-style: italic;
+}
+
 /* Sliders for LetterWriter (overriding JQuery font) */
 .sliderlabel {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;

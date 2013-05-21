@@ -63,7 +63,7 @@ input {
 }
 
 .sliderparam {
-    width: 13%;
+    width: 18%;
     float: left;
     text-align: right;
     overflow: auto;
@@ -72,7 +72,7 @@ input {
 }
 
 .slider {
-    width: 85%;
+    width: 80%;
     float: right;
 }
 
@@ -562,12 +562,17 @@ h5 {
 }
 
 #editorList {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     list-style-type: none;
     padding-left: 0em;
 }
 
 #editorList div>h3 {
-    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+    background: #fff8cc;
+}
+
+#editorList div>div {
+    background: #fff7e6;
 }
 
 .editorSlider {
@@ -835,7 +840,7 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#editorParseTree {
-    width: 19%;
+    width: 32%;
     min-height: 600px;
     float: left;
     margin: 0;
@@ -846,12 +851,12 @@ body>.ui-tooltip {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 
-    background: #efe;
+    background: #e0d8f0;
     box-shadow: 0 0 4px #666;
 }
 
 #letterDebugger>#gameAndMapContainer {
-    width: 80%;
+    width: 66%;
     float: left;
     margin: 0;
     padding: 0;
@@ -860,6 +865,7 @@ body>.ui-tooltip {
 
 #letterDebugger>#gameAndMapContainer>#gameContainer {
     width: 50%;
+    min-height: 600px;
     float: left;
     margin: 0;
     padding: 0;
@@ -872,7 +878,7 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#gameAndMapContainer>#editorMap {
-    width: 50%;
+    width: 49%;
     min-height: 600px;
     float: left;
     margin: 0;
@@ -883,6 +889,6 @@ body>.ui-tooltip {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 
-    background: #fee;
+    background: #fff7e6;
     box-shadow: 0 0 4px #666;
 }

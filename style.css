@@ -701,10 +701,6 @@ h5 {
 .NontermControlWarning {
     width: 16px;
     height: 16px;
-    float: left;
-    padding-left: 4px;
-    padding-right: 1px;
-    padding-top: 4px;
 /*
     background: yellow;
 */
@@ -764,23 +760,6 @@ h5 {
     font-size: small;
     font-style: italic;
     padding: 0 1em 0 0
-}
-
-.hintWarning {
-    width: 16px;
-    height: 16px;
-    float: left;
-    clear: left;
-    padding-right: 1px;
-    padding-left: 4px;
-}
-
-.rhsWarning {
-    width: 16px;
-    height: 16px;
-    float: left;
-    padding-right: 1px;
-    padding-left: 4px;
 }
 
 .playerHint {

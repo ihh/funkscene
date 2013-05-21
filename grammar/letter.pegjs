@@ -225,7 +225,7 @@ text
  = "\\" escaped:[#\[\]\{\}\|=\@\$] tail:text? { return escaped + tail; }
  / "\\\\" tail:text? { return "\\\\" + tail; }
  / !"=>" "=" tail:text? { return "=" + tail; }
- / !("$" [A-Za-z_]) "$" tail:text? { return "$" + tail; }
+ / !("$" [A-Za-z_\{]) "$" tail:text? { return "$" + tail; }
  / comment tail:text? { return tail; }
  / head:text_chars tail:text? { return head + tail; }
 
@@ -269,7 +269,7 @@ product_weight_expr
   / primary_weight_expr
 
 primary_weight_expr
-    = n:numeric_literal  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
+    = n:nonnegative_numeric_literal  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
     / param_func
     / "(" linespc* e:sum_weight_expr linespc* ")"  { return e; }
 
@@ -310,23 +310,34 @@ param_assignment
 { return new LetterWriter.ParamAssignment ({id:id,value:expr,local:false}) }
 
 param_expansion
-    = id:clothed_param_id
+    = id:clothed_param_id !(linespc* "=")
 { return new LetterWriter.ParamReference (id) }
-    / id:bare_param_id
+    / id:bare_param_id !(linespc* "=")
 { return new LetterWriter.ParamReference (id) }
+
 
 param_expr
-    = sum_weight_expr
-    / cat_string_expr
-
-cat_string_expr
-    = l:primary_string_expr linespc* op:"." linespc* r:cat_string_expr
+    = l:sum_expr linespc* op:"." linespc* r:param_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
-    / primary_string_expr
+    / sum_expr
 
-primary_string_expr
-    = param_identifier
+sum_expr
+    = l:product_expr linespc* op:("+"/"-") linespc* r:sum_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+  / product_expr
+
+product_expr
+    = l:primary_expr linespc* op:("*"/"/") linespc* r:product_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+    / "!" linespc* l:product_expr
+{ return new LetterWriter.ParamFunc ({op:"!",l:l}) }
+  / primary_expr
+
+primary_expr
+    = n:numeric_literal  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
     / s:string_literal  { return new LetterWriter.ParamFunc ({op:"'",value:s}) }
+    / param_func
+    / "(" linespc* e:sum_expr linespc* ")"  { return e; }
 
 string_literal
     = "\"" s:double_quoted_text? "\"" { return s }
@@ -341,4 +352,3 @@ single_quoted_text
     = "\\\\" tail:single_quoted_text? { return "\\" + tail; }
     / "\\" escaped:['] tail:single_quoted_text? { return escaped + tail; }
     / chars:[^']+ tail:single_quoted_text? { return chars.join("") + tail; }
-

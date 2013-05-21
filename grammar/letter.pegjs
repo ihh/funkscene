@@ -1,16 +1,3 @@
-// Example:
-
-// @start = [Let us begin the letter.]{Sire, the people are [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt.|That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}}
-
-// Alternative:
-
-// @start = [Let us begin the letter.]{Sire, the people are @people}
-// @people = [...|What to tell him?]{That they are revolting against his cruel authority. => sadly in open revolt. | That they are delighted with his rule. => ever more enamored with your dazzling Majesty.}
-
-// If there is no prompt, then a suitable default will be used
-// (derived from the nonterminal name, or generic "Please select..." text if the nonterminal is anonymous).
-
-
 {
     var params = [];
     var anonNonterms = 0;
@@ -150,13 +137,13 @@ start
 statement = param_decl / rule
 
 param_decl
- = "param" spc+ param_list spc*
+ = "control" spc+ param_list spc*
 
 param_list
-    = p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
+    = "$" p:symbol spc* r:param_range spc* v:param_value spc*  &{return addParam(p,v,r[0],r[1])}  ("," spc* param_list)?
 
 param_value
-    = "=" spc* v:weight  { return v }
+    = "=" spc* v:nonnegative_numeric_literal  { return v }
     / { return 0.5 }
 
 param_range
@@ -187,9 +174,13 @@ ui_rhs
  = symbols:sym_expr* { return symbols }
 
 hint_with_count
- = text:text n:max_count spc* "=>" { return [text, n] }
- / text:text "=>" { return [text, undefined] }
+ = text:hint_text n:max_count spc* "=>" { return [text, n] }
+ / text:hint_text "=>" { return [text, undefined] }
  / { return ["", undefined] }
+
+hint_text
+    = f:sum_weight_expr { return f.asText() }
+    / text
 
 max_count
  = "[" spc* "most" spc+ n:positive_integer spc* "]" spc*  { return n }
@@ -201,8 +192,12 @@ positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }
 
 sym_expr
- = ppp:preamble_placeholder_prompt sym:nonterm_symbol q:sym_modifier* { return makeNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
- / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifier* { return makeAnonNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
+ = ppp:preamble_placeholder_prompt sym:nonterm_symbol q:sym_modifier*
+    { return makeNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
+ / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifier*
+    { return makeAnonNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
+ / param_assignment
+ / param_expansion
  / text:text  { return makeTerm(text) }
 
 anonymous_nonterm
@@ -235,7 +230,7 @@ text
  / head:text_chars tail:text? { return head + tail; }
 
 text_chars
- = chars:[^#\[\]\{\}\|=\@]+  { return chars.join(""); }
+ = chars:[^#\[\]\{\}\|=\@\$]+  { return chars.join(""); }
 
 symbol
   = first:[A-Za-z_] rest:[0-9A-Za-z_]* { return first + rest.join(""); }
@@ -261,28 +256,84 @@ source_character
   = .
 
 // Used to parse "hints" for randomized nonterminals as probabilistic weights
-sum_expr
-    = l:product_expr spc* op:("+"/"-"/"or"i) spc* r:sum_expr
+sum_weight_expr
+    = l:product_weight_expr linespc* op:("+"/"-"/"or"i) linespc* r:sum_weight_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
-  / product_expr
+  / product_weight_expr
 
-product_expr
-    = l:primary_expr spc* op:("*"/"/"/"and"i/"vs"i) spc* r:product_expr
+product_weight_expr
+    = l:primary_weight_expr linespc* op:("*"/"/"/"and"i/"vs"i) linespc* r:product_weight_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
-    / ("!" spc* / ("not"i spc+)) l:product_expr
+    / ("!" linespc* / ("not"i linespc+)) l:product_weight_expr
 { return new LetterWriter.ParamFunc ({op:"!",l:l}) }
-  / primary_expr
+  / primary_weight_expr
 
-primary_expr
-    = n:weight  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / param_expr
-    / "(" spc* e:sum_expr spc* ")"  { return e; }
+primary_weight_expr
+    = n:numeric_literal  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
+    / param_func
+    / "(" linespc* e:sum_weight_expr linespc* ")"  { return e; }
 
-param_expr
-    = "$" x:symbol  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
-    / "${" x:symbol "}"  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
+param_func
+    = x:param_identifier  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
 
-weight
+param_identifier
+    = bare_param_id
+    / clothed_param_id
+
+bare_param_id
+    = "$" x:symbol  { return x }
+
+clothed_param_id
+    = "${" x:symbol "}"  { return x }
+
+numeric_literal
+    = ("+" linespc*)? n:nonnegative_numeric_literal  { return n; }
+    / "-" linespc* n:nonnegative_numeric_literal { return -n; }
+
+nonnegative_numeric_literal
  = n:[0-9]+ "%"           { return parseFloat (n.join("")) / 100; }
  / h:[0-9]* "." t:[0-9]+  { return parseFloat (h + "." + t.join("")); }
  / n:[0-9]+               { return parseFloat (n.join("")); }
+
+linespc
+ = [ \t]
+ / multi_line_comment
+
+
+
+
+// Used within RHS of rules
+param_assignment
+    = id:param_identifier linespc* "=" linespc* expr:param_expr (line_terminator / ";")
+{ return new LetterWriter.ParamAssignment ({id:id,value:expr}) }
+
+param_expansion
+    = id:clothed_param_id
+{ return new LetterWriter.ParamReference (id) }
+    / id:bare_param_id spc
+{ return new LetterWriter.ParamReference (id) }
+
+param_expr
+    = sum_weight_expr
+    / cat_string_expr
+
+cat_string_expr
+    = l:primary_string_expr linespc* op:"." linespc* r:cat_string_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+
+primary_string_expr
+    = param_identifier
+    / s:string_literal  { return new LetterWriter.ParamFunc ({op:"'",value:s}) }
+
+string_literal
+    = "\"" s:double_quoted_text "\"" { return s }
+    / "'" s:single_quoted_text "'" { return s }
+
+double_quoted_text
+    = "\\" escaped:["] tail:double_quoted_text? { return escaped + tail; }
+    / chars:[^"]+ tail:double_quoted_text? { return chars.join("") + tail; }
+
+single_quoted_text
+    = "\\" escaped:['] tail:single_quoted_text? { return escaped + tail; }
+    / chars:[^']+ tail:single_quoted_text? { return chars.join("") + tail; }
+

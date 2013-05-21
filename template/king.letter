@@ -6,4 +6,4 @@ pause @people => [(I fear to say)|...|What to tell him?]{That they are revolting
          | That they are delighted with his rule. => ever more enamored of your dazzling Majesty.}
 @closing => [Better end politely.]{Be servile => I remain your most @faithful servant, Lord Tarquin.}
 
-random @faithful => {Faithfulness=>faithful|not Faithfulness=>diligent}
+random @faithful => {$Faithfulness=>faithful|not $Faithfulness=>diligent}

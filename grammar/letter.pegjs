@@ -227,9 +227,10 @@ random_modifier
  = "?" { return { random: true } }
 
 text
- = "\\" escaped:[#\[\]\{\}\|=\@] tail:text? { return escaped + tail; }
+ = "\\" escaped:[#\[\]\{\}\|=\@\$] tail:text? { return escaped + tail; }
  / "\\\\" tail:text? { return "\\\\" + tail; }
  / !"=>" "=" tail:text? { return "=" + tail; }
+ / !"$"[A-Za-z_] "$" tail:text? { return "$" + tail; }
  / comment tail:text? { return tail; }
  / head:text_chars tail:text? { return head + tail; }
 
@@ -277,7 +278,7 @@ product_expr
 
 primary_expr
     = n:weight  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / x:symbol  { return new LetterWriter.ParamFunc ({op:"?",param:x.toLowerCase()}) }
+    / "$" x:symbol  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
     / "(" spc* e:sum_expr spc* ")"  { return e; }
 
 weight

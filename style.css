@@ -835,12 +835,19 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#editorParseTree {
-    width: 20%;
+    width: 19%;
     min-height: 600px;
     float: left;
     margin: 0;
     padding: 0;
-    border: 0;
+
+    border: 1px solid;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+
+    background: #efe;
+    box-shadow: 0 0 4px #666;
 }
 
 #letterDebugger>#gameAndMapContainer {
@@ -856,7 +863,12 @@ body>.ui-tooltip {
     float: left;
     margin: 0;
     padding: 0;
-    border: 0;
+
+    background: #eef;
+    border: 1px solid;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
 }
 
 #letterDebugger>#gameAndMapContainer>#editorMap {
@@ -865,5 +877,12 @@ body>.ui-tooltip {
     float: left;
     margin: 0;
     padding: 0;
-    border: 0;
+
+    border: 1px solid;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+
+    background: #fee;
+    box-shadow: 0 0 4px #666;
 }

@@ -86,6 +86,7 @@ function rebuildFromText() {
     grammar = new LetterWriter.Grammar(template.value).normalize()
     createEditor()
     rebuild()
+    editor.warnChangeFunction()
 }
 
 function rebuild() {

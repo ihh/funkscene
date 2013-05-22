@@ -591,8 +591,7 @@ h5 {
 }
 
 .editorSliderLabel {
-    text-align: right;
-    float: right;
+    font-style: italic;
 }
 
 .editorSliderAndLabel {

@@ -8,9 +8,13 @@ html, body {
 html, body, select, select>option, ul, ul>li {
     margin: 0px; 
     padding: 0px;
-    background-color: #f0f0f0;
+    background-color: #eee;
     color: black;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.letterWriterBody {
+    background-color: #fffff8;
 }
 
 select, select>option {
@@ -68,17 +72,17 @@ input {
 }
 
 .sliderparam {
-    width: 18%;
+    text-align: center;
+    width: 100%;
     float: left;
-    text-align: right;
+    clear:both;
     overflow: auto;
-    vertical-align: text-top;
     font-size: small;
 }
 
 .slider {
-    width: 80%;
-    float: right;
+    width: 100%;
+    clear: both;
 }
 
 .sliderparent {
@@ -92,6 +96,7 @@ input {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
     padding: 10px 20px 10px 20px;
+    background: #f8f8f8;
 }
 
 /* Basic FunkScene game */
@@ -812,7 +817,7 @@ body>.ui-tooltip {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 
-    background: #fff7e6;
+    background: #fffff0;
     box-shadow: 0 0 4px #666;
 }
 
@@ -828,10 +833,10 @@ body>.ui-tooltip {
     width: 49%;
     min-height: 600px;
     float: left;
-    margin: 0;
-    padding: 0;
+    margin: 0 2px 0 2px;
+    padding: 0 2px 0 2px;
 
-    background: #eef;
+    background: #eee;
     border: 1px solid;
     border-radius: 4px;
     -moz-border-radius: 4px;
@@ -850,6 +855,6 @@ body>.ui-tooltip {
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
 
-    background: #e0d8f0;
+    background: #fffff0;
     box-shadow: 0 0 4px #666;
 }

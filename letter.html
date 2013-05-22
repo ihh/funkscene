@@ -13,41 +13,43 @@
   </head>
   <body>
 
-    <!-- Game container -->
-    <div id="letterDebugger">
-      <div id="editorMap"></div>
-      <div id="gameAndParseTreeContainer">
-	<div id="gameContainer">
-	  <div id="undo" class="letter undo"></div>
-	  <h1>The Letter</h1>
-	
-	  <span id="letter">
-	    <!-- Preloading animation from http://preloaders.net/ -->
-	    <br> Loading... <br> <br> <img src="img/loading.gif">
-	  </span>
+    <div class="letterWriterBody"> <!-- wraps everything so we can set background color -->
 
-	  <br><br><br><br>
-	  <div id="slidersParent" style="display:none"></div>
+      <!-- Game container -->
+      <div id="letterDebugger">
+	<div id="editorMap"></div>
+	<div id="gameAndParseTreeContainer">
+	  <div id="gameContainer">
+	    <div id="undo" class="letter undo"></div>
+	    <h1>The Letter</h1>
+	    
+	    <span id="letter">
+	      <!-- Preloading animation from http://preloaders.net/ -->
+	      <br> Loading... <br> <br> <img src="img/loading.gif">
+	    </span>
 
-	  <br><br><br>
+	    <br><br><br><br>
+	    <div id="slidersParent" style="display:none"></div>
+
+	    <br><br><br>
+	  </div>
+	  <div id="editorParseTree"></div>
 	</div>
-	<div id="editorParseTree"></div>
       </div>
-    </div>
 
-    <div id="editor">
-      <small><i><a href="#" onclick="rebuild()">Restart</a></i></small>
-	<h5>Phrasebook</h4>
-      <div id="editorList"></div>
-	<h5>Sliders</h4>
-      <div id="editorParams"></div>
-      <small><i><a href="#" id="addSliderLink">Add another slider</a></i></small>
-    </div>
+      <div id="editor">
+	<small><i><a href="#" onclick="rebuild()">Restart</a></i></small>
+	<h5>Phrasebook</h5>
+	<div id="editorList"></div>
+	<h5>Sliders</h5>
+	<div id="editorParams"></div>
+	<small><i><a href="#" id="addSliderLink">Add another slider</a></i></small>
+      </div>
 
       <div id="reveal">
 	<small>
-	<i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildFromText()">rebuild</a>.</i>
-	<i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
+	  <i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildFromText()">rebuild</a>.</i>
+	  <i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
 	</small>
 	<br>
 	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
@@ -55,7 +57,7 @@
 	<small><br><div id="TemplateSyntax"></div></small>
       </div>
 
-
+    </div>
 
     <!-- JQuery UI -->
     <script src="jquery/jquery-1.9.1.js"></script>

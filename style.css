@@ -621,7 +621,6 @@ h5 {
 .nonterminal {
     margin: 2px 2px 0px 2px;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
-    font-size:small;
     position:relative;
 }
 
@@ -634,6 +633,7 @@ h5 {
     padding: 0;
     text-align:right;
     float: left;
+    font-style: italic;
 }
 
 .NontermControl>.NontermControlValue {
@@ -643,35 +643,25 @@ h5 {
     min-height: 1em;
 }
 
-.nonterminal>.NontermControl {
+.NontermControlValue>select, .NontermControlValue>select>option {
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.nonterminal>.NontermControl, .rule>.NontermControl {
     clear: both;
 }
 
-.nonterminal>.NontermControl>.NontermControlName {
+.nonterminal>.NontermControl>.NontermControlName, .rule>.NontermControl>.NontermControlName {
     width: 8%;
 }
 
-.nonterminal>.NontermControl>.NontermControlValue {
-    min-width: 90%;
-}
-
-
-.rule>.NontermControl {
-    clear: both;
-}
-
-.rule>.NontermControl>.NontermControlName {
-    width: 8%;
-}
-
-.rule>.NontermControl>.NontermControlValue {
+.nonterminal>.NontermControl>.NontermControlValue, .rule>.NontermControl>.NontermControlValue {
     min-width: 90%;
 }
 
 
 .NontermProperties {
     width: 100%;
-    min-height: 3em;
 }
 
 .NontermProperties>.NontermPropertiesColumn {
@@ -683,17 +673,15 @@ h5 {
 .NontermPropertiesColumn>.NontermControl {
     clear: none;
     float: left;
-    height: 2em;
     width: 100%;
 }
 
 .NontermPropertiesColumn>.NontermControl>.NontermControlName {
-    width: 40%;
+    min-width: 40%;  /* parent width is 20% of grandparent, so this ensures field width is 8% of grandparent, same as .nonterminal>.NontermControlName (so the first field lines up) */
     float: left;
 }
 
 .NontermPropertiesColumn>.NontermControl>.NontermControlValue {
-    width: 40%;
     float: left;
     clear: none;
 }
@@ -701,6 +689,8 @@ h5 {
 .NontermControlWarning {
     width: 16px;
     height: 16px;
+    clear: none;
+    float: left;
 /*
     background: yellow;
 */
@@ -742,7 +732,6 @@ h5 {
     box-shadow: 0 0 2px #888;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    padding: 0 0 2em 0;
     background: #FFEDD1;
 }
 
@@ -754,31 +743,14 @@ h5 {
 }
 
 .deleteRule {
-    width: 7%;
-    float: right;
-    text-align: right;
+    clear: both;
     font-size: small;
     font-style: italic;
-    padding: 0 1em 0 0
-}
-
-.playerHint {
-    background: palegoldenrod;
-}
-
-.computerHint {
-    background: lavender;
 }
 
 .rules>.rule>.rhs textarea {
     background: lemonchiffon;
     resize: vertical;
-}
-
-.rules>.rule>.limit {
-    width: 4%;
-    float: left;
-    text-align: left;
 }
 
 .nonterminal form {
@@ -801,12 +773,16 @@ h5 {
     background: palegoldenrod;
 }
 
-.hintPropertyEditor>.NontermControlValue>textarea {
+.rhsPropertyEditor>.NontermControlValue>textarea {
+    background: #FFF69A
+}
+
+.hintPropertyEditor>.NontermControlValue>textarea.playerHint {
     background: palegoldenrod;
 }
 
-.rhsPropertyEditor>.NontermControlValue>textarea {
-    background: #FFF69A
+.hintPropertyEditor>.NontermControlValue>textarea.computerHint {
+    background: lavender;
 }
 
 

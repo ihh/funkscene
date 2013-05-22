@@ -182,12 +182,12 @@ ui_rhs
  = symbols:sym_expr* { return symbols }
 
 hint_with_count
- = text:hint_text n:max_count spc* "=>" { return [text, n] }
+ = text:hint_text n:max_count "=>" { return [text, n] }
  / text:hint_text "=>" { return [text, undefined] }
  / { return ["", undefined] }
 
 hint_text
-    = f:sum_weight_expr { return f.asText() }
+    = spc* f:sum_weight_expr spc* { return f.asText() }
     / text
 
 max_count

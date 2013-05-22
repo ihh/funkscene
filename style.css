@@ -530,6 +530,11 @@ input {
     -moz-animation: fade-text 2s linear 1;
 }
 
+/* Restart DIV for LetterWriter */
+.letter .restart {
+    float: left;
+}
+
 /* Undo DIV for LetterWriter */
 .letter .undo {
     float: right;

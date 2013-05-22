@@ -20,7 +20,10 @@
 	<div id="editorMap"></div>
 	<div id="gameAndParseTreeContainer">
 	  <div id="gameContainer">
-	    <div id="undo" class="letter undo"></div>
+	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="rebuild()">Restart</a></i></small>
+	      <span id="restartWarning"></span>
+	    </span>
+	    <span id="undo" class="letter undo"></span>
 	    <h1>The Letter</h1>
 	    
 	    <span id="letter">
@@ -38,7 +41,6 @@
       </div>
 
       <div id="editor">
-	<small><i><a href="#" onclick="rebuild()">Restart</a></i></small>
 	<h5>Phrasebook</h5>
 	<div id="editorList"></div>
 	<h5>Sliders</h5>
@@ -74,14 +76,20 @@ template = document.getElementById("editorTemplate")
 var editorArgs = {tooltips:false}
 //editorArgs = {}
 
+function createEditor() {
+    if (editor) editor.remove()
+    editor = grammar.newEditor(editorArgs)
+    editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
+}
+
 function rebuildFromText() {
     grammar = new LetterWriter.Grammar(template.value).normalize()
-    editor.remove()
-    editor = grammar.newEditor(editorArgs)
+    createEditor()
     rebuild()
 }
 
 function rebuild() {
+    $("#restartWarning").empty()
     letter.clear()
     letter = grammar.clone().newLetter()
     letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
@@ -96,9 +104,9 @@ $(function(){
     grammar = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
     template.value = grammar.toCanonicalString()
     letter = grammar.clone().newLetter()
-    editor = grammar.newEditor(editorArgs)
+    createEditor()
 
-//    $("#editorTemplate").change(rebuildFromText)
+    $("#editorTemplate").change(rebuildFromText)
 
 });
     </script>

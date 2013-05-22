@@ -1,5 +1,5 @@
 control $Faithfulness {Opportunistic=>Faithful} = 1
-@start => [Let us begin the letter.]{Sire, the people are @people @closing}
+@start => [Let us begin the letter.]{Sire, $noun="people"; the $noun are @people @closing}
 pause @people => [(I fear to say)|...|What to tell him?]{That they are revolting against his cruel authority. =>
  sadly in [How to put this...]
  { Revolution [once] => open revolt | Rebellion [once] => rebellion}. They are @people

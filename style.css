@@ -608,6 +608,8 @@ h5 {
 .editorSliderDeleteLink {
     padding-left: 20px;
     float: right;
+    font-style: italic;
+    font-size: small;
 }
 
 .editorSliderContainer {

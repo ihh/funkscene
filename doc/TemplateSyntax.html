@@ -2,10 +2,11 @@
 	<br>
 	<code style="padding-left: 1em; white-space: pre">
            <i>template</i>: (<i>param-block</i> | <i>rule-block</i>)+
-        <i>param-block</i>: "param" <i>param-list</i>
+        <i>param-block</i>: "control" <i>param-list</i>
          <i>param-list</i>: <i>param-declaration</i> ("," <i>param-list</i>)?
   <i>param-declaration</i>: <i>param-identifier</i> ("{" <i>min-descriptor</i> "=>" <i>max-descriptor</i> "}")? ("=" <i>probability-value</i>)?
-   <i>param-identifier</i>: <i>identifier</i>
+   <i>param-identifier</i>: "$" <i>identifier</i>
+ <i>delimited-param-id</i>: "${" <i>identifier</i> "}"
      <i>min-descriptor</i>: <i>text</i>
      <i>max-descriptor</i>: <i>text</i>
          <i>rule-block</i>: <i>nonterm-modifier</i>* <i>nonterm-identifier</i> <i>optional-max-usage</i>? "=>" <i>nonterm-descriptor</i>
@@ -23,7 +24,11 @@
       <i>optional-hint</i>: <i>text</i> <i>optional-max-usage</i>? "=>"
      <i>grammar-symbol</i>: <i>nonterm-identifier</i>
                      | <i>nonterm-descriptor</i> <i>pause-modifier</i>? <i>commit-modifier</i>?
+                     | <i>param-identifier</i>
+                     | <i>delimited-param-id</i>
                      | <i>text</i>
+   <i>local-assignment</i>: <i>param-identifier</i> "=>" <i>param-expression</i> (<i>line-terminator</i> | ";")
+  <i>global-assignment</i>: <i>param-identifier</i> "=" <i>param-expression</i> (<i>line-terminator</i> | ";")
  <i>optional-max-usage</i>: "[most " <i>integer</i> "]" | "[once]" | "[twice]" | "[thrice]"
         <i>placeholder</i>: <i>text</i>
              <i>prompt</i>: <i>text</i>

@@ -20,7 +20,7 @@
 	<div id="editorMap"></div>
 	<div id="gameAndParseTreeContainer">
 	  <div id="gameContainer">
-	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="rebuild()">Restart</a></i></small>
+	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
 	      <span id="restartWarning"></span>
 	    </span>
 	    <span id="undo" class="letter undo"></span>
@@ -50,7 +50,7 @@
 
       <div id="reveal">
 	<small>
-	  <i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildFromText()">rebuild</a>.</i>
+	  <i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>.</i>
 	  <i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
 	</small>
 	<br>
@@ -82,18 +82,23 @@ function createEditor() {
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
 }
 
-function rebuildFromText() {
+function rebuildGrammarFromText() {
     grammar = new LetterWriter.Grammar(template.value).normalize()
     createEditor()
-    rebuild()
+    restartLetterFromGrammar()
     editor.warnChangeFunction()
 }
 
-function rebuild() {
+function restartLetterFromGrammar() {
     $("#restartWarning").empty()
     letter.clear()
     letter = grammar.clone().newLetter()
     letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
+}
+
+function rebuildGrammarAndLetterFromText() {
+    rebuildGrammarFromText()
+    restartLetterFromGrammar()
 }
 
 $(function(){
@@ -107,7 +112,7 @@ $(function(){
     letter = grammar.clone().newLetter()
     createEditor()
 
-    $("#editorTemplate").change(rebuildFromText)
+    $("#editorTemplate").change(rebuildGrammarFromText)
 
 });
     </script>

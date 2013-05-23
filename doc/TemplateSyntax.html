@@ -24,7 +24,7 @@
       <i>optional-hint</i>: <i>text</i> <i>optional-max-usage</i>? "=>"
      <i>grammar-symbol</i>: <i>nonterm-identifier</i>
                      | <i>nonterm-descriptor</i> <i>pause-modifier</i>? <i>commit-modifier</i>?
-                     | <i>param-identifier</i>
+                     | <i>param-identifier</i> ";"
                      | <i>delimited-param-id</i>
                      | <i>text</i>
    <i>local-assignment</i>: <i>param-identifier</i> "=>" <i>param-expression</i> (<i>line-terminator</i> | ";")
@@ -33,6 +33,6 @@
         <i>placeholder</i>: <i>text</i>
              <i>prompt</i>: <i>text</i>
 	</code>
-	<br> <i>Here</i> <code>probability</code> <i>is a nonnegative numeric constant, </i> <code>identifier</code> <i>is a standard C-like variable name and</i> <code>text</code> <i>is any text
+	<br> <i>This grammar is approximate. In it, </i> <code>probability</code> <i>is a nonnegative numeric constant, </i> <code>param-expression</code> <i> is an arithmetic expression involving </i> <code>param-identifier</code><i>'s, </i> <code>identifier</code> <i>is a standard C-like variable name, and</i> <code>text</code> <i>is any text
 	  (in which quotes do not need to be escaped, but any of the characters "</i><code>@#=&lt;&gt;\[]{}</code><i>" must be escaped by preceding with a backslash character "</i><code>\</code><i>").</i>
 	<br> <i>For</i> <code>random</code> <i>rules, the</i> <code>optional-hint</code> <i>is interpreted as an arithmetic expression that yields the relative frequency with which the rule is randomly chosen. This expression may involve player-tweakable parameters, which must be declared using </i> <code>param</code> <i>.</i>

@@ -51,13 +51,17 @@
 
       <div id="reveal">
 	<small>
-	  <i>Well, it looks like you finished the letter. Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>.</i>
-	  <i><br>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax is shown beneath the edit box.</i>
+	  <i>Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>.</i>
+	  <br><i>You can also <a href="#" onclick="resetEverything()">reset</a> the template to the <a href="#" id="initialExample">initial example.</a></i>
+	  <br><i>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax can be found beneath the edit box.</i>
 	</small>
 	<br>
 	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
 	</textarea>
-	<small><br><div id="TemplateSyntax"></div></small>
+	<small><br>
+	  <i><a href="#" id="SyntaxToggle">Template language syntax</a></i>
+	<br>
+	<div id="TemplateSyntax"></div></small>
       </div>
 
     </div>
@@ -79,8 +83,21 @@ template = document.getElementById("editorTemplate")
 var editorArgs = {tooltips:false}
 //editorArgs = {}
 
-function createEditor() {
+$("#initialExample").attr("href",defaultSource)
+
+function removeEditor() {
     if (editor) editor.remove()
+    editor = null
+}
+
+function removeLetter() {
+    $("#restartWarning").empty()
+    if (letter) letter.clear()
+    letter = null
+}
+
+function createEditor() {
+    removeEditor()
     editor = grammar.newEditor(editorArgs)
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
     editor.addNotify (function(){ localStorage.setItem(storageKey,template.value) })
@@ -94,8 +111,7 @@ function rebuildGrammarFromText() {
 }
 
 function restartLetterFromGrammar() {
-    $("#restartWarning").empty()
-    letter.clear()
+    removeLetter()
     letter = grammar.clone().newLetter()
     letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
 }
@@ -105,22 +121,44 @@ function rebuildGrammarAndLetterFromText() {
     restartLetterFromGrammar()
 }
 
-$(function(){
+function setupTemplateSyntax() {
     var xhr = new XMLHttpRequest();
     xhr.open ("GET", "doc/TemplateSyntax.html", false);
     xhr.send();
     $("#TemplateSyntax").append(xhr.responseText)
 
+    function showSyntax(e) { e && e.preventDefault(); $("#TemplateSyntax").show(); $("#SyntaxToggle").click(hideSyntax) }
+    function hideSyntax(e) { e && e.preventDefault(); $("#TemplateSyntax").hide(); $("#SyntaxToggle").click(showSyntax) }
+    hideSyntax()
+}
+
+function loadInitialGrammar() {
+
     var storedText = localStorage.getItem(storageKey)
 
     grammar = (storedText && storedText.length > 0) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
     grammar = grammar.normalize()
-    template.value = grammar.toCanonicalString()
-    letter = grammar.clone().newLetter()
     createEditor()
 
+    $("#editorTemplate").change(null)
+    template.value = grammar.toCanonicalString()
     $("#editorTemplate").change(rebuildGrammarFromText)
 
+    letter = grammar.clone().newLetter()
+}
+
+function resetEverything() {
+    if (confirm ("Really, delete everything?")) {
+        localStorage.removeItem(storageKey)
+        removeEditor()
+        removeLetter()
+        loadInitialGrammar()
+    }
+}
+
+$(function(){
+    setupTemplateSyntax()
+    loadInitialGrammar()
 });
     </script>
 

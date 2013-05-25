@@ -51,7 +51,8 @@
 
       <div id="reveal">
 	<small>
-	  <i>Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>.</i>
+	  <i>Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>
+	    or <a href="#" id="templateSaveLink">save</a>.</i>
 	  <br><i>You can also <a href="#" onclick="resetEverything()">reset</a> the template to the <a href="#" id="initialExample">initial example.</a></i>
 	  <br><i>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax can be found beneath the edit box.</i>
 	</small>
@@ -97,7 +98,10 @@ function removeLetter() {
     letter = null
 }
 
-function saveTemplateInStorage(){ localStorage.setItem(storageKey,template.value) }
+function saveTemplateInStorage(){
+    localStorage.setItem (storageKey, template.value)
+    $("#templateSaveLink").attr("href","data:text/plain;charset=utf-8," + encodeURIComponent(template.value)).attr("download","template.txt")
+}
 
 function createEditor() {
     removeEditor()

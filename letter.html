@@ -58,6 +58,7 @@
 	<br>
 	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
 	</textarea>
+	<div id="editorTemplateFailedLoad"></div>
 	<small><br>
 	  <i><a href="#" id="SyntaxToggle">Template language syntax</a></i>
 	<br>
@@ -96,18 +97,22 @@ function removeLetter() {
     letter = null
 }
 
+function saveTemplateInStorage(){ localStorage.setItem(storageKey,template.value) }
+
 function createEditor() {
     removeEditor()
     editor = grammar.newEditor(editorArgs)
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
-    editor.addNotify (function(){ localStorage.setItem(storageKey,template.value) })
+    editor.addNotify (saveTemplateInStorage)
 }
 
 function rebuildGrammarFromText() {
     grammar = new LetterWriter.Grammar(template.value).normalize()
     createEditor()
     restartLetterFromGrammar()
+    // do a bit of notifying (calling the editor's main notify function would update this textarea, not what we want)
     editor.warnChangeFunction()
+    saveTemplateInStorage()
 }
 
 function restartLetterFromGrammar() {
@@ -136,7 +141,12 @@ function loadInitialGrammar() {
 
     var storedText = localStorage.getItem(storageKey)
 
-    grammar = (storedText && storedText.length > 0) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
+    try {
+    grammar = (storedText && storedText.length > 0 && /\S/.test(storedText)) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
+    } catch (e) {
+       $("#editorTemplateFailedLoad").append("<i>Failed to load:</i><br>" + storedText)
+       console.log(e);
+       grammar = LetterWriter.Grammar.newFromUrl(defaultSource) }
     grammar = grammar.normalize()
     createEditor()
 

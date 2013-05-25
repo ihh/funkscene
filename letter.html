@@ -144,8 +144,8 @@ function loadInitialGrammar() {
     try {
     grammar = (storedText && storedText.length > 0 && /\S/.test(storedText)) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
     } catch (e) {
-       $("#editorTemplateFailedLoad").append("<i>Failed to load:</i><br>" + storedText)
-       console.log(e);
+       $("#editorTemplateFailedLoad").append("<i>Failed to initialize:</i><br><code><verbatim>" + storedText + "</verbatim></code><br><span class=\"undefinedParameter\">" + e.message + "</span></font>")
+       console.log(e.message);
        grammar = LetterWriter.Grammar.newFromUrl(defaultSource) }
     grammar = grammar.normalize()
     createEditor()

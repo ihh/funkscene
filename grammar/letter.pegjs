@@ -312,7 +312,7 @@ linespc
 
 // Used within RHS of rules
 param_assignment
-    = id:param_identifier linespc* "=>" linespc* expr:param_expr param_terminator
+    = id:param_identifier linespc* "@=" linespc* expr:param_expr param_terminator
 { return new LetterWriter.ParamAssignment ({id:id,value:expr,local:true}) }
     / id:param_identifier linespc* "=" linespc* expr:param_expr param_terminator
 { return new LetterWriter.ParamAssignment ({id:id,value:expr,local:false}) }

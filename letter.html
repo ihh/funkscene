@@ -72,7 +72,9 @@
     <script type="text/javascript" src="lib/parser/letter.js"></script>
 
     <script type="text/javascript">
-var grammar, letter, editor, template;
+var grammar, letter, editor, template, storageKey, defaultSource;
+storageKey = "LetterWriter"
+defaultSource = "template/king.letter"
 template = document.getElementById("editorTemplate")
 var editorArgs = {tooltips:false}
 //editorArgs = {}
@@ -81,6 +83,7 @@ function createEditor() {
     if (editor) editor.remove()
     editor = grammar.newEditor(editorArgs)
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
+    editor.addNotify (function(){ localStorage.setItem(storageKey,template.value) })
 }
 
 function rebuildGrammarFromText() {
@@ -108,7 +111,10 @@ $(function(){
     xhr.send();
     $("#TemplateSyntax").append(xhr.responseText)
 
-    grammar = LetterWriter.Grammar.newFromUrl("template/king.letter").normalize()
+    var storedText = localStorage.getItem(storageKey)
+
+    grammar = (storedText && storedText.length > 0) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
+    grammar = grammar.normalize()
     template.value = grammar.toCanonicalString()
     letter = grammar.clone().newLetter()
     createEditor()

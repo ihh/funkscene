@@ -51,10 +51,11 @@
 
       <div id="reveal">
 	<small>
-	  <i>Try modifying the template, then <a href="#" onclick="rebuildGrammarAndLetterFromText()">rebuild</a>
-	    or <a href="#" id="templateSaveLink">save</a>.</i>
-	  <br><i>You can also <a href="#" onclick="resetEverything()">reset</a> the template to the <a href="#" id="initialExample">initial example.</a></i>
-	  <br><i>The template language describes a <a href="http://en.wikipedia.org/wiki/Context-free_grammar">context-free grammar</a>, which the player controls. The syntax can be found beneath the edit box.</i>
+	  <i><a id="undoEdit">Undo</a>
+            | <a id="redoEdit">Redo</a>
+            | <a href="#" onclick="rebuildGrammarAndLetterFromText()">Run</a>
+	    | <a href="#" id="templateSaveLink">Save</a>
+            | <a href="#" onclick="resetEverything()">Reset</a> (to <a href="#" id="initialExample">initial example</a>)</i>
 	</small>
 	<br>
 	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
@@ -100,6 +101,10 @@ function removeLetter() {
 
 function saveTemplateInStorage(){
     localStorage.setItem (storageKey, template.value)
+    initSaveLink()
+}
+
+function initSaveLink(){
     $("#templateSaveLink").attr("href","data:text/plain;charset=utf-8," + encodeURIComponent(template.value)).attr("download","template.txt")
 }
 
@@ -108,15 +113,27 @@ function createEditor() {
     editor = grammar.newEditor(editorArgs)
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
     editor.addNotify (saveTemplateInStorage)
+    editor.addNotify (recordEdit)
 }
 
 function rebuildGrammarFromText() {
-    grammar = new LetterWriter.Grammar(template.value).normalize()
-    createEditor()
-    restartLetterFromGrammar()
-    // do a bit of notifying (calling the editor's main notify function would update this textarea, not what we want)
-    editor.warnChangeFunction()
-    saveTemplateInStorage()
+    try {
+        grammar = new LetterWriter.Grammar(template.value).normalize()
+        createEditor()
+        restartLetterFromGrammar()
+// do a bit of notifying (calling the editor's main notify function would update this textarea, not what we want)
+        editor.warnChangeFunction()
+        saveTemplateInStorage()
+	$("#editorTemplate").focus()
+    } catch (e) { }
+}
+
+function templateEdited() {
+    rebuildGrammarFromText()
+    recordEdit()
+
+    redoHistory = []
+    $("#redoEdit").removeAttr("href")  // disable redo link
 }
 
 function restartLetterFromGrammar() {
@@ -146,17 +163,22 @@ function loadInitialGrammar() {
     var storedText = localStorage.getItem(storageKey)
 
     try {
-    grammar = (storedText && storedText.length > 0 && /\S/.test(storedText)) ? new LetterWriter.Grammar(storedText) : LetterWriter.Grammar.newFromUrl(defaultSource)
+	grammar = (storedText && storedText.length > 0 && /\S/.test(storedText))
+	    ? new LetterWriter.Grammar(storedText)
+	    : LetterWriter.Grammar.newFromUrl(defaultSource)
     } catch (e) {
-       $("#editorTemplateFailedLoad").append("<i>Failed to initialize:</i><br><code><verbatim>" + storedText + "</verbatim></code><br><span class=\"undefinedParameter\">" + e.message + "</span></font>")
-       console.log(e.message);
-       grammar = LetterWriter.Grammar.newFromUrl(defaultSource) }
+	$("#editorTemplateFailedLoad").append("<i>Failed to initialize:</i><br><code><verbatim>" + storedText + "</verbatim></code><br><span class=\"undefinedParameter\">" + e.message + "</span></font>")
+	console.log(e.message);
+	grammar = LetterWriter.Grammar.newFromUrl(defaultSource)
+    }
     grammar = grammar.normalize()
     createEditor()
 
     $("#editorTemplate").change(null)
     template.value = grammar.toCanonicalString()
-    $("#editorTemplate").change(rebuildGrammarFromText)
+    $("#editorTemplate").change(templateEdited)
+    initSaveLink()
+    initEditHistory()
 
     letter = grammar.clone().newLetter()
 }
@@ -169,6 +191,60 @@ function resetEverything() {
         loadInitialGrammar()
     }
 }
+
+
+var undoHistory, redoHistory;
+var maxUndos = 10;
+
+function recordEdit() {
+    var str = editor.grammar.toCanonicalString()
+    if (undoHistory.length == 0 || str != undoHistory[undoHistory.length - 1]) {
+	undoHistory.push (str)
+	if (undoHistory.length >= maxUndos)
+	    undoHistory.shift()
+	if (undoHistory.length > 1)
+	    $("#undoEdit").attr("href","#")  // enable undo link
+    }
+}
+
+function initEditHistory() {
+    undoHistory = [template.value]
+    redoHistory = []
+    $("#undoEdit").removeAttr("href")  // disable undo link
+    $("#redoEdit").removeAttr("href")  // disable redo link
+}
+
+function undoEdit(e) {
+    e.preventDefault()
+    var str = grammar.toCanonicalString()
+    var oldStr = str;
+    while (undoHistory.length > 0 && str == oldStr) {
+	var oldStr = undoHistory.pop()
+    }
+    if (undoHistory.length == 0)
+	$("#undoEdit").removeAttr("href")  // disable undo link
+    if (oldStr != str) {
+	redoHistory.push(str)
+	template.value = oldStr
+	rebuildGrammarFromText()
+	recordEdit()
+	$("#redoEdit").attr("href","#")  // enable redo link
+    }
+}
+$("#undoEdit").click(undoEdit)
+
+function redoEdit(e) {
+    e.preventDefault()
+    if (redoHistory.length > 0) {
+	template.value = redoHistory.pop()
+	rebuildGrammarFromText()
+	if (redoHistory.length == 0)
+	    $("#redoEdit").removeAttr("href")  // disable redo link
+	recordEdit()
+    }
+}
+$("#redoEdit").click(redoEdit)
+
 
 $(function(){
     setupTemplateSyntax()

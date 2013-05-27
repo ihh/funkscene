@@ -873,3 +873,8 @@ body>.ui-tooltip {
     background: #fffff0;
     box-shadow: 0 0 4px #666;
 }
+
+.parseTreeHighlight {
+    background: blue;
+    color: yellow;
+}

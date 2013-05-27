@@ -112,6 +112,10 @@ function createEditor() {
     removeEditor()
     editor = grammar.newEditor(editorArgs)
     editor.warnChange ($("#restartWarning"), "The underlying template has been edited. Restart the letter to stay in sync.")
+// the following line is disabled, meaning that click-navigation from parse tree to editor
+// will still be attempted, even if parse tree has gotten out of sync with editor
+// This may cause errors which are not currently caught...
+//    editor.addNotify (function() { letter.detachEditor() })
     editor.addNotify (saveTemplateInStorage)
     editor.addNotify (recordEdit)
 }
@@ -136,10 +140,12 @@ function templateEdited() {
     $("#redoEdit").removeAttr("href")  // disable redo link
 }
 
-function restartLetterFromGrammar() {
+function restartLetterFromGrammar(firstTime) {
     removeLetter()
     letter = grammar.clone().newLetter()
-    letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
+    letter.attachEditor(editor)
+    if (!firstTime)
+        letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
 }
 
 function rebuildGrammarAndLetterFromText() {
@@ -180,7 +186,7 @@ function loadInitialGrammar() {
     initSaveLink()
     initEditHistory()
 
-    letter = grammar.clone().newLetter()
+    restartLetterFromGrammar(true)
 }
 
 function resetEverything() {

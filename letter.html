@@ -17,7 +17,9 @@
 
       <!-- Game container -->
       <div id="letterDebugger">
-	<div id="editorMap"></div>
+	<div id="editorMapContainer">
+	  <div id="editorMap"></div>
+	</div>
 	<div id="gameAndParseTreeContainer">
 	  <div id="gameContainer">
 	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
@@ -36,35 +38,42 @@
 
 	    <br><br><br>
 	  </div>
-	  <div id="editorParseTree"></div>
+	  <div id="editorParseTreeContainer">
+	    <div id="editorParseTree"></div>
+	  </div>
 	</div>
       </div>
 
+      <hr>
       <div id="editor">
+
 	<h5>Phrasebook</h5>
 	<div id="editorList"></div>
 	<small><i><a href="#" id="addNontermLink">Add a phrase</a></i></small>
+
+	<hr>
 	<h5>Sliders</h5>
 	<div id="editorParams"></div>
 	<small><i><a href="#" id="addSliderLink">Add a slider</a></i></small>
-      </div>
 
-      <div id="reveal">
-	<small>
-	  <i><a id="undoEdit">Undo</a>
-            | <a id="redoEdit">Redo</a>
-            | <a href="#" onclick="rebuildGrammarAndLetterFromText()">Run</a>
-	    | <a href="#" id="templateSaveLink">Save</a>
-            | <a href="#" onclick="resetEverything()">Reset</a> (to <a href="#" id="initialExample">initial example</a>)</i>
-	</small>
-	<br>
-	<textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
-	</textarea>
-	<div id="editorTemplateFailedLoad"></div>
-	<small><br>
-	  <i><a href="#" id="SyntaxToggle">Template language syntax</a></i>
-	<br>
-	<div id="TemplateSyntax"></div></small>
+	<hr>
+	<div id="reveal">
+	  <small>
+	    <i><a id="undoEdit">Undo</a>
+              | <a id="redoEdit">Redo</a>
+              | <a href="#" onclick="rebuildGrammarAndLetterFromText()">Run</a>
+	      | <a href="#" id="templateSaveLink">Save</a>
+              | <a href="#" onclick="resetEverything()">Reset</a> (to <a href="#" id="initialExample">initial example</a>)</i>
+	  </small>
+	  <br>
+	  <textarea id="editorTemplate" rows="10" columns="80" style="width: 100%; vertical-align: text-top">
+	  </textarea>
+	  <div id="editorTemplateFailedLoad"></div>
+	  <small><br>
+	    <i><a href="#" id="SyntaxToggle">Template language syntax</a></i>
+	    <br>
+	    <div id="TemplateSyntax"></div></small>
+	</div>
       </div>
 
     </div>

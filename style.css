@@ -825,12 +825,12 @@ body>.ui-tooltip {
     border: 0;
 }
 
-#letterDebugger>#editorMap {
+#letterDebugger>#editorMapContainer {
     width: 32%;
-    min-height: 600px;
+    min-height: 592px;  /* 600px minus top & bottom padding */
     float: left;
     margin: 0;
-    padding: 0;
+    padding: 4px;
 
     border: 1px solid;
     border-radius: 4px;
@@ -839,6 +839,11 @@ body>.ui-tooltip {
 
     background: #fffff0;
     box-shadow: 0 0 4px #666;
+}
+
+#letterDebugger>#editorMapContainer>#editorMap {
+    width: 100%;
+    min-height: 592px;
 }
 
 #letterDebugger>#gameAndParseTreeContainer {
@@ -863,12 +868,12 @@ body>.ui-tooltip {
     -webkit-border-radius: 4px;
 }
 
-#letterDebugger>#gameAndParseTreeContainer>#editorParseTree {
-    width: 49%;
-    min-height: 600px;
+#letterDebugger>#gameAndParseTreeContainer>#editorParseTreeContainer {
+    width: 48%;
+    min-height: 592px;  /* 600px minus top & bottom padding */
     float: left;
     margin: 0;
-    padding: 0;
+    padding: 4px;
 
     border: 1px solid;
     border-radius: 4px;
@@ -877,6 +882,11 @@ body>.ui-tooltip {
 
     background: #fffff0;
     box-shadow: 0 0 4px #666;
+}
+
+#letterDebugger>#gameAndParseTreeContainer>#editorParseTreeContainer>#editorParseTree {
+    width: 100%;
+    min-height: 592px;
 }
 
 .parseTreeHighlight {

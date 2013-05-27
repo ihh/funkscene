@@ -585,6 +585,11 @@ h5 {
     clear: both;
 }
 
+.editorSortLink {
+    font-style: italic;
+    font-size: small;
+}
+
 #editorList {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     list-style-type: none;

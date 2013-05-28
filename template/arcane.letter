@@ -1,0 +1,67 @@
+@start => [_Well, this is it: the dreaded cover letter. Final step in your application to Arcane College._
+
+_Competition is fierce, with over fifteen applicants to a place, and it's gotten worse during the recession (despite the government slashing the Magical Ingredient Allowance, which you might think would deter people). You're going to have to make your letter stand out._
+
+||Shall we begin?]{@opening a Bachelor's Degree in @subject at Arcane College.
+@something_about_me
+@faculty
+@yours_sincerely_etc}
+pause @something_about_me[thrice]  => [
+_Might be a good idea to say a little more about yourself._ 
+|What will you say?]{Emphasize my positive qualities=>@my_positive_qualities; @something_about_me|Say why I'm right for the position=>@right_for_the_position; @something_about_me|Describe my experience=>@i_have_much_relevant_experience; @something_about_me|I think I've talked enough about myself.=>}
+pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts|Illusion=>Illusory Light & Magic}
+pause @opening => [|_This really shouldn't be so hard. These letters are pretty formulaic. All you have to do is put the pieces together._
+   
+_Let's start at the beginning, then: with the opening._|Pick an opening...]{Dear Witch or Wizard=>Dear Witch or Wizard,
+
+I would like to study towards|To Whom It May Concern=>To Whom It May Concern:
+
+I seek to apply for|Brothers and Sisters in Magic!=>Brothers and Sisters in Magic!
+
+It is my heart's desire to obtain}
+@my_positive_qualities => [_Good idea. Say what a wonderful person you are._
+|Let's start with some personal details]{My positive leadership qualities=>@among_my_virtues I have exceptional leadership skills.
+@i_have_demonstrated_leadership_qualities |My extracurricular activities=>@apart_from_my_studies I greatly enjoy extracurricular activities.
+@extracurricular_activities|My family's hardship=>Arcane College's commitment to advancing the underprivileged is important to me, as I grew up in a very poor family.
+@i_have_prevailed_through_hardship}
+random @apart_from_my_studies => [apart from my studies?]{Choose me!=>Apart from my studies, |Choose me!=>As well as my studies, |Choose me!=>When I am not studying, }
+random @among_my_virtues => [among my virtues?]{Choose me!=>Among my virtues is the fact that |Choose me!=>One of my many good qualities is that |Choose me!=>I would like to point out that |Choose me!=>My many favorable qualities include the following: }
+@i_can_explain_my_poverty => [I should probably give some explanation for why I grew up poor. Wizard families don't usually stay poor for long.|What reason for my poverty?]{Curse on parents=>|Karmically balanced wish-fulfillment=>|Inexperience at magic=>}
+@i_am_a_persecuted_drow_elf => [persecution of drow elves?]{Choose me!=>}
+@i_have_prevailed_through_hardship => [hardship?]{I am a drow elf, with an undeserved reputation for evil=>@i_am_a_persecuted_drow_elf|I'm poor=>Growing up, I was extremely poor. @i_can_explain_my_poverty|I was injured by a magical curse=>}
+@i_create_parallel_worlds => [creating parallel worlds?]{Choose me!=>}
+@i_terrify_the_normals => [terrifying the normals?]{Choose me!=>}
+@i_have_fought_a_nameless_evil => [fighting nameless evil?]{Choose me!=>}
+@extracurricular_activities => [extracurricular?]{Magical sports=>@i_enjoy_magical_sports|Fighting nameless evil=>@i_have_fought_a_nameless_evil|Terrifying the normals=>@i_terrify_the_normals|Illusions and passages to parallel worlds=>@i_create_parallel_worlds|Forging of magical artifacts=>@i_forge_magical_artifacts}
+@i_enjoy_magical_sports => [sporting?]{Choose me!=>}
+@i_have_demonstrated_leadership_qualities => [In particular, I have led ||What did you lead?]{An expedition to the lost pyramid of Mentuhotep=>an expedition to discover the magical treasures of the lost pyramid of Mentuhotep, which despite being ultimately unsuccessful, enabled me to develop extensive skills in the misdirection and evasion of police.|A death metal band=>a musical ensemble of my peers (we enjoyed attention from labels and even some modest success with our recording "Bohemian Abattoir").|The school debating team=>}
+@yours_sincerely_etc => [What formal closing to use?]{Choose me!=>}
+pause @faculty[thrice]  => [Let's namedrop a few faculty.]{Professor Dwarfenstein[once] =>I'd like to work with Professor Dwarfenstein.
+@faculty|Dr Ogre[once] =>I'd like to work with Dr Ogre.
+@faculty|Professor Whiskers[once] =>I'd like to work with Professor Whiskers.
+@faculty|That's probably enough namedropping=>I would of course be interested in working with any other faculty who might be available to mentor me.}
+@a_monster_threatened_my_village => [monster threatened village?]{Choose me!=>}
+@i_underwent_transformation => [i underwent transformation?]{Choose me!=>}
+@i_defeated_a_monster => [i defeated monster?]{Choose me!=>}
+@i_have_much_relevant_experience => [What experience have I gained already?]{That quest I went on=>@a_monster_threatened_my_village @i_underwent_transformation @i_defeated_a_monster|My magical apprenticeship=>@i_traveled_to_find_master @how_did_the_apprenticeship_go|My independent research project=>@i_accidentally_unleashed_nameless_evil @i_followed_evil_around_world @how_did_that_battle_with_nameless_evil_work_out}
+@i_accidentally_unleashed_nameless_evil => [unleashed nameless evil?]{Yeah, this was pretty epic=>|Worst thing I've ever done=>}
+@i_followed_evil_around_world => [followed evil around world?]{Destroyed Californian suburb=>Great school district. Sad.|Battled pirates=>}
+@i_am_still_haunted_by_evil => [still haunted by evil?]{Choose me!=>}
+@i_vanquished_the_nameless_evil_forever => [vanquished nameless evil?]{Choose me!=>}
+@how_did_that_battle_with_nameless_evil_work_out => [how did that battle with nameless evil work out?]{@i_vanquished_the_nameless_evil_forever|@i_am_still_haunted_by_evil}
+@i_traveled_to_find_master => [i traveled to find master?]{Choose me!=>}
+@i_failed_my_apprenticeship => [failed apprenticeship?]{Choose me!=>}
+@i_had_a_successful_apprenticeship => [successful apprenticeship?]{Choose me!=>}
+@how_did_the_apprenticeship_go => [how did the apprenticeship go?]{I had a very successful apprenticeship=>@i_had_a_successful_apprenticeship |Unfortunately this project did not work out, but not for want of trying=>@i_failed_my_apprenticeship}
+@right_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@i_am_dedicated_to_a_field_of_interest_to_the_academy|My loyalty to the ethos of the school=>}
+@i_am_familiar_with_the_ontology_of_spells => [ontology of spells?]{Choose me!=>}
+@i_am_practised_in_the_physical_ontology => [physical ontology?]{Choose me!=>}
+@i_excel_in_the_naming_of_magical_things => [naming of magical things?]{@i_am_practised_in_the_physical_ontology|@i_am_familiar_with_the_ontology_of_spells}
+@i_enjoy_questing_in_the_field => [questing in the field?]{Choose me!=>}
+@i_forge_magical_artifacts => [artifact fabrication?]{Choose me!=>}
+@i_like_fieldwork => [fieldwork?]{@i_forge_magical_artifacts|@i_enjoy_questing_in_the_field}
+@i_can_raise_the_dead => [necromancy?]{Choose me!=>}
+@i_can_reverse_time_in_a_local_bubble => [local time reversal?]{Choose me!=>}
+@i_am_a_healer => []{Choose me!=>}
+@my_specialty_is_highly_sought => [winding back the ravages of time?]{I'm a healer=>@i_am_a_healer|I can go back in time. On short trips.=>@i_can_reverse_time_in_a_local_bubble|Your dead? I can raise them.=>@i_can_raise_the_dead}
+@i_am_dedicated_to_a_field_of_interest_to_the_academy => [dedication to field of magic?]{My discipline is highly sought after=>@my_specialty_is_highly_sought|I'm experienced at fieldwork=>@i_like_fieldwork|I have research experience in magical names and theory=>@i_excel_in_the_naming_of_magical_things}

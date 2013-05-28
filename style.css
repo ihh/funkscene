@@ -827,9 +827,10 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#editorMapContainer {
-    width: 32%;
+    width: 100%;
     min-height: 592px;  /* 600px minus top & bottom padding */
     float: left;
+    clear: both;
     margin: 0;
     padding: 4px;
 
@@ -848,8 +849,9 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#gameAndParseTreeContainer {
-    width: 66%;
+    width: 100%;
     float: left;
+    clear: both;
     margin: 0;
     padding: 0;
     border: 0;

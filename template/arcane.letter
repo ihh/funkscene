@@ -22,7 +22,7 @@ It is my heart's desire to obtain}
 @my_positive_qualities => [_Good idea. Say what a wonderful person you are._
 |Let's start with some personal details]{My positive leadership qualities=>@among_my_virtues I have exceptional leadership skills.
 @i_have_demonstrated_leadership_qualities |My extracurricular activities=>@apart_from_my_studies I greatly enjoy extracurricular activities.
-@extracurricular_activities|My family's hardship=>Arcane College's commitment to advancing the underprivileged is important to me, as I grew up in a very poor family.
+@extracurricular_activities|My family's hardship=>Arcane College's commitment to advancing the underprivileged is important to me, as I grew up in disadvantaged circumstances.
 @i_have_prevailed_through_hardship}
 random @apart_from_my_studies => [apart from my studies?]{Choose me!=>Apart from my studies, |Choose me!=>As well as my studies, |Choose me!=>When I am not studying, }
 random @among_my_virtues => [among my virtues?]{Choose me!=>Among my virtues is the fact that |Choose me!=>One of my many good qualities is that |Choose me!=>I would like to point out that |Choose me!=>My many favorable qualities include the following: }

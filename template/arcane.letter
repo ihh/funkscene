@@ -9,7 +9,8 @@ _Competition is fierce, with over fifteen applicants to a place, and it's gotten
 pause @something_about_me[thrice]  => [
 _Might be a good idea to say a little more about yourself._ 
 |What will you say?]{Emphasize my positive qualities=>@my_positive_qualities; @something_about_me|Say why I'm right for the position=>@right_for_the_position; @something_about_me|Describe my experience=>@i_have_much_relevant_experience; @something_about_me|I think I've talked enough about myself.=>}
-pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts|Illusion=>Illusory Light & Magic}
+pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts (specializing in @player_phrase_subject1)|Illusion=>Illusory Light & Magic}
+@player_phrase_subject1 => [|what specialization?]{reanimation=>offensive reanimation|forensics=>forensic questioning|cleanup=>crime scene cleanup}
 pause @opening => [|_This really shouldn't be so hard. These letters are pretty formulaic. All you have to do is put the pieces together._
    
 _Let's start at the beginning, then: with the opening._|Pick an opening...]{Dear Witch or Wizard=>Dear Witch or Wizard,
@@ -38,9 +39,9 @@ random @accused_of_a_massacre => [accused of a massacre?]{Naturally, as a conspi
 @i_have_fought_a_nameless_evil => [fighting nameless evil?]{Choose me!=>}
 @extracurricular_activities => [extracurricular?]{Magical sports=>@i_enjoy_magical_sports I have represented my local Youth Magic chapter at an international level, last year touring @computer_phrase_extracurricular_activities3 to play the local @computer_phrase_extracurricular_activities1.
 |Fighting nameless evil=>@i_have_fought_a_nameless_evil|Terrifying the normals=>@i_terrify_the_normals|Illusions and passages to parallel worlds=>@i_create_parallel_worlds|Forging of magical artifacts=>@i_forge_magical_artifacts}
-random @computer_phrase_extracurricular_activities3 => {Romania|Moldova|Transylvania|New England|Colombia}
-random @computer_phrase_extracurricular_activities2 => {spit|blood|mud|bile}
-random @computer_phrase_extracurricular_activities1 => {vampires|lycanthropes|@computer_phrase_extracurricular_activities2-demons}
+random @computer_phrase_extracurricular_activities3 => [computer phrase extracurricular activities3?]{Romania|Moldova|Transylvania|New England|Colombia}
+random @computer_phrase_extracurricular_activities2 => [computer phrase extracurricular activities2?]{spit|blood|mud|bile}
+random @computer_phrase_extracurricular_activities1 => [computer phrase extracurricular activities1?]{vampires|lycanthropes|@computer_phrase_extracurricular_activities2-demons}
 @i_enjoy_magical_sports => [I'm a keen athlete. Every weekend, I play ||What sport?]{Broom-based softball=>aerial softball, having developed my flying skills to a high level of proficiency.|Blind soccer=>soccer, using permanently invisible balls.|Golem wrestling=>wrestling with mud-based and (more recently) igneous pumice-based golems.}
 @i_have_demonstrated_leadership_qualities => [In particular, I have led |...<br>|What did you lead?]{An expedition to the lost pyramid of Mentuhotep=>an expedition to discover the magical treasures of the lost pyramid of Mentuhotep, which despite being (ultimately) unsuccessful, led all seven of us to develop extensive skills in the misdirection and evasion of international police.|A death metal band=>a musical ensemble of my peers (we enjoyed attention from record labels and even some modest success with our cover of "Bohemian Abattoir").|The school debating team=>my high school debating team, where (in addition to leading a group of five eager rhetoricians) I was able to practice both my offensive and defensive Deep Empathy techniques.}
 @yours_sincerely_etc => [What formal closing to use?]{Choose me!=>}

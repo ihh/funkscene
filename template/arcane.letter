@@ -36,8 +36,12 @@ random @accused_of_a_massacre => [accused of a massacre?]{Naturally, as a conspi
 @i_create_parallel_worlds => [creating parallel worlds?]{Choose me!=>}
 @i_terrify_the_normals => [terrifying the normals?]{Choose me!=>}
 @i_have_fought_a_nameless_evil => [fighting nameless evil?]{Choose me!=>}
-@extracurricular_activities => [extracurricular?]{Magical sports=>@i_enjoy_magical_sports|Fighting nameless evil=>@i_have_fought_a_nameless_evil|Terrifying the normals=>@i_terrify_the_normals|Illusions and passages to parallel worlds=>@i_create_parallel_worlds|Forging of magical artifacts=>@i_forge_magical_artifacts}
-@i_enjoy_magical_sports => [sporting?]{Choose me!=>}
+@extracurricular_activities => [extracurricular?]{Magical sports=>@i_enjoy_magical_sports I have represented my local Youth Magic chapter at an international level, last year touring @computer_phrase_extracurricular_activities3 to play the local @computer_phrase_extracurricular_activities1.
+|Fighting nameless evil=>@i_have_fought_a_nameless_evil|Terrifying the normals=>@i_terrify_the_normals|Illusions and passages to parallel worlds=>@i_create_parallel_worlds|Forging of magical artifacts=>@i_forge_magical_artifacts}
+random @computer_phrase_extracurricular_activities3 => {Romania|Moldova|Transylvania|New England|Colombia}
+random @computer_phrase_extracurricular_activities2 => {spit|blood|mud|bile}
+random @computer_phrase_extracurricular_activities1 => {vampires|lycanthropes|@computer_phrase_extracurricular_activities2-demons}
+@i_enjoy_magical_sports => [I'm a keen athlete. Every weekend, I play ||What sport?]{Broom-based softball=>aerial softball, having developed my flying skills to a high level of proficiency.|Blind soccer=>soccer, using permanently invisible balls.|Golem wrestling=>wrestling with mud-based and (more recently) igneous pumice-based golems.}
 @i_have_demonstrated_leadership_qualities => [In particular, I have led |...<br>|What did you lead?]{An expedition to the lost pyramid of Mentuhotep=>an expedition to discover the magical treasures of the lost pyramid of Mentuhotep, which despite being (ultimately) unsuccessful, led all seven of us to develop extensive skills in the misdirection and evasion of international police.|A death metal band=>a musical ensemble of my peers (we enjoyed attention from record labels and even some modest success with our cover of "Bohemian Abattoir").|The school debating team=>my high school debating team, where (in addition to leading a group of five eager rhetoricians) I was able to practice both my offensive and defensive Deep Empathy techniques.}
 @yours_sincerely_etc => [What formal closing to use?]{Choose me!=>}
 pause @faculty[thrice]  => [Let's namedrop a few faculty.]{Professor Dwarfenstein[once] =>I'd like to work with Professor Dwarfenstein.

@@ -5,7 +5,7 @@ html, body {
     border: 0px;
 }
 
-html, body, select, select>option, ul, ul>li {
+html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMenu ul>li {
     margin: 0px; 
     padding: 0px;
     background-color: #eee;
@@ -17,11 +17,11 @@ html, body, select, select>option, ul, ul>li {
     background-color: #fffff8;
 }
 
-select, select>option {
+.sceneMenu select, .sceneMenu select>option {
     font-size: medium;
 }
 
-input[type='checkbox'] {
+.sceneMenu input[type='checkbox'] {
     -webkit-appearance:none;
     width:2em;
     height:2em;
@@ -30,7 +30,7 @@ input[type='checkbox'] {
     border:1px solid #555;
    
 }
-input[type='checkbox']:checked {
+.sceneMenu input[type='checkbox']:checked {
     background: darkgoldenrod;
 }
 
@@ -188,7 +188,7 @@ input {
 }
 
 /* Menu item */
-.menu>label{
+.sceneMenu>label{
     color: black;
     line-height:20px;
     display:block;
@@ -198,34 +198,34 @@ input {
     border-width: 1px 1px 0px 1px
 }
 
-.menu>label:hover {
+.sceneMenu>label:hover {
     background-color: #e0e0e0;
 }
 
-.menu>label[disabled] {
+.sceneMenu>label[disabled] {
     font-style: italic;
     color: gray;
 }
-.menu>label:hover[disabled] {
+.sceneMenu>label:hover[disabled] {
     background-color: #f0f0f0;
 }
 
 /* First item in list */
-.menu>.firstOption{
+.sceneMenu>.firstOption{
     border-top-width:1px;
     border-top-right-radius:10px;
     border-top-left-radius:10px;
 }
 
 /* Last item in list */
-.menu>.lastOption{
+.sceneMenu>.lastOption{
     border-bottom-width:1px;
     border-bottom-right-radius:10px;
     border-bottom-left-radius:10px;
 }
 
 /* Only item in list */
-.menu>.onlyOption{
+.sceneMenu>.onlyOption{
     border-width:1px;
     border-radius:10px;
 }
@@ -245,7 +245,7 @@ input {
 }
 
 .continue:hover {
-    color: #e0e0e0;  /* Same as menu option hover color, darker than usual foreground color */
+    color: #e0e0e0;  /* Same as .sceneMenu option hover color, darker than usual foreground color */
     background-color: #505050; /* Darker than usual background color */ 
 }
 
@@ -585,9 +585,15 @@ h5 {
     clear: both;
 }
 
-.editorSortLink {
+.editorLink {
     font-style: italic;
     font-size: small;
+}
+
+.editorNavLinks {
+    position:absolute;
+    top:0;
+    right:1em;
 }
 
 #editorList {
@@ -688,6 +694,7 @@ h5 {
 .NontermProperties {
     width: 100%;
     height: 1em;
+    margin-top: 6px;  /* to clear the nav links */
 }
 
 .NontermProperties>.NontermPropertiesColumn {
@@ -735,13 +742,12 @@ h5 {
 }
 
 .deleteNonterminal {
-    float: right;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size:small;
     font-style:italic;
     position:absolute;
-    bottom:0;
-    right:0;
+    bottom:4px;
+    left:1em;
     white-space: nowrap;
     text-align:right;
 }
@@ -752,13 +758,12 @@ h5 {
     width:100%;
 }
 
-.nonterminal>.rules>.rule {
+.nonterminal>.rules>.rule { 
     border: 1px solid;
     border-radius: 4px 0 4px 0;
     box-shadow: 0 0 2px #888;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
-    background: #FFEDD1;
 }
 
 .addRule {
@@ -769,9 +774,21 @@ h5 {
 }
 
 .deleteRule {
-    clear: both;
+    bottom:0;
+    right:0;
+    clear:both;
     font-size: small;
     font-style: italic;
+}
+
+#editorList .nonterminal>.rules>.rule,
+#editorList .nonterminal>.rules>.rule>.NontermControl,
+#editorList .nonterminal>.rules>.rule>.NontermControl>.NontermControlWarning,
+#editorList .nonterminal>.rules>.rule>.NontermControl>.NontermControlName,
+#editorList .nonterminal>.rules>.rule>.NontermControl>.NontermControlValue,
+#editorList .nonterminal>.rules>.rule>.deleteRule
+{ /* need the #editorList for extra specificity over "#editorList div>div" */
+    background: #FFEDD1;
 }
 
 .rules>.rule>.rhs textarea {
@@ -792,7 +809,7 @@ h5 {
 }
 
 .placeholderPropertyEditor>.NontermControlValue>textarea {
-    background: #FFFAE6;  /* lemonchiffon, half saturation, hue slightly redder */
+    background: #FEFCE5;  /* matches lemonchiffon */
 }
 
 .promptPropertyEditor>.NontermControlValue>textarea {

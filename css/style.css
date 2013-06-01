@@ -21,7 +21,7 @@ html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMe
     font-size: medium;
 }
 
-.sceneMenu input[type='checkbox'] {
+.NontermControlValue input[type='checkbox'] {
     -webkit-appearance:none;
     width:2em;
     height:2em;
@@ -30,7 +30,7 @@ html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMe
     border:1px solid #555;
    
 }
-.sceneMenu input[type='checkbox']:checked {
+.NontermControlValue input[type='checkbox']:checked {
     background: darkgoldenrod;
 }
 

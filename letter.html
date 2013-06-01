@@ -61,6 +61,14 @@
 	<small><i><a href="#" id="addSliderLink">Add a slider</a></i></small>
 
 	<hr>
+	<h5>Configuration</h5>
+
+	<form><i>Initial recharge time for "undo":</i>
+	  <input type="text" size="4" id="editorUndoWait"/>
+	  <i>milliseconds</i></form>
+
+	<hr>
+	<h5>Edit template directly</h5>
 	<div id="reveal">
 	  <small>
 	    <i><a id="undoEdit">Undo</a>
@@ -156,12 +164,10 @@ function templateEdited() {
     $("#redoEdit").removeAttr("href")  // disable redo link
 }
 
-function restartLetterFromGrammar(firstTime) {
+function restartLetterFromGrammar() {
     removeLetter()
     letter = grammar.clone().newLetter()
     letter.attachEditor(editor)
-    if (!firstTime)
-        letter.conceal = function() { }   // turn off conceal, don't hide edit box once we're done
 }
 
 function rebuildGrammarAndLetterFromText() {
@@ -202,7 +208,7 @@ function loadInitialGrammar() {
     initSaveLink()
     initEditHistory()
 
-    restartLetterFromGrammar(true)
+    restartLetterFromGrammar()
 }
 
 function resetEverything() {

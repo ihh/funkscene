@@ -4,6 +4,7 @@
     var lhsStack = [];
     var nonterms = [];
     var nontermObj = {};
+    var undo = {};
 
     function extend(a,b) { return LetterWriter.extend(a,b) }
 
@@ -140,9 +141,13 @@ start
  = spc* statement*  { return { nonterm: nontermObj,
 			       start: getStart(),
 			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
-			       params: params } }
+			       params: params,
+			       undo: undo } }
 
-statement = param_decl / rule
+statement = param_decl / undo / rule
+
+undo
+    = "undo" spc* "{" spc* "wait" spc* ":" spc* w:nonnegative_numeric_literal spc* "}" spc* { undo.wait = w }
 
 param_decl
  = "control" spc+ param_list spc*

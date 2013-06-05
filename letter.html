@@ -36,13 +36,13 @@
 	    <br><br><br>
 	  </div>
 	  <div id="editorParseTreeContainer">
-	    <h5>Phrase Debugger</h5>
+	    <h5>Debugger</h5>
 	    <div id="editorParseTree"></div>
 	  </div>
 	</div>
 	<div id="editorMapContainer">
 	  <a name="editorMap">
-	    <h5>Phrase Connection Map</h5>
+	    <h5>Choice Connection Map</h5>
 	  </a>
 	  <div id="editorMap"></div>
 	</div>
@@ -51,9 +51,9 @@
       <hr>
       <div id="editor">
 
-	<h5>Phrasebook</h5>
+	<h5>ChoiceBook</h5>
 	<div id="editorList"></div>
-	<small><i><a href="#" id="addNontermLink">Add a phrase</a></i></small>
+	<small><i><a href="#" id="addNontermLink">Add a choice</a></i></small>
 
 	<hr>
 	<h5>Sliders</h5>
@@ -65,7 +65,7 @@
 
 	<form><i>Initial recharge time for "undo":</i>
 	  <input type="text" size="4" id="editorUndoWait"/>
-	  <i>milliseconds</i></form>
+	  <i>milliseconds (increases by <span id="editorUndoPercentIncrease"></span>% with each use)</i></form>
 
 	<hr>
 	<h5>Raw template</h5>

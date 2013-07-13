@@ -11,7 +11,7 @@ _Competition is fierce, with over fifteen applicants to a place, and it's gotten
 
 @yours_sincerely_etc}
 pause @something_about_me[thrice]  => [_Might be a good idea to say a little more about yourself._
-|What will you say?]{Emphasize my positive qualities=>@my_positive_qualities; @something_about_me|Say why I'm right for the position=>@right_for_the_position; @something_about_me|Describe my experience=>@i_have_much_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
+|What will you say?]{Emphasize my positive qualities=>@my_positive_qualities; @something_about_me|Say why I'm right for the position=>@suitability_for_the_position; @something_about_me|Describe my experience=>@my_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
 pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts @necromantic_specialization|Illusion=>Illusory Light & Magic}
 @necromantic_specialization => [...
 _Everyone chooses necromancy. You ought to be a bit more specific._
@@ -45,7 +45,7 @@ _You've never told anyone about that before. Maybe this whole experience will be
 @tragic_theme => [What's your favorite tragic theme?]{Amoral sociopathy=>lawyers.|Hubristic elitism=>scientists.|Soul-destroying apathy=>politics.}
 @comedic_theme => [What's your favorite comedic theme?]{Rabbis and priests=>rabbis and priests, generally getting burned at the stake by vengeful heathens.|Bachelor parties=>bachelor parties in which all the protagonists suffer Pinocchio hexes.|Tolkien=>alternate versions of Middle Earth in which all the races are obsessed with sex.|Current events=>the way media outlets sensationalize important issues, like maelstrom-induced sun warming.|Ex-hippies=>former sixties radicals, who now spend their nights Palantir-tossing and their days smoking Myst-Wattle.}
 @romance_characters => [Who are the protagonists of your pleasant filth?]{witches=>otherwise-rational witches|wizards=>otherwise-sensible wizards|cats=>otherwise-cool cats}
-@romances => {Tragedies=>dark tragedies of star-crossed lovers doomed by an accidental curse of fate.|Comedies=>comic stories of meet-cutes, missed connections and misfiring glamor charms, ending with a kiss.|Erotica=>surging tales of passion: tongues of blue fire lapping orbs of power, slow-building tsunamis of supernatural lust, maelstroms of primal energy driving @romance_characters to oblivion. The usual.}
+@romances => [romances?]{Tragedies=>dark tragedies of star-crossed lovers doomed by an accidental curse of fate.|Comedies=>comic stories of meet-cutes, missed connections and misfiring glamor charms, ending with a kiss.|Erotica=>surging tales of passion: tongues of blue fire lapping orbs of power, slow-building tsunamis of supernatural lust, maelstroms of primal energy driving @romance_characters to oblivion. The usual.}
 @political_utopia => [What's your political ideal?]{social democracy=>social democracy|syndicalist anarchy=>syndicalist anarchy|economic liberty=>economic liberty|free love=>free love|ecological harmony=>ecological harmony|religious perfection=>religious perfection}
 @political_dystopia => [What's your political nightmare?]{capitalist callousness=>capitalist callousness|violent anarchy=>violent anarchy|oppressive taxation=>oppressive taxation|mandated sexuality=>mandated sexuality|rampant pollution=>rampant pollution|religious fundamentalism=>religious fundamentalism}
 @inhabitants_of_utopia => [Describe the inhabitants?]{buff=>muscled Adonises and lush Aphrodites|brainy=>intellectual Einsteins and Lovelaces|good with words=>poetic Byrons and Brontes|highly moral=>ethical apes|good sharers=>mutualistic llamas|incorruptible=>quasi-intelligent plasma waves in the lower ionosphere}
@@ -63,30 +63,30 @@ pause @faculty[thrice]  => [Let's namedrop a few faculty.]{Professor Dwarfenstei
 @faculty|Dr Ogre[once] =>I'd like to work with Dr Ogre.
 @faculty|Professor Whiskers[once] =>I'd like to work with Professor Whiskers.
 @faculty|That's probably enough namedropping=>I would of course be interested in working with any other faculty who might be available to mentor me.}
-@i_underwent_transformation => [i underwent transformation?]{Choose me!=>}
-@i_defeated_a_monster => [i defeated monster?]{Choose me!=>}
-@i_have_much_relevant_experience => [What experience have I gained already?]{That quest I went on=>Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up. @i_underwent_transformation @i_defeated_a_monster|My magical apprenticeship=>@i_traveled_to_find_master @how_did_the_apprenticeship_go|My independent research project=>@i_accidentally_unleashed_nameless_evil @i_followed_evil_around_world @how_did_that_battle_with_nameless_evil_work_out}
+@transformation_into_hero => [What do you want to say about the transformation you underwent?]{Tell them about the artefact=>|Tell them about the visitation=>|Tell them about the Rivening=>|Tell them what you did after=>}
+@defeat_of_monster => [i defeated monster?]{Choose me!=>}
+@my_relevant_experience => [What experience have you gained already?]{Tell them about that quest=>Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up. @transformation_into_hero @defeat_of_monster|Tell them about the magical apprenticeship=>@journey_to_find_master @apprenticeship_outcome|Tell them about my independent research project=>@accidental_unleashing_of_nameless_evil @pursuit_of_unleashed_evil_around_world @outcome_of_battle_with_nameless_evil}
 random @monster_texture => [monster texture?]{speckled|tusked|phlegm-soaked}
 random @monster_fur => [monster fur?]{slime|chitin|spider}
 random @monster_type => [computer phrase1 i have much relevant experience?]{whale|mammoth|bot}
-@i_accidentally_unleashed_nameless_evil => [How do you feel about unleashing a nameless evil on the world?]{Yeah, that was pretty epic=>|Worst thing I've ever done=>}
-@i_followed_evil_around_world => [followed evil around world?]{Destroyed Californian suburb=>Great school district. Sad.|Battled pirates=>}
-@i_am_still_haunted_by_evil => [still haunted by evil?]{Choose me!=>}
-@i_vanquished_the_nameless_evil_forever => [vanquished nameless evil?]{Choose me!=>}
-@how_did_that_battle_with_nameless_evil_work_out => [how did that battle with nameless evil work out?]{@i_vanquished_the_nameless_evil_forever|@i_am_still_haunted_by_evil}
-@i_traveled_to_find_master => [i traveled to find master?]{Choose me!=>}
-@i_failed_my_apprenticeship => [failed apprenticeship?]{Choose me!=>}
-@i_had_a_successful_apprenticeship => [successful apprenticeship?]{Choose me!=>}
-@how_did_the_apprenticeship_go => [how did the apprenticeship go?]{I had a very successful apprenticeship=>@i_had_a_successful_apprenticeship |Unfortunately this project did not work out, but not for want of trying=>@i_failed_my_apprenticeship}
-@right_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@i_am_dedicated_to_a_field_of_interest_to_the_academy|My loyalty to the ethos of the school=>}
+@accidental_unleashing_of_nameless_evil => [How do you feel about unleashing a nameless evil on the world?]{Yeah, that was pretty epic=>|Worst thing I've ever done=>}
+@pursuit_of_unleashed_evil_around_world => [What part do you want to tell them about?]{Gomo-Wan's destruction of the Californian suburb=>Great school district. Sad.|The battle with Balinese hex pirates=>}
+@nameless_evil_haunts_me_still => [...<br> OK, yeah, good idea to come clean. Lay your skeletons on the table. Of the closet. Or something. <br>|So, exactly what part of this should we talk about?]{The nightmares=>|The Collection Times=>|The hourglass=>}
+@nameless_evil_vanquished_forever => [So, what do you want to say about the vanquishing?]{Talk up the general epictude of the battle=>|Those grateful young wizard faces! Wow=>|Minimize the collateral damage=>|Show off a few scars=>}
+@outcome_of_battle_with_nameless_evil => [So, how did that battle with nameless evil work out?]{Tell them you vanquished it forever=>@nameless_evil_vanquished_forever|Tell them it haunts you still=>@nameless_evil_haunts_me_still}
+@journey_to_find_master => [What do you want to say?]{Tell them about your journey=>|Tell them about the encounter=>|Tell them about the Tower=>|Tell them about the Room=>}
+@i_failed_my_apprenticeship => [|...<br> Yes. Better come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your master's desires=>|Simply state the mistake you made=>|Tell them the lesson that was seared on your brain=>}
+@i_had_a_successful_apprenticeship => [What do you want to say about your successful apprenticeship?]{Tell them about the rapport you developed with your master=>|Tell them about the magical challenges you overcame=>|Tell them the last words your master said to you=>}
+@apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>@i_had_a_successful_apprenticeship |Admit the project did not work out, but not for want of trying=>@i_failed_my_apprenticeship}
+@suitability_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@dedication_to_specialist_field|My loyalty to the ethos of the school=>}
 @i_am_familiar_with_the_ontology_of_spells => [ontology of spells?]{Choose me!=>}
 @i_am_practised_in_the_physical_ontology => [physical ontology?]{Choose me!=>}
 @i_excel_in_the_naming_of_magical_things => [naming of magical things?]{@i_am_practised_in_the_physical_ontology|@i_am_familiar_with_the_ontology_of_spells}
 @i_enjoy_questing_in_the_field => [questing in the field?]{Choose me!=>}
 @i_forge_magical_artifacts => [artifact fabrication?]{Choose me!=>}
 @i_like_fieldwork => [fieldwork?]{@i_forge_magical_artifacts|@i_enjoy_questing_in_the_field}
-@i_can_raise_the_dead => [necromancy?]{Choose me!=>}
-@i_can_reverse_time_in_a_local_bubble => [local time reversal?]{Choose me!=>}
-@i_am_a_healer => []{Choose me!=>}
-@my_specialty_is_highly_sought => [winding back the ravages of time?]{I'm a healer=>@i_am_a_healer|I can go back in time. On short trips.=>@i_can_reverse_time_in_a_local_bubble|Your dead? I can raise them.=>@i_can_raise_the_dead}
-@i_am_dedicated_to_a_field_of_interest_to_the_academy => [dedication to field of magic?]{My discipline is highly sought after=>@my_specialty_is_highly_sought|I'm experienced at fieldwork=>@i_like_fieldwork|I have research experience in magical names and theory=>@i_excel_in_the_naming_of_magical_things}
+@i_can_raise_the_dead => [...<br>OK, they'll <i>definitely</i> have heard this schtick before. Be precise.</br>|So yeah, this necromancy?]{It kind of requires a re-enactment=>A re-enactment of the death event, that is. Just a little show.|Using live actors. Who don't stay live=>|And, um. Music=>Music and dance.}
+@i_can_reverse_time => [...<br>They'll know there must be caveats. You have to admit them.<br>|What will you say?]{Tell them about the Time Bends=>Re-emitted photon narcosis...|Tell them about the bubble=>If you're straddling the perimeter of my bubble, don't expect to stay in one piece|Tell them about Glenda=>}
+@i_am_a_healer => [...<br>Of course, they'll know there is a cost...<br>|What spin on the truth do you put?]{That healing is always a zero-sum game=>|That magic attracts daemons=>|Tell them about Uncle Robert=>}
+@my_highly_sought_specialty => [So, what about your specialization makes it so special?]{I'm a healer. Everyone loves a healer.=>@i_am_a_healer|I can go back in time. On short trips.=>@i_can_reverse_time|Your dead? I can raise them.=>@i_can_raise_the_dead}
+@dedication_to_specialist_field => [dedication to field of magic?]{My discipline is highly sought after=>@my_highly_sought_specialty|I'm experienced at fieldwork=>@i_like_fieldwork|I have research experience in magical names and theory=>@i_excel_in_the_naming_of_magical_things}

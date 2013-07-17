@@ -64,7 +64,18 @@ pause @faculty[twice]  => [Let's namedrop a few faculty.]{Professor Dwarfenstein
 @faculty|Dr Ogre[once] =>I'd like to work with Dr Ogre.
 @faculty|Professor Whiskers[once] =>I'd like to work with Professor Whiskers.
 @faculty|I think I've done enough namedropping=>I would of course be interested in working with any faculty who might be available to mentor me.}
-@transformation_into_hero => [What do you want to say about the transformation you underwent?]{Tell them about the artefact=>|Tell them about the visitation=>|Tell them about the Rivening=>|Tell them what you did after=>}
+@transformation_into_hero => [What do you want to say about the transformation you underwent?]{Tell them about the artefact=>_The Silverfish is not, in fact, a fish; it is an Annelid. (It is, however, made of silver.)_
+_The Annelida are the phylum of the ringworms, and the leeches. Annelids have a spiral body plan, quite unlike our own. The larger representatives of the species look truly alien when they writhe._
+_You remember the first time you saw the Silverfish, in the hand of the crone. You shudder, briskly._
+I don't like to talk too much about my hero power. Suffice it to say, I am skilled at the art of persuasion.|Tell them about the visitation=>_She hailed you on the way home, right after you got the summons, looking for all the world like any old beggar lady. Of course she must have had her ways._
+_She showed you the Silverfish, cackling. "Give you an edge," she promised. "Something to help you stay alive. You do know what these contests are really about?"_
+_She didn't show you the scissors, not at first. Not until you'd agreed._
+I am grateful to Mother Grothel for a truly beneficial hero power.|Tell them about the Rivening=>_The scissors were sharp enough; but, as Mother Grothel explained, it is necessary for them to be fractally serrated, to give the Silverfish a surface on which to grab._
+_"Just like a hip replacement, deary," she said of your new silver tongue. "Or a hearing aid!" This made her cackle unto a coughing fit._
+My hero power did not come without sacrifice, and I learned a great respect for the truth.|Tell them what you did after=>_How genuine they used to find you. How sincere those eyes, to your loved ones._
+_Love! There's a memory. Difficult to love a liar. Especially difficult if the liar is Drow._
+_What are the odds? As if the racist prejudice about dark elves isn't bad enough, you then get cursed with the ability to compulsively "polish" the truth? It's almost as if that witch had it in for you._
+I learned great respect for integrity, as a part of the character-building process that led me to my secret hero power.}
 @my_relevant_experience => [What experience have you gained already?]{Tell them about that quest thing I did=>@quest|Tell them about my internship=>@apprenticeship|Tell them about my independent research project=>@research_project|Tell them about the conferences you've attended=>My magical experience has been greatly augmented by exposure to cutting-edge thaumaturgical research at conferences such as @conference, @conference, and @conference.}
 random @conference => [conference?]{Choose me![once] =>@pop_culture_conference|Choose me![once] =>@tech_conference|Choose me![once] =>@political_conference|Choose me!=>@magic_conference}
 random @magic_conference => [magic conference?]{Choose me![once] =>the Aprille Confederation on Chyromancie|Choose me![once] =>the NorCal Renaissance Faire's Satellite Meeting on Sex Charms|Choose me![once] =>Gongfest International|Choose me![once] =>SweatLodger|Choose me![once] =>CovenCon|Choose me![once] =>WizMoot|Choose me![once] =>VisionQuest|Choose me![once] =>the Pan-American Seminar on Entheogens|Choose me![once] =>the Annual Revenge Federation}
@@ -73,7 +84,10 @@ random @tech_conference => [conference?]{Choose me![once] =>DefCon|Choose me![on
 random @political_conference => [conference?]{Choose me![once] =>Women in Secularism|Choose me![once] =>the Republican National Convention|Choose me![once] =>Marxism 2013|Choose me!=>Netroots Nation}
 random @research_project[once]  => [research project?]{@accidental_unleashing_of_nameless_evil @pursuit_of_unleashed_evil_around_world}
 random @apprenticeship[once]  => [apprenticeship?]{@journey_to_find_master @apprenticeship_outcome}
-random @quest[once]  => [quest?]{Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up. @transformation_into_hero @defeat_of_monster}
+random @quest[once]  => [quest?]{Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up.
+@transformation_into_hero
+@defeat_of_monster
+}
 @defeat_of_monster => [...<br>The good thing about this story is that you defeated the monster. Your choice lies in how much of the truth you tell.</br>|What will you tell them?]{Talk of the searing pain of battle=>|Emphasize your magical technique=>|Admit the monster was a pathetic creature=>}
 random @monster_texture => [monster texture?]{speckled|tusked|phlegm-soaked}
 random @monster_fur => [monster fur?]{slime|chitin|spider}

@@ -100,7 +100,40 @@ random @monster_type => [computer phrase1 i have much relevant experience?]{whal
 @nameless_evil_vanquished_forever => [So, what do you want to say about the vanquishing?]{Talk up the general epictude of the battle=>|Those grateful young wizard faces! Wow=>|Minimize the collateral damage=>|Show off a few scars=>}
 @outcome_of_battle_with_gomi_wan => [Attack or retreat?]{Attack=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
 @outcome_of_bloom_on_hex_pirate_vessel => [Contain or retreat?]{Contain=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
-@journey_to_find_master => [What do you want to say?]{Tell them about your journey=>|Tell them about the encounter=>|Tell them about the Tower=>|Tell them about the Room=>}
+@journey_to_find_master => [What do you want to say?]{Tell them about your journey=>_Tradition dictates that the apprentice must make the journey on foot; or, at least, the last three days. You hitch-hiked the first part._
+
+_Brecon County is remote, a cold grey place. You found a tree-stump bivouac on the first night, cast a predator-scent charm to ward off insects and rodents, and settled in._
+
+_Your memories of the first two days' walk are a little hazy. You recall some odd distractions. Walking past a church during some bizarre ceremony to pick a husband for the vicar's pregnant daughter. A deformed man was picked, and there was uproar. Then there were those two lost children: do fathers really just abandon children in the woods around here? Perhaps better than locking them in motel rooms, like that golden-haired girl singing from that balcony._
+
+@stop_to_help
+
+Traveling on foot, hoping for an apprenticeship, I sought my Master.|Tell them about the encounter=>_On the last day of your journey, you stumble across a scene in a clearing that still makes you shiver, a little. Two children were playing Butcher and Pig._
+
+_What is it about children abandoned in the woods, round here? Doesn't Brecon have child protective services? Why would you leave children alone with such a sharp knife?_
+
+_Why do you feel so curiously distant about it all?_
+
+_The children play their roles to perfection, but there is no blood. The Pig's head comes clean off, leaving a bony stump. The head rolls across the grass and goes cross-eyed, then starts to giggle. The Butcher puts the Pig's head back on, and they switch roles._
+
+_You feel detached; sleepy, even. Your head nods. A scratchy voice (you later place this as Evan's) tells you "It's just a dream, man. Don't sweat it"._
+
+The journey to my Master was mildly disquieting, but essentially uneventful.
+|Tell them about the Tower=>_In a secret valley, deep in the heart of Brecon County, is a tower so breathtakingly ugly that you probably ought to need planning permission just to look at it._
+
+_The tower resembles a giant, knobbly, mottled fist, punching upwards at the clouds, bristling with antennae and dishes like a knuckleduster. Rounding a copse, when you first catch a glimpse, you feel dread but also a mild nausea... as though what it's doing to the clouds is really not very comfortable._
+
+_Rastlim's assistant, Jongold, greets you by the door. You see a worn plaque: "PUBLIC SERVICE BROADCASTING"._
+
+_"Oh, ignore that," says Jongold. "It's old. Although quite appropriate, I suppose," he adds._
+
+The Tower of Rastlim truly is an inspirational place.
+|Tell them about the Room=>}
+random @jackson => [jackson?]{1=>_On the second evening, you met Jackson, a wizened hippie in an Afghan jacket, whom you later came to know quite well during the Apprenticeship. He didn't announce himself as an employee of the Department, but he had an easy way about him, and you got talking._
+
+_Jackson nodded when you told him of the episodes. "We done a whole series of those," he said cryptically. "Did you help any of 'em?"_
+}
+@stop_to_help => [Did you stop to help any of these people?]{Yes=>_You intervene where you can: you stick up for the deformed suitor, you lead the children to the relative safety of a nearby ice cream van. The girl singing from the motel balcony creeps you out; or rather, the motel itself does; you're not sure why, but you don't stay there long._ @jackson _No, you replied, suddenly embarrassed. "Well, you get some choices," he said diffidently._|No=>_You kept walking, mindful of the need to focus on your training._ @jackson _Yes, you replied, but it didn't seem to change much. "That's the nature of episodic drama," he said._}
 @failure_of_my_apprenticeship => [|...<br> Yes. Better come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your master's desires=>|Simply state the mistake you made=>|Tell them the lesson that was seared on your brain=>}
 @success_of_my_apprenticeship => [What do you want to say about your successful apprenticeship?]{Tell them about the rapport you developed with your master=>|Tell them about the magical challenges you overcame=>|Tell them the last words your master said to you=>}
 @apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>@success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>@failure_of_my_apprenticeship}

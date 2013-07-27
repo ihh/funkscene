@@ -170,7 +170,7 @@ _All of which made riding in a straight line (with your head facing front at all
 
 _Fortunately, Rastlim liked the work, and seemed to hold you in higher regard afterwards. Which was nice. (For a while.)_
 
-Infusing the dreamworld with meaning needs a level head. I was proud to sail through with flying colors.
+Infusing the dreamworld with meaning takes a level head. I was proud to sail through with flying colors.
 |Tell them the last words your Master said to you=>}
 @apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>@success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>@failure_of_my_apprenticeship}
 @suitability_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@dedication_to_specialist_field|My loyalty to the ethos of the school=>}

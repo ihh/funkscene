@@ -84,7 +84,8 @@ random @pop_culture_conference => [conference?]{Choose me![once] =>WorldCon|Choo
 random @tech_conference => [conference?]{Choose me![once] =>DefCon|Choose me![once] =>Biology of Genomes|Choose me![once] =>Black Hat|Choose me![once] =>Evolution|Choose me![once] =>the Game Developers Conference|Choose me![once] =>the Indie Game Jam|Choose me![once] =>Neural Information Processing Systems}
 random @political_conference => [conference?]{Choose me![once] =>Women in Secularism|Choose me![once] =>the Republican National Convention|Choose me![once] =>Marxism 2013|Choose me!=>Netroots Nation}
 random @research_project[once]  => [research project?]{@accidental_unleashing_of_nameless_evil @pursuit_of_unleashed_evil_around_world}
-random @apprenticeship[once]  => [apprenticeship?]{@journey_to_find_master @apprenticeship_outcome}
+random @apprenticeship[once]  => [apprenticeship?]{Early in my high school career, I was lucky enough to study under Rastlim the Cautioner.
+@journey_to_find_master @apprenticeship_outcome}
 random @quest[once]  => [quest?]{Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up.
 @transformation_into_hero
 @defeat_of_monster
@@ -102,7 +103,7 @@ random @monster_type => [computer phrase1 i have much relevant experience?]{whal
 @outcome_of_bloom_on_hex_pirate_vessel => [Contain or retreat?]{Contain=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
 @journey_to_find_master => [What do you want to say?]{Tell them about your journey=>_Tradition dictates that the apprentice must make the journey on foot; or, at least, the last three days. You hitch-hiked the first part._
 
-_Brecon County is remote, a cold grey place. You found a tree-stump bivouac on the first night, cast a predator-scent charm to ward off insects and rodents, and settled in._
+_Brecon County is remote, a cold grey place. An entirely unsurprising home for Rastlim, really. You found a tree-stump bivouac on the first night, cast a predator-scent charm to ward off insects and rodents, and settled in._
 
 _Your memories of the first two days' walk are a little hazy. You recall some odd distractions. Walking past a church during some bizarre ceremony to pick a husband for the vicar's pregnant daughter. A deformed man was picked, and there was uproar. Then there were those two lost children: do fathers really just abandon children in the woods around here? Perhaps better than locking them in motel rooms, like that golden-haired girl singing from that balcony._
 
@@ -121,15 +122,26 @@ _You feel detached; sleepy, even. Your head nods. A scratchy voice (you later pl
 The journey to my Master was mildly disquieting, but essentially uneventful.
 |Tell them about the Tower=>_In a secret valley, deep in the heart of Brecon County, is a tower so breathtakingly ugly that you probably ought to need planning permission just to look at it._
 
-_The tower resembles a giant, knobbly, mottled fist, punching upwards at the clouds, bristling with antennae and dishes like a knuckleduster. Rounding a copse, when you first catch a glimpse, you feel dread but also a mild nausea... as though what it's doing to the clouds is really not very comfortable._
+_The Tower of Brecon resembles a giant, knobbly, mottled fist, punching upwards at the clouds. It bristles with antennae and dishes like a knuckleduster. Rounding a copse, when you first catch a glimpse, you feel dread but also a mild nausea... as though what it's doing to the clouds is really not very comfortable._
 
 _Rastlim's assistant, Jongold, greets you by the door. You see a worn plaque: "PUBLIC SERVICE BROADCASTING"._
 
 _"Oh, ignore that," says Jongold. "It's old. Although quite appropriate, I suppose," he adds._
 
 The Tower of Rastlim truly is an inspirational place.
-|Tell them about the Room=>}
-random @jackson => [jackson?]{1=>_On the second evening, you met Jackson, a wizened hippie in an Afghan jacket, whom you later came to know quite well during the Apprenticeship. He didn't announce himself as an employee of the Department, but he had an easy way about him, and you got talking._
+|Tell them about the Room=>_Belloc's Chamber, right up top of the Tower of Brecon, still gives you nightmares. Which is exactly what it was designed to do._
+
+_You recall your first glimpse of the Chamber, that first afternoon. Jongold led you past it on the way to your dorm. (Usually the tower is full of interns. You were lucky enough to sleep alone - if that counts as luck.)_
+
+_Jongold held up a hand as you passed: "You'll be spending plenty of time in here," he said. The door swung open without a touch. Mages can't help showing off._
+
+_Inside you caught a glimpse of benches, machines, a weird gas mask on the wall. A stack of tape reels, marked "hypnopædia". A large block of cheese._
+
+_"This is our bad dream factory," said Jongold. The door slammed shut, making you jump. "Sweet dreams tonight," he laughed._
+
+I felt truly privileged to work in the place where so many dreams are made real.
+}
+random @jackson => [jackson?]{_On the second evening, you met Jackson, a wizened hippie in an Afghan jacket, whom you later came to know quite well during the Apprenticeship. He didn't announce himself as an employee of the Department, but he had an easy way about him, and you got talking._
 
 _Jackson nodded when you told him of the episodes. "We done a whole series of those," he said cryptically. "Did you help any of 'em?"_
 }

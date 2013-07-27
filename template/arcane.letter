@@ -185,7 +185,7 @@ _Porcupine just stared at you. Then she slowly drew a finger across her neck. An
 
 After some reflection, I decided that my inclinations lay in magical outreach, rather than the proscriptive approach of Magical Propaganda. I will always be grateful for the lessons I learned in Brecon.
 }
-random @witches => [witches?]{1=>_It was several weeks into the internship that you first saw the witches. Glimpses, at first, through a window or an archway. Only one at a time, to begin with; always dressed in white robes, always mute. You gave them names: the tall one, the strong one, the spiky one._
+random @witches => [witches?]{_It was several weeks into the internship that you first saw the witches. Glimpses, at first, through a window or an archway. Only one at a time, to begin with; always dressed in white robes, always mute. You gave them names: the tall one, the strong one, the spiky one._
 
 _One month into the program, they were waiting in your dorm. They spoke for the first time, each introducing themselves by name: Amelie Long, Suzi Bond, and Porcupine._
 }
@@ -213,7 +213,14 @@ _All of which made riding in a straight line (with your head facing front at all
 _Fortunately, Rastlim liked the work, and seemed to hold you in higher regard afterwards. Which was nice. (For a while.)_
 
 Infusing the dreamworld with meaning takes a level head. I was proud to sail through with flying colors.
-|Tell them the last words your Master said to you=>}
+|Tell them the last words your Master said to you=>_Rastlim -- a hard man to reach throughout your apprenticeship (most of what you learned came from Evan, Jackson and Jongold) -- made a personal appearance on your final day. He seemed to feel that a character-building, spine-stiffening speech was called for._
+
+_You actually don't remember all the details. Something about how literary criticism of dreams could no longer be separated from their function as propaganda tools in the struggle against darkness. As usual with Rastlim it was inspirational, but yet distant and forbidding at the same time._
+
+_Last words? Well, his literal last words were his stilted laugh: "HAW, HAW!" If those count as words. Then he turned on his heel, and left. He had made some joke about Mickey Mouse magicians: amateur sorcerers, splitting brooms. Undisciplined magic, lacking theoretical form, was the worst sin in Rastlim's book._
+
+Master Rastlim inculcated me with an enormous respect for the traditional forms and practices of magic.
+}
 @apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>My apprenticeship was a great success. @success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>Surveying my apprenticeship with hindsight, it was not the greatest success; but this was not for want of effort on my behalf. @failure_of_my_apprenticeship}
 @suitability_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@dedication_to_specialist_field|My loyalty to the ethos of the school=>}
 @ontology_of_spells => [...<br>It is a good idea to show off your knowledge of magical nomenclature. It would be wise to pick the area that will impress them most.<br>|What do you know of the ontology of spells?]{Choose me!=>}

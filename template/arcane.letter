@@ -84,8 +84,6 @@ random @pop_culture_conference => [conference?]{Choose me![once] =>WorldCon|Choo
 random @tech_conference => [conference?]{Choose me![once] =>DefCon|Choose me![once] =>Biology of Genomes|Choose me![once] =>Black Hat|Choose me![once] =>Evolution|Choose me![once] =>the Game Developers Conference|Choose me![once] =>the Indie Game Jam|Choose me![once] =>Neural Information Processing Systems}
 random @political_conference => [conference?]{Choose me![once] =>Women in Secularism|Choose me![once] =>the Republican National Convention|Choose me![once] =>Marxism 2013|Choose me!=>Netroots Nation}
 random @research_project[once]  => [research project?]{@accidental_unleashing_of_nameless_evil @pursuit_of_unleashed_evil_around_world}
-random @apprenticeship[once]  => [apprenticeship?]{Early in my high school career, I was lucky enough to study under Rastlim the Cautioner.
-@journey_to_find_master @apprenticeship_outcome}
 random @quest[once]  => [quest?]{Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up.
 @transformation_into_hero
 @defeat_of_monster
@@ -101,6 +99,9 @@ random @monster_type => [computer phrase1 i have much relevant experience?]{whal
 @nameless_evil_vanquished_forever => [So, what do you want to say about the vanquishing?]{Talk up the general epictude of the battle=>|Those grateful young wizard faces! Wow=>|Minimize the collateral damage=>|Show off a few scars=>}
 @outcome_of_battle_with_gomi_wan => [Attack or retreat?]{Attack=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
 @outcome_of_bloom_on_hex_pirate_vessel => [Contain or retreat?]{Contain=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
+random @apprenticeship[once]  => [apprenticeship?]{Early in my high school career, I was lucky enough to study under Rastlim the Cautioner.
+$pig_description = "a particularly gruesome cautionary tale involving a knife";
+@journey_to_find_master @apprenticeship_outcome}
 @journey_to_find_master => [What do you want to say?]{Tell them about your journey=>_Tradition dictates that the apprentice must make the journey on foot; or, at least, the last three days. You hitch-hiked the first part._
 
 _Brecon County is remote, a cold grey place. An entirely unsurprising home for Rastlim, really. You found a tree-stump bivouac on the first night, cast a predator-scent charm to ward off insects and rodents, and settled in._
@@ -120,7 +121,7 @@ _The children play their roles to perfection, but there is no blood. The Pig's h
 _You feel detached; sleepy, even. Your head nods. A scratchy voice (you later place this as Evan's) tells you "It's just a dream, man. Don't sweat it"._
 
 The journey to my Master was mildly disquieting, but essentially uneventful.
-|Tell them about the Tower=>_In a secret valley, deep in the heart of Brecon County, is a tower so breathtakingly ugly that you probably ought to need planning permission just to look at it._
+$pig_description = "the same dream you saw on the last day of your journey";|Tell them about the Tower=>_In a secret valley, deep in the heart of Brecon County, is a tower so breathtakingly ugly that you probably ought to need planning permission just to look at it._
 
 _The Tower of Brecon resembles a giant, knobbly, mottled fist, punching upwards at the clouds. It bristles with antennae and dishes like a knuckleduster. Rounding a copse, when you first catch a glimpse, you feel dread but also a mild nausea... as though what it's doing to the clouds is really not very comfortable._
 
@@ -146,7 +147,48 @@ random @jackson => [jackson?]{_On the second evening, you met Jackson, a wizened
 _Jackson nodded when you told him of the episodes. "We done a whole series of those," he said cryptically. "Did you help any of 'em?"_
 }
 @stop_to_help => [Did you stop to help any of these people?]{Yes=>_You intervene where you can: you stick up for the deformed suitor, you lead the children to the relative safety of a nearby ice cream van. The girl singing from the motel balcony creeps you out; or rather, the motel itself does; you're not sure why, but you don't stay there long._ @jackson _No, you replied, suddenly embarrassed. "Well, you get some choices," he said diffidently._|No=>_You kept walking, mindful of the need to focus on your training._ @jackson _Yes, you replied, but it didn't seem to change much. "That's the nature of episodic drama," he said._}
-@failure_of_my_apprenticeship => [|...<br> Yes. Better come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your Master's desires=>|Simply state the mistake you made=>|Tell them the lesson that was seared on your brain=>}
+@failure_of_my_apprenticeship => [|<br> It's probably a good idea to come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your Master's desires=>@witches
+
+_"Really?" you stammered. "Porcupine?" She looked away._
+
+_You're not sure how the transition happened, but next you were standing outside the dream room. No-one is supposed to enter Belloc's Chamber out of hours, but there was a flickering light under the door._
+
+_Next - again, not sure how - you were in the room. Rastlim was hunched over the console, his mouth half-open, his eyes wide. All dignity gone. He was watching "How Children Played Butcher With Each Other", $pig_description;._
+
+_"Do you see, now?" said Susan. Amelie turned to look at you. Before her head had finished turning, you were back in the dorm._
+
+I found that my Master, while a highly respected Mage, had inclinations that were divergent from my own.
+|Simply state the mistake you made=>@witches
+
+_"I think I know you," you blurted to Amelie. She stared back coolly. "You know very little. And your work here ensures that others remain even more ignorant than you."_
+
+_"Do you know that Rastlim uses real childrens' ghosts?" said Porcupine._
+
+_"Have you ever heard of Lord Haw-Haw?" said Suzi Bond. "He was a Nazi propaganda artist in the human World War. Much like your Rastlim. Do you know what happened to him?"_
+
+_All of a sudden you were alone in the dorm... a chill tracing your spine, and a Pandora's Box exploding in your mind._
+
+I feel that, although the Tower had much to teach me, I was remiss in not asking enough questions early on. An inquisitive mind is crucial to a good education.
+|Tell them the lesson that was seared on your brain=>@witches
+
+_You could not take your eyes off Suzi Bond. She seemed somehow other-wordly. After a while, she spoke._
+
+_"Rastlim is a construct," she said. "You have never touched him, and you never will. He lacks material form."_
+
+_"The boys' conjurations always did lack substance," commented Amelie acerbically._
+
+_"Ask yourself this," continued Suzi. "Do you want to be instrumental in denying knowledge to the masses? What role do you think these scary stories serve? Is it really necessary to protect people from themselves?"_
+
+_"It's quite simple," Amelie added. "This is a war. Do not be fooled by their easy attitudes."_
+
+_Porcupine just stared at you. Then she slowly drew a finger across her neck. And all three women vanished._
+
+After some reflection, I decided that my inclinations lay in magical outreach, rather than the proscriptive approach of Magical Propaganda. I will always be grateful for the lessons I learned in Brecon.
+}
+random @witches => [witches?]{1=>_It was several weeks into the internship that you first saw the witches. Glimpses, at first, through a window or an archway. Only one at a time, to begin with; always dressed in white robes, always mute. You gave them names: the tall one, the strong one, the spiky one._
+
+_One month into the program, they were waiting in your dorm. They spoke for the first time, each introducing themselves by name: Amelie Long, Suzi Bond, and Porcupine._
+}
 @success_of_my_apprenticeship => [What do you want to say about your successful apprenticeship?]{Tell them about your talent for the work=>_You still remember the moment when you first knew you'd be good at this work. The project was a basic one: a remake of the Egyptian classic, "The Book of Thoth"._
 
 _"These stories serve an important role," said Evan portentously, as you worked on the fine detail of the sexy cat-god, played (with annoying smugness) by Jongold. "By transmitting these cautionary dreams, we ensure that taboos against magical learning are perpetuated in society, keeping the laypeople safe."_
@@ -172,7 +214,7 @@ _Fortunately, Rastlim liked the work, and seemed to hold you in higher regard af
 
 Infusing the dreamworld with meaning takes a level head. I was proud to sail through with flying colors.
 |Tell them the last words your Master said to you=>}
-@apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>@success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>@failure_of_my_apprenticeship}
+@apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>My apprenticeship was a great success. @success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>Surveying my apprenticeship with hindsight, it was not the greatest success; but this was not for want of effort on my behalf. @failure_of_my_apprenticeship}
 @suitability_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@dedication_to_specialist_field|My loyalty to the ethos of the school=>}
 @ontology_of_spells => [...<br>It is a good idea to show off your knowledge of magical nomenclature. It would be wise to pick the area that will impress them most.<br>|What do you know of the ontology of spells?]{Choose me!=>}
 @physical_ontology => [...<br>Yes, impress them by quoting some of the lesser-known nooks and crannies of Magical Materialism.<br>|What do you know of the physical ontology?]{Choose me!=>}

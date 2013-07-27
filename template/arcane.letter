@@ -124,7 +124,7 @@ The journey to my Master was mildly disquieting, but essentially uneventful.
 
 _The Tower of Brecon resembles a giant, knobbly, mottled fist, punching upwards at the clouds. It bristles with antennae and dishes like a knuckleduster. Rounding a copse, when you first catch a glimpse, you feel dread but also a mild nausea... as though what it's doing to the clouds is really not very comfortable._
 
-_Rastlim's assistant, Jongold, greets you by the door. You see a worn plaque: "PUBLIC SERVICE BROADCASTING"._
+_At the door is Rastlim's assistant, Jongold, a fresh-faced blond-haired chap who greets you with a chirpy wink and ushers you inside. Your eye is caught by a well-worn plaque: "PUBLIC SERVICE BROADCASTING"._
 
 _"Oh, ignore that," says Jongold. "It's old. Although quite appropriate, I suppose," he adds._
 
@@ -146,8 +146,32 @@ random @jackson => [jackson?]{_On the second evening, you met Jackson, a wizened
 _Jackson nodded when you told him of the episodes. "We done a whole series of those," he said cryptically. "Did you help any of 'em?"_
 }
 @stop_to_help => [Did you stop to help any of these people?]{Yes=>_You intervene where you can: you stick up for the deformed suitor, you lead the children to the relative safety of a nearby ice cream van. The girl singing from the motel balcony creeps you out; or rather, the motel itself does; you're not sure why, but you don't stay there long._ @jackson _No, you replied, suddenly embarrassed. "Well, you get some choices," he said diffidently._|No=>_You kept walking, mindful of the need to focus on your training._ @jackson _Yes, you replied, but it didn't seem to change much. "That's the nature of episodic drama," he said._}
-@failure_of_my_apprenticeship => [|...<br> Yes. Better come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your master's desires=>|Simply state the mistake you made=>|Tell them the lesson that was seared on your brain=>}
-@success_of_my_apprenticeship => [What do you want to say about your successful apprenticeship?]{Tell them about the rapport you developed with your master=>|Tell them about the magical challenges you overcame=>|Tell them the last words your master said to you=>}
+@failure_of_my_apprenticeship => [|...<br> Yes. Better come clean. They might follow up on references. <br>|How to describe your less-than-glowing apprenticeship?]{Be frank about your Master's desires=>|Simply state the mistake you made=>|Tell them the lesson that was seared on your brain=>}
+@success_of_my_apprenticeship => [What do you want to say about your successful apprenticeship?]{Tell them about your talent for the work=>_You still remember the moment when you first knew you'd be good at this work. The project was a basic one: a remake of the Egyptian classic, "The Book of Thoth"._
+
+_"These stories serve an important role," said Evan portentously, as you worked on the fine detail of the sexy cat-god, played (with annoying smugness) by Jongold. "By transmitting these cautionary dreams, we ensure that taboos against magical learning are perpetuated in society, keeping the laypeople safe."_
+
+_Jackson snorted. "Nothing safe about these dreams. And you're kidding yourself, if you think this is about anything except preserving our monopoly."_
+
+_You studiously avoided getting drawn into such discussions. Instead, you concentrated harder on the dream protagonist's physiological response to the feline Jongold. A little estradiol here, a little adrenaline there. (People think it's all about the object of desire; but who stares lustfully into a cat's eyes, really? It's all about the hormones. That way, you can refactor the dream to use a cat goddess instead of a tomcat, and it works just as well.)_
+
+_"It doesn't matter," said Jongold, with a sideways glance at you. "We do a job. Some of us do it well. You can criticize the system if you want, but some sort of order has to be maintained. And what is truth, really?"_
+
+_"Put a hairball in it, catface," cackled Jackson._
+
+I was delighted to find that I had a natural talent for Magical Propaganda.
+|Tell them about the magical challenges you overcame=>_Truth be told, none of it was that hard. The apprenticeship sailed by, at least at first. The only tricky part was that blasted Èṣù monkey._
+
+_The role called for you to ride a bike between two brothers (played by Jongold and Evan), wearing a hat. One side of your hat was painted white, the other side black. This then triggers a big feud between the formerly tight-knit brothers, each claiming a different color for the hat, proving that meaning is ambiguous, cementing Èṣù's role as signifier, etc etc._
+
+_The only problem was that Jackson had decided the theme of indeterminacy should extend to everything else in the dream, too, creating an acid-like ambience of which Dali would've been proud. So: the bike was sometimes a motorbike, sometimes a pushbike, sometimes a paper plane. The brothers were sometimes sisters. Occasionally, the monkey in a hat did not break up their friendship; but instead made them laugh, terminating an earlier argument. The hat itself might unexpectedly morph into a top hat, or a boater, or even (you never quite understood this) a live penguin._
+
+_All of which made riding in a straight line (with your head facing front at all times) extremely difficult. Definitely harder than it needed to be. You're pretty sure Jackson was messing with you. He was like that._
+
+_Fortunately, Rastlim liked the work, and seemed to hold you in higher regard afterwards. Which was nice. (For a while.)_
+
+Infusing the dreamworld with meaning needs a level head. I was proud to sail through with flying colors.
+|Tell them the last words your Master said to you=>}
 @apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>@success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>@failure_of_my_apprenticeship}
 @suitability_for_the_position => [_Excellent idea! Say a bit about why you're so perfect for the position._|Why AM I right for the position?]{My dedication to a particular field of magic=>@dedication_to_specialist_field|My loyalty to the ethos of the school=>}
 @ontology_of_spells => [...<br>It is a good idea to show off your knowledge of magical nomenclature. It would be wise to pick the area that will impress them most.<br>|What do you know of the ontology of spells?]{Choose me!=>}

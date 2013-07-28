@@ -86,7 +86,11 @@ random @magic_conference => [magic conference?]{Choose me![once] =>the Aprille C
 random @pop_culture_conference => [conference?]{Choose me![once] =>WorldCon|Choose me![once] =>Lollapalooza|Choose me![once] =>Glastonbury|Choose me![once] =>Burning Man|Choose me![once] =>Coachella|Choose me![once] =>Rainbow Gathering|Choose me![once] =>the San Francisco Bay Area Interactive Fiction Meetup}
 random @tech_conference => [conference?]{Choose me![once] =>DefCon|Choose me![once] =>Biology of Genomes|Choose me![once] =>Black Hat|Choose me![once] =>Evolution|Choose me![once] =>the Game Developers Conference|Choose me![once] =>the Indie Game Jam|Choose me![once] =>Neural Information Processing Systems}
 random @political_conference => [conference?]{Choose me![once] =>Women in Secularism|Choose me![once] =>the Republican National Convention|Choose me![once] =>Marxism 2013|Choose me!=>Netroots Nation}
-random @research_project[once]  => [research project?]{@accidental_unleashing_of_nameless_evil @pursuit_of_unleashed_evil_around_world}
+random @research_project[once]  => [research project?]{In my gap year, I undertook a research project. This project led to certain consequences, viz. the accidental loosing of a nameless evil upon the world, with attendant destruction.
+@accidental_unleashing_of_nameless_evil
+
+When ancient evil is loosed, you have to mop it up (under the terms of the 1879 Reform Bill). This turned out to be one of the more significant challenges of my gap year.
+@pursuit_of_unleashed_evil_around_world}
 random @quest[once]  => [quest?]{Several years ago, my home town was threatened by a terrible monster, a @monster_texture @monster_fur-@monster_type. As one of the few magical denizens not attending the Pleiades Convention during this period, I received an official government summons to defend the town. Naturally, this required a bit of hero power-up.
 @transformation_into_hero
 @defeat_of_monster
@@ -103,12 +107,34 @@ I believe I have a talent for misdirection.
 random @monster_texture => [monster texture?]{speckled|tusked|phlegm-soaked}
 random @monster_fur => [monster fur?]{slime|chitin|spider}
 random @monster_type => [computer phrase1 i have much relevant experience?]{whale|mammoth|golem}
-@accidental_unleashing_of_nameless_evil => [How do you feel about having unleashed a nameless evil on the world?]{Yeah, those were pretty epic lulz=>|Worst thing I've ever done=>|I am indifferent, given the nameless evils routinely unleashed by corporations=>Big pharma's teams of hotshot shamen. Monsanto's land witches. Industrial Light and Magic, with their pathetic CGI cover operation.}
-@pursuit_of_unleashed_evil_around_world => [What part do you want to tell them about?]{Gomo-Wan's destruction of the Californian suburb=>Great school district. Sad.
-@outcome_of_battle_with_gomi_wan|The battle with Balinese hex pirates=>@outcome_of_bloom_on_hex_pirate_vessel}
+@accidental_unleashing_of_nameless_evil => [How do you feel about having unleashed a nameless evil on the world?]{Epic lulz=>_Yeah, those were pretty epic lulz._
+The crafting of this nameless evil was one of the more exciting episodes of my existence on this plane. I look forward to greater chaos as my skills develop.
+$work_adjective = "awesome";|Shame=>_That was the worst thing I've ever done._
+$work_adjective = "shameful";|Meh=>As to the impact of my events I am indifferent, given the nameless evils routinely unleashed upon the world by corporations, and their government shills.
+_Big pharma's teams of hotshot shamen. Monsanto's land witches. Industrial Light and Magic. You're wise to their games._
+$work_adjective = "justifiable";}
+@pursuit_of_unleashed_evil_around_world => [What part do you want to tell them about?]{The Balinese hex pirates=>It was only ever supposed to be a very specific Contagion, restricted to one species. Chickens, to be precise.
+_It started as a prank on the high school paladins... their mascot was a chicken... Careful, now! don't think too much on it while writing, or you'll give yourself away..._
+@indonesian_viral_bloom
+Anyway, the bottom line is that my viral construct, only ever intended to be chicken-specific and harmless, created a mutant sentient super-tuna, via a cross-species transmission event.
+That same fish caused well-known collateral damage to coastal Southern California last year, which (albeit a different story) contributes towards an understanding of the impact of my $work_adjective; deeds.
+@outcome_of_bloom_on_hex_pirate_vessel
+|The Californian suburb=>For reasons on which it is perhaps best not to dwell, my nameless evil led directly to the acquisition of sentience and various time-bending superpowers by a 600-pound tuna fish; who promptly decided to travel the world, deciding (somewhere along the way) to name herself Gomo-Wan.
+Gomo-Wan had all sorts of adventures, but some time later, found herself (after an epic and painful struggle) gasping for air, and pleading for her life, on the deck of a tuna fishing charter boat off Long Beach, California.
+Following the initial shock of hearing a fish speak telepathically in his mind, hedge fund analyst Kristof Baxendale was more than happy to toss Gomo-Wan back into the water... on condition of unlimited boons. Kristof was a wily one.
+The first boons were not too bad, mere technological speed-ups. The Singularity was not too far off; decent computational models of the brain were easy to pull backwards through time, and Kristof's early requests (immortality, hyperintelligence, the ability to hack ATMs) were easy to satisfy.
+But the nature of $work_adjective; research like this is that things never stand still, and soon Kristof was requesting matter transformation and unlimited time edits, which no-one with even a basic notion of recursive complexity would touch with a ten-foot pole.
+@destruction_of_santa_marconi is something I will live with to the rest of my days, although I tell myself it was an accident waiting to happen; I was merely the one who triggered the historic events which @devastation_of_lawns
+@outcome_of_battle_with_gomo_wan}
+@destruction_of_santa_marconi => [How do we describe the consequences?]{Be blunt=>The complete excision of Santa Marconi from the map|Be subtle=>the Garbage Collection Apocalypse}
+@devastation_of_lawns => [Again... subtle or blunt?]{Subtle=>disturbed so many tranquil auras.|Blunt=>wiped out so many innocent lawns.}
+@chicken_of_the_sea => [No, it's too silly]{I agree=>. Anyway, odd story.|TELL THE TRUTH=>... chicken of the sea, you know.}
+@tunafish_cross_infected => [Keep going?]{No=>.|Yes=>, and a tunafish got cross-infected@chicken_of_the_sea The name of the fish was Gomo-Wan.}
+@pirate_cockfight => [Even more?]{No, stop there=> |Yes, keep going=>Some pirates from Bali had a cockfight going on their speedboat@tunafish_cross_infected}
+@indonesian_viral_bloom => [Tell more detail?]{No, play it safe=> |Yeah, sure=>If you read about the Indonesian viral bloom last year, that was me. @pirate_cockfight}
 @nameless_evil_haunts_me_still => [...<br> OK, yeah, good idea to come clean. Lay your skeletons on the table. Of the closet. Or something. <br>|So, exactly what part of this should we talk about?]{The nightmares=>|The Collection Times=>|The hourglass=>}
 @nameless_evil_vanquished_forever => [So, what do you want to say about the vanquishing?]{Talk up the general epictude of the battle=>|Those grateful young wizard faces! Wow=>|Minimize the collateral damage=>|Show off a few scars=>}
-@outcome_of_battle_with_gomi_wan => [Attack or retreat?]{Attack=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
+@outcome_of_battle_with_gomo_wan => [Attack or retreat?]{Attack=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
 @outcome_of_bloom_on_hex_pirate_vessel => [Contain or retreat?]{Contain=>@nameless_evil_vanquished_forever|Retreat=>@nameless_evil_haunts_me_still}
 random @apprenticeship[once]  => [apprenticeship?]{Early in my high school career, I was lucky enough to study under Rastlim the Cautioner.
 $pig_description = "a particularly gruesome cautionary tale involving a knife";

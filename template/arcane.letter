@@ -271,7 +271,10 @@ _Last words? Well, his literal last words were his stilted laugh: "HAW, HAW!" If
 }
 @rastlim_speech => [
 _Rastlim -- a hard man to reach throughout your apprenticeship (most of what you learned came from Evan, Jackson and Jongold) -- made a personal appearance on your final day. He seemed to feel that a character-building, spine-stiffening speech was called for._
-||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@art_and_propaganda}
+||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@art_and_propaganda|How could you forget Rastlim's appearance that day?=>_How could you ever forget the way Rastlim looked, that day? The disfiguring scar which you must have noticed before (but somehow never acknowledged), running from his earlobe to his chin..._
+
+_Your memory of the scar eclipses the memory of his words. Was it the second-sight you'd learned in the Tower, or simply over-work, that made it seem to bleed as he talked?_
+}
 @last_words => [||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@rastlim_speech}
 @two_brothers => [
 _The role called for you to ride a bike between two brothers (played by Jongold and Evan), wearing a hat. One side of your hat was painted white, the other side black. This then triggers a big feud between the formerly tight-knit brothers, each claiming a different color for the hat, proving that meaning is ambiguous, cementing Èṣù's role as signifier, etc etc._
@@ -284,7 +287,15 @@ _Fortunately, Rastlim liked the work, and seemed to hold you in higher regard af
 }
 @signifying_monkey => [
 _Truth be told, none of it was that hard. The apprenticeship sailed by, at least at first. The only tricky part was that blasted Èṣù monkey._
-||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@two_brothers}
+||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@two_brothers|I could never forget Èṣù=>_You'll never forget Èṣù. He taught you how to rhyme, and play the dozens with your cousins... the soul of signifying, the meaning of lying._
+
+_The milk shaker, the record breaker, the population maker,_
+_The  gun-slinger, the baby bringer,_
+_The hum-dinger the kitty ringer_
+_The one with the terrible middle finger_
+
+<i><b>OK, stop that.</b></i>
+}
 @magical_challenges => [Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@signifying_monkey}
 @boys_pontificate => [
 _"These stories serve an important role," said Evan portentously, as you worked on the fine detail of the sexy cat-god, played (with annoying smugness) by Jongold. "By transmitting these cautionary dreams, we ensure that taboos against magical learning are perpetuated in society, keeping the laypeople safe."_
@@ -299,7 +310,11 @@ _"Put a hairball in it, catface," cackled Jackson._
 }
 @book_of_thoth => [
 _You still remember the moment when you first knew you'd be good at this work. The project was a basic one: a remake of the Egyptian classic, "The Book of Thoth"._
-||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@boys_pontificate}
+||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@boys_pontificate|I could never forget the Book of Thoth=>_You'll never forget the Book of Thoth. A secret magical tome of legendary power, granting the power to speak with nonhuman life._
+
+_Little is known of the book, obscured as it is by tales of curse, tragedy, and ill portent. As well it should be: the Egyptian stories had no word for bacteria, nor any concept that the human skin was crawling with them. The trillion voices quickly overwhelmed any untrained initiate who read the book._
+
+_But this is all a distraction._}
 random @dispel => [dispel?]{Choose me!=>_You wipe the dangerous memories from your mind._
 }
 @natural_talent => [Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@book_of_thoth}

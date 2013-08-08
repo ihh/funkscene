@@ -271,9 +271,9 @@ _Last words? Well, his literal last words were his stilted laugh: "HAW, HAW!" If
 }
 @rastlim_speech => [
 _Rastlim -- a hard man to reach throughout your apprenticeship (most of what you learned came from Evan, Jackson and Jongold) -- made a personal appearance on your final day. He seemed to feel that a character-building, spine-stiffening speech was called for._
-||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@art_and_propaganda|How could you forget Rastlim's appearance that day?=>_How could you ever forget the way Rastlim looked, that day? The disfiguring scar which you must have noticed before (but somehow never acknowledged), running from his earlobe to his chin..._
+||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@art_and_propaganda|How could you forget Rastlim's appearance that day?=>_How could you ever forget the way Rastlim looked, that day? The pink scar which you must have noticed before (but somehow never acknowledged), running from his earlobe to the corner of his mouth, and down to his chin..._
 
-_Your memory of the scar eclipses the memory of his words. Was it the second-sight you'd learned in the Tower, or simply over-work, that made it seem to bleed as he talked?_
+_Your memory of the scar eclipses the memory of his words. Was it the second-sight you'd learned in the Tower, or simply over-work, that made it seem on the verge of bleeding as he talked?_
 }
 @last_words => [||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@rastlim_speech}
 @two_brothers => [

@@ -15,7 +15,8 @@ pause @something_about_me[thrice]  => [_Might be a good idea to say a little mor
 pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts @necromantic_specialization|Illusion=>Illusory Light & Magic}
 @necromantic_specialization => [...
 _Everyone chooses necromancy. You ought to be a bit more specific._
-|What specialization?]{forensics=>(specializing in post-mortem forensic questioning)|reanimation=>(specializing in offensive reanimation)|cleanup=>(specializing in crime scene cleanup)}
+|What specialization?]{forensics=>(specializing in post-mortem forensic questioning)|reanimation=>(specializing in @offensive_or_defensive reanimation)|cleanup=>(specializing in crime scene cleanup)}
+@offensive_or_defensive => [offensive]{damn right offensive=>offensive|be cautious, now=>defensive}
 pause @opening => [|_This really shouldn't be so hard. These letters are pretty formulaic. All you have to do is put the pieces together._
    
 _Let's start at the beginning, then: with the opening._
@@ -33,17 +34,45 @@ It is my heart's desire to obtain}
 @my_background => [_It never hurts to add a personal touch._
 |...<br>|What kind of childhood did you have?]{Privileged=>I am acutely aware that my education at the Red Dragon School and Winchester Academy of Magic represents a degree of privilege unavailable to most, and I am firmly committed to making the most of these early chances.|Comfortable=>Growing up, I was fortunate to have well-off parents and an excellent education.|Tough=>@triumph_over_hardship}
 random @apart_from_my_studies => [apart from my studies?]{Choose me!=>Apart from my studies, |Choose me!=>As well as my studies, |Choose me!=>When I am not studying, }
-random @among_my_virtues => [among my virtues?]{Choose me!=>Among my virtues is the fact that |Choose me!=>One of my many good qualities is that |Choose me!=>I would like to point out that |Choose me!=>My many favorable qualities include the following: }
-@triumph_over_hardship => [_You've faced way more than the usual challenges facing entrants to Arcane. No silver-spoon privileged track for you. Tell them about it._|What was the hardest thing about my childhood?]{I am a drow elf, with an undeserved reputation for evil=>@life_of_a_drow_elf|My family is not wealthy=>Arcane's commitment to advancing the underprivileged is important to me, having grown up without many of the advantages that today's wizarding youth enjoy.  @explanation_of_poverty|I was injured by a magical curse=>When I was seven years old, I woke early one morning and ran into the back yard. Lying against the shed was a giant puffball -- a fluffy marshmallow of fungal spores. I kicked it joyously, unaware that such puffballs are often home to the NanoFey... I remember a mosquito whine of rage, red dots in my vision, and then... nothing. I awoke three weeks later, in hospital, surrounded by grim-faced doctors. The puffball's inhabitants had cursed me, and for a year and a day I was afflicted with an esoteric and highly dangerous form of magical Tourette's, so that I was forced to wear a gag day & night for my own protection. This significantly limited my early education in magic, although I learned an important lesson about magical race relations.}
+random @among_my_virtues => [among my virtues?]{Choose me!=>Among my virtues is the fact that |Choose me!=>One of my many good qualities is that |Choose me!=>I would like to point out that |Choose me!=>My many favorable qualities include that}
+@triumph_over_hardship => [_You've faced way more than the usual challenges facing entrants to Arcane. No silver-spoon privileged track for you. Tell them about it._|What was the hardest thing about my childhood?]{My orcish ancestry lends an undeserved reputation for evil=>@life_of_an_orc|My family is not in one of the wealthy Houses=>Arcane's commitment to advancing the underprivileged is important to me, having grown up without many of the advantages that today's wizarding youth enjoy.  @explanation_of_poverty|I was injured by a magical curse=>When I was six years old, I woke early one morning and ran into the back yard. Lying against the shed was a giant puffball -- a fluffy marshmallow of fungal spores. I kicked it joyously, unaware that such puffballs are often home to the NanoFey...
+
+@stalk}
+@race_relations => [Go on?]{That's good enough; leave it there=> |Milk it=>
+I like to think, however, that I learned an important life lesson about magical race relations, which has furthered my strong commitment to supernatural multiculturalism.
+}
+@gag => [Go on?]{That's good enough; leave it there=> |Milk it=>
+Forced to wear a gag day & night for their own protection, a student's early magical development is bound to suffer.
+
+@race_relations}
+@pills => [a few pills]{just admit it=>a brief course of oral antifungals|too explicit=>swift medical attention}
+@stalk => [Go on?]{That's good enough; leave it there=>Fortunately, @pills dealt decisively and finally with the NanoFey problem. I learned a bit about respect for magical micro-cultures!|Milk it=>
+I remember a mosquito whine of rage, red dots in my vision, and then... nothing.
+
+I awoke three weeks later, in hospital, surrounded by grim-faced doctors. The puffball's inhabitants had cursed me, and for a year and a day I was afflicted with a fungal stalk sprouting from my neck.
+
+@gag
+Eventually, of course, the stalk broke off, and a course of broad-spectrum antifungals dealt with the NanoFey. 
+}
 @explanation_of_poverty => [
 _You should probably give some explanation for why you grew up disadvantaged. Wizard families don't usually stay poor for long._|What reason for my poverty?]{Curse on parents=>At an early age my parents were cursed and @lost_something_important as an unfortunate side-effect of @familial_curse. Consequently they were unable to provide for me or to teach me the arts of self-sufficiency.|Karmically balanced wish-fulfillment=>I am embarrassed to relate that my poverty is my own fault; an unfortunate consequence of an ill-fated decision, as a toddler, to accept a Djinn's offer of unlimited candy until my 18th birthday. Unbeknownst to me (but, of course, well-known to anyone with a copy of Bagemihl's Grimoire or a smidgen of common sense), this Djinn's generous offer came with small print; specifically, that the free candy was attached to a now-unbreakable unpaid internship with a local software firm.|Inexperience at magic=>My poverty was due to simple inexperience at using my magical abilities to conjure gold, diamonds, cellphones, alternate reality goggles, airships, scented concubines, muscled paramour slaves, exotic lizard pets, or the myriad other commodities we use to support ourselves. If only I could go back and teach my younger self some basic incantations! Sadly I had little magical influence from my elders to guide me.}
 @lost_something_important => [What did they lose?]{Their humanity=>transformed into werewolves|Their speech=>rendered senseless and mute|Their freedom=>transported to a distant asteroid for a billion years}
 @familial_curse => [What familial curse explains your poverty?]{House market crash=>a real estate deal that went bad when the land sunk into the sea|Penny-pinching bureaucrats=>the small print of a quantum insurance policy|Government overreach=>military service with the Reavers}
-@life_of_a_drow_elf => [Life is not easy, when you are a drow elf! No-one tends to suspect you have _good_ motives, and what is regarded as healthy self-interest in other species is instantly condemned as scheming evil in Drowa. I can summarize this best by relating a single incident that occurred in my junior year|...<br> <br> maybe you can finally SHAKE yourself of this horror <br> <br>|Where did this incident occur?]{Band camp=> at band camp. $Here @= "At this camp"; @accused_of_a_massacre|Swim class=> in swim class. $Here @= "In the changing rooms"; @accused_of_a_massacre|Vacation=> on a school vacation trip in the Swiss Alps. $Here @= "Also on the slopes"; @accused_of_a_massacre}
-random @accused_of_a_massacre => [accused of a massacre?]{Naturally, as a conspicuous Other, my schooling had to take place at a private educational institution friendly to the magical races. $Here; there was a half-gnome, a member of the paladin corps, who had taken a dislike to my kind. I had brought a serrated knife with me, in the hope of divining some rabbit guts (a family tradition), and I also tend to carry flash-powder. This gnome took it upon himself to make unsubstantiated accusations that I was planning a massacre, which made my life at school difficult for a very long time. For three months I was forced to wear a county-issue Conscience Bracelet, with devastating consequences for my social life.
+@life_of_an_orc => [Life is not easy, when you are a genetically modified species! No-one tends to suspect orcs of _good_ motives, and what is regarded as healthy self-interest in other species is instantly condemned as scheming evil in my race.
+
+I can summarize this best by relating a single incident that occurred in my junior year|...<br> <br> maybe you can finally SHAKE yourself of this horror <br> <br>|Where did this incident occur?]{Band camp=> at band camp. $Here @= "At this camp"; @accused_of_a_massacre|Swim class=> in swim class. $Here @= "In the changing rooms"; @accused_of_a_massacre|Vacation=> on a school vacation trip in the Swiss Alps. $Here @= "Also on the slopes"; @accused_of_a_massacre}
+random @accused_of_a_massacre => [accused of a massacre?]{Naturally, as a conspicuous Other, my schooling had to take place at a private educational institution friendly to the magical races. $Here; there was a half-gnome, a member of the paladin corps, who had taken a dislike to my kind.
+
+I had brought a serrated knife with me, in the hope of divining some rabbit guts (a family tradition), and I also tend to carry flash-powder. This gnome took it upon himself to make unsubstantiated accusations that I was planning a massacre, which made my life at school difficult for a very long time.
+
+For three months I was forced to wear a county-issue Conscience Bracelet, with devastating consequences for my social life.
 
 _You've never told anyone about that before. Maybe this whole experience will be good for you. Air some laundry..._
-|I do not mind admitting that my school was exclusive. $Here; there was a student who, like me, was a magical nonhuman. We should have been allies -- the world viewed us both as Other -- and yet he always seemed to be able to conform. He was a paladin... I cannot explain how or why, but he planted some magical ingredients in my locker... rabbit guts, flash-powder... I don't want to go into details but I was accused -- wrongly -- of massacre by demonic summoning (planned). The consequences for my social life at the time were profound.
+|I do not mind admitting that my school was exclusive. $Here; there was a student who, like me, was a magical nonhuman.
+
+We should have been allies -- the world viewed us both as Other -- and yet he always seemed to be able to conform. He was a paladin... I cannot explain how or why, but he planted some magical ingredients in my locker... rabbit guts, flash-powder...
+
+I don't want to go into details but I was accused -- wrongly -- of massacre by demonic summoning (planned). The consequences for my social life at the time were profound.
 
 _You've never told anyone about that before. Hard work, but definitely beneficial..._
 }

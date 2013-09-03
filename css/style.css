@@ -542,16 +542,52 @@ input {
 }
 
 /* Restart DIV for LetterWriter */
-.letter .restart {
+.restart {
     float: left;
 }
 
 /* Score DIVs for LetterWriter */
-.letter .scoreHolder {
-    font-size: large;
+.scoreContainerHidden {
+    border-style: none;
 }
 
-.letter .score {
+.scoreContainer {
+    font-size: large;
+    color: DarkBlue;
+    background-color: white;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    margin:2px;
+    padding:2px;
+}
+
+.scoreContainerIncreasing {
+    font-size: large;
+    color: DarkGreen;
+    background-color: #dfd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    margin:2px;
+    padding:2px;
+}
+
+.scoreContainerDecreasing {
+    font-size: large;
+    color: DarkRed;
+    background-color: #fdd;
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 3px;
+    margin:2px;
+    padding:2px;
+}
+
+.scoreLabel {
+}
+
+.score {
 }
 
 /* Undo DIV for LetterWriter */

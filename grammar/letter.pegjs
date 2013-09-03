@@ -331,6 +331,17 @@ param_assignment
 { return new LetterWriter.ParamAssignment ({id:id,value:expr,local:true}) }
     / id:param_identifier linespc* "=" linespc* expr:param_expr param_terminator
 { return new LetterWriter.ParamAssignment ({id:id,value:expr,local:false}) }
+    / id:param_identifier linespc* op:cumulative_op "=" linespc* increment_expr:param_expr param_terminator
+{ var param_func = new LetterWriter.ParamFunc ({op:"$",param:id.toLowerCase()})
+  var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:op})
+  return new LetterWriter.ParamAssignment ({id:id,value:rhs_expr,local:false}) }
+    / id:param_identifier linespc* "++" linespc* param_terminator
+{ var param_func = new LetterWriter.ParamFunc ({op:"$",param:id.toLowerCase()})
+  var increment_expr = new LetterWriter.ParamFunc ({op:"#",value:1})
+  var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:"+"})
+  return new LetterWriter.ParamAssignment ({id:id,value:rhs_expr,local:false}) }
+
+cumulative_op = "+" / "/" / "*"
 
 param_terminator = line_terminator / ";" / !source_character
 

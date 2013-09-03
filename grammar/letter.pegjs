@@ -1,5 +1,6 @@
 {
     var params = [];
+    var scoreParam = undefined;
     var anonNonterms = 0;
     var lhsStack = [];
     var nonterms = [];
@@ -7,6 +8,11 @@
     var undo = {};
 
     function extend(a,b) { return LetterWriter.extend(a,b) }
+
+    function addScoreParam(p) {
+	scoreParam = p;
+	return true;
+    }
 
     function addParam(p,v,min,max) {
 	if (/^not$/i.test(p))
@@ -142,9 +148,13 @@ start
 			       start: getStart(),
 			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
 			       params: params,
+			       scoreParam: scoreParam,
 			       undo: undo } }
 
-statement = param_decl / undo / rule
+statement = score_param_decl / param_decl / undo / rule
+
+score_param_decl
+    = "score" spc+ id:bare_param_id spc*  &{ return addScoreParam(id) }
 
 undo
     = "undo" spc* "{" spc* "wait" spc* ":" spc* w:nonnegative_numeric_literal spc* "}" spc* { undo.wait = w }

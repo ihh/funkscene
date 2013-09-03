@@ -1,3 +1,4 @@
+score $score
 undo { wait: 0 }
 @start => [_Well, this is it: the dreaded cover letter. Final step in your application to Arcane College._
 
@@ -11,7 +12,7 @@ _Competition is fierce, with over fifteen applicants to a place, and it's gotten
 
 @yours_sincerely_etc}
 pause @something_about_me[thrice]  => [_Might be a good idea to say a little more about yourself._
-|What will you say?]{Emphasize my positive qualities=>@my_positive_qualities; @something_about_me|Say why I'm right for the position=>@suitability_for_the_position; @something_about_me|Describe my experience=>@my_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
+|What will you say?]{Emphasize my positive qualities[once] =>@my_positive_qualities; @something_about_me|Say why I'm right for the position[once] =>@suitability_for_the_position; @something_about_me|Describe my experience[once] =>@my_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
 pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts @necromantic_specialization|Illusion=>Illusory Light & Magic}
 @necromantic_specialization => [...
 _Everyone chooses necromancy. You ought to be a bit more specific._

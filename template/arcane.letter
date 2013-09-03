@@ -4,15 +4,15 @@ undo { wait: 0 }
 
 _Competition is fierce, with over fifteen applicants to a place, and it's gotten worse during the recession (despite the government slashing the Magical Ingredient Allowance, which you might think would deter people). You're going to have to make your letter stand out._
 
-||Shall we begin?]{@opening a Bachelor's Degree in @subject at Arcane College.
-
+||Shall we begin?]{$score = 0;
+@opening a Bachelor's Degree in @subject at Arcane College.
 @something_about_me
 
 @faculty
 
 @yours_sincerely_etc}
 pause @something_about_me[thrice]  => [_Might be a good idea to say a little more about yourself._
-|What will you say?]{Emphasize my positive qualities[once] =>@my_positive_qualities; @something_about_me|Say why I'm right for the position[once] =>@suitability_for_the_position; @something_about_me|Describe my experience[once] =>@my_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
+|What will you say?]{Emphasize my positive qualities[once] =>$score = $score + 10;@my_positive_qualities; @something_about_me|Say why I'm right for the position[once] =>$score = $score + 10;@suitability_for_the_position; @something_about_me|Describe my experience[once] =>$score = $score + 10;@my_relevant_experience; @something_about_me|I think I've talked enough about myself.=> }
 pause @subject => [Pick a subject]{Prestidigitation=>prestidigitation|Necromancy=>the Necromantic Arts @necromantic_specialization|Illusion=>Illusory Light & Magic}
 @necromantic_specialization => [...
 _Everyone chooses necromancy. You ought to be a bit more specific._

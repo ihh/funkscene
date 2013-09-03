@@ -546,6 +546,14 @@ input {
     float: left;
 }
 
+/* Score DIVs for LetterWriter */
+.letter .scoreHolder {
+    font-size: large;
+}
+
+.letter .score {
+}
+
 /* Undo DIV for LetterWriter */
 .letter .undo {
     float: right;

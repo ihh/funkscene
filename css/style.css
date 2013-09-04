@@ -584,6 +584,18 @@ input {
     padding:2px;
 }
 
+.scoreDeltaPositive {
+    position: relative;
+    font-size: small;
+    color: DarkGreen;
+}
+
+.scoreDeltaNegative {
+    position: relative;
+    font-size: small;
+    color: DarkRed;
+}
+
 .scoreLabel {
 }
 

@@ -18,7 +18,8 @@
       <!-- Game container -->
       <div id="letterDebugger">
 	<div id="gameAndParseTreeContainer">
-	  <div id="gameContainer" style="border-style:none;margin-left:400px">
+	  <div id="leftPadding" style="width:400px;height:1em"></div>
+	  <div id="gameContainer" style="border-style:none;left:400px">
 	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
 	      <span id="restartWarning"></span>
 	    </span>
@@ -127,13 +128,13 @@ function changeShowIDE() {
     if ($("#showIDECheckbox")[0].checked) {
 	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").show()
 	$(".letterWriterBody").attr("style","background-color:#fffff8")
-	$("#gameContainer").attr("style","border-style:solid;position:static")
+	$("#gameContainer").attr("style","border-style:solid")
 	$("#scoreContainer").attr("style","position:static;width:auto;bottom:auto")
     } else {
 	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").hide()
 	$(".letterWriterBody").attr("style","background-color:#eee")
-	$("#gameContainer").attr("style","border-style:none;margin-left:400px")
-	$("#scoreContainer").attr("style","")
+	$("#gameContainer").attr("style","border-style:none;left:400px")
+	$("#scoreContainer").attr("style","left:400px")
     }
 }
 

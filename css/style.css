@@ -104,6 +104,7 @@ input {
     max-width: 700px;
     margin: 10px auto; 
     padding: 0 10px;
+    position: relative;
 }
 
 /* FunkScene game + debugger */

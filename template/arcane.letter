@@ -112,7 +112,7 @@ I am grateful to Mother Grothel for a truly beneficial hero power.|Tell them abo
 _"Just like a hip replacement, deary," she said of your new tongue. "Or a hearing aid!" This made her cackle unto a coughing fit._
 _It didn't stay silver for long, of course. The flesh now is indistinguishable from your own. Sometimes you forget, for hours at a time._
 My hero power did not come without sacrifice, and I learned a great respect for the truth.|Tell them what you did after=>_How genuine they used to find you. How sincere those eyes, to your loved ones._
-_Love! There's a memory. Difficult to love a liar. Especially difficult if the liar is Drow._
+_Love! There's a memory. Difficult to love a liar. Especially difficult if the liar is an Orc._
 _What are the odds? As if the racist prejudice about dark elves isn't bad enough, you then get cursed with the ability to compulsively "polish" the truth? It's almost as if that witch had it in for you._
 I learned great respect for integrity, as a part of the character-building process that led me to my secret hero power.}
 @my_relevant_experience => [What experience have you gained already?]{Tell them about that quest thing I did=>@quest|Tell them about my internship=>@apprenticeship|Tell them about my independent research project=>@research_project|Tell them about the conferences you've attended=>My magical experience has been greatly augmented by exposure to cutting-edge thaumaturgical research at conferences such as @conference, @conference, and @conference.}

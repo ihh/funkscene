@@ -11,14 +11,14 @@
 
     <title>The Letter</title>
   </head>
-  <body>
+  <body style="background-color:#eee">
 
     <div class="letterWriterBody"> <!-- wraps everything so we can set background color -->
 
       <!-- Game container -->
       <div id="letterDebugger">
 	<div id="gameAndParseTreeContainer">
-	  <div id="gameContainer">
+	  <div id="gameContainer" style="border-style:none">
 	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
 	      <span id="restartWarning"></span>
 	    </span>
@@ -59,7 +59,7 @@
 	</div>
       </div>
 
-      <hr>
+      <hr id="editorDivider" style="display:none">
       <div id="editor" style="display:none">
 
 	<h5>ChoiceBook</h5>
@@ -125,9 +125,13 @@ $("#initialExample").attr("href",defaultSource)
 
 function changeShowIDE() {
     if ($("#showIDECheckbox")[0].checked) {
-	$("#editor,#editorMapContainer,#editorParseTreeContainer").show()
+	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").show()
+	$(".letterWriterBody").attr("style","background-color:#fffff8")
+	$("#gameContainer").attr("style","border-style:solid")
     } else {
-	$("#editor,#editorMapContainer,#editorParseTreeContainer").hide()
+	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").hide()
+	$(".letterWriterBody").attr("style","background-color:#eee")
+	$("#gameContainer").attr("style","border-style:none")
     }
 }
 

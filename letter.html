@@ -36,12 +36,22 @@
 	    <br><br><br>
 	    <div id="scoreContainer" class="scoreContainerHidden"><span id="scoreLabel" class="scoreLabel"></span> <span id="score" class="score"></span></div>
 	  </div>
-	  <div id="editorParseTreeContainer">
+
+	  <div id="editorParseTreeContainer" style="display:none">
 	    <h5>Debugger</h5>
 	    <div id="editorParseTree"></div>
 	  </div>
+
+	  <div style="float:right">
+	    <form action="#">
+	      IDE
+	      <input type="checkbox" id="showIDECheckbox" name="ide" value="showIDE" onclick="changeShowIDE()">
+	    </form>
+	  </div>
+
 	</div>
-	<div id="editorMapContainer">
+
+	<div id="editorMapContainer" style="display:none">
 	  <a name="editorMap">
 	    <h5>Choice Connection Map</h5>
 	  </a>
@@ -50,7 +60,7 @@
       </div>
 
       <hr>
-      <div id="editor">
+      <div id="editor" style="display:none">
 
 	<h5>ChoiceBook</h5>
 	<div id="editorList"></div>
@@ -112,6 +122,14 @@ var editorArgs = {tooltips:false}
 //editorArgs = {}
 
 $("#initialExample").attr("href",defaultSource)
+
+function changeShowIDE() {
+    if ($("#showIDECheckbox")[0].checked) {
+	$("#editor,#editorMapContainer,#editorParseTreeContainer").show()
+    } else {
+	$("#editor,#editorMapContainer,#editorParseTreeContainer").hide()
+    }
+}
 
 function removeEditor() {
     if (editor) editor.remove()
@@ -278,6 +296,7 @@ $("#redoEdit").click(redoEdit)
 $(function(){
     setupTemplateSyntax()
     loadInitialGrammar()
+    changeShowIDE()
 });
     </script>
 

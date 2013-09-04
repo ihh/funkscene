@@ -549,6 +549,9 @@ input {
 /* Score DIVs for LetterWriter */
 .scoreContainerHidden {
     border-style: none;
+    position: fixed;
+    bottom: 20;
+    width: 49%;
 }
 
 .scoreContainer {
@@ -560,6 +563,9 @@ input {
     border-radius: 3px;
     margin:2px;
     padding:2px;
+    position: fixed;
+    bottom: 20;
+    width: 49%;
 }
 
 .scoreContainerIncreasing {
@@ -571,6 +577,9 @@ input {
     border-radius: 3px;
     margin:2px;
     padding:2px;
+    position: fixed;
+    bottom: 20;
+    width: 49%;
 }
 
 .scoreContainerDecreasing {
@@ -582,6 +591,9 @@ input {
     border-radius: 3px;
     margin:2px;
     padding:2px;
+    position: fixed;
+    bottom: 20;
+    width: 49%;
 }
 
 .scoreDeltaPositive {

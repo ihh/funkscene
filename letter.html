@@ -18,7 +18,7 @@
       <!-- Game container -->
       <div id="letterDebugger">
 	<div id="gameAndParseTreeContainer">
-	  <div id="gameContainer" style="border-style:none">
+	  <div id="gameContainer" style="border-style:none;margin-left:400px">
 	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
 	      <span id="restartWarning"></span>
 	    </span>
@@ -51,6 +51,7 @@
 
 	</div>
 
+    <div style="height:2em;width:100%;display:block;float:left;"></div> <!-- leave space for scoreContainer to hang off bottom of letter in IDE mode, ick -->
 	<div id="editorMapContainer" style="display:none">
 	  <a name="editorMap">
 	    <h5>Choice Connection Map</h5>
@@ -127,11 +128,13 @@ function changeShowIDE() {
     if ($("#showIDECheckbox")[0].checked) {
 	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").show()
 	$(".letterWriterBody").attr("style","background-color:#fffff8")
-	$("#gameContainer").attr("style","border-style:solid")
+	$("#gameContainer").attr("style","border-style:solid;position:static")
+	$("#scoreContainer").attr("style","position:absolute;width:auto;bottom:auto")
     } else {
 	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").hide()
 	$(".letterWriterBody").attr("style","background-color:#eee")
-	$("#gameContainer").attr("style","border-style:none")
+	$("#gameContainer").attr("style","border-style:none;margin-left:400px")
+	$("#scoreContainer").attr("style","")
     }
 }
 

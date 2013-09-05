@@ -19,7 +19,7 @@
       <div id="letterDebugger">
 	<div id="gameAndParseTreeContainer">
 	  <div id="leftPadding" style="width:400px;height:1em"></div>
-	  <div id="gameContainer" style="border-style:none;left:400px">
+	  <div id="gameContainer" style="border-style:none;left:20%">
 	    <span id="restart" class="letter restart"><small><i><a href="#" onclick="restartLetterFromGrammar()">Restart</a></i></small>
 	      <span id="restartWarning"></span>
 	    </span>
@@ -133,8 +133,8 @@ function changeShowIDE() {
     } else {
 	$("#editor,#editorMapContainer,#editorParseTreeContainer,#editorDivider").hide()
 	$(".letterWriterBody").attr("style","background-color:#eee")
-	$("#gameContainer").attr("style","border-style:none;left:400px")
-	$("#scoreContainer").attr("style","left:400px")
+	$("#gameContainer").attr("style","border-style:none;left:20%")
+	$("#scoreContainer").attr("style","left:20%")
     }
 }
 

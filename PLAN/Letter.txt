@@ -8,7 +8,7 @@ http://faye.jcoglan.com/browser/publishing.html
 
 Boil all of it (gamefile publication, negotiation, play) into a pub-sub model:
 Message(C,H,P,T):
- Does anyone want to play a choose-your-own Adventure game on channel C (which serves as a game ID)
+ Does anyone want to play a choose-your-own Adventure game with channel parameter C (which serves as a game ID)
  using the multiplayer turn-attributed grammar G which has MD5 hash H,
   with [possibly incomplete] player list P
    (a vector, where the n'th entry is null or (playerPublicKey + signature of (C,H) + optional P[1] signature))
@@ -22,76 +22,122 @@ Message(C,H,P,T):
 [if P is incomplete for G, rebroadcast on channel 'join/G.name' as well as C, where G.name is the name of the grammar]
 [if G.private==true, then (T,Q) parameters of message are encrypted so that only members of P can read.]
 
-
-GrammarRequest(H) on channel "grammar/H"
-GrammarResponse(H) on channel "grammar/H/response"
-
+GrammarRequest(H).
+GrammarResponse(G).
 
 
-Client has four modes: "edit", "join", "wait" and "play".
+Channels:
+join
+join/NAME
+join/NAME/C
+grammar
+grammar/H
+grammar/H/C
+game
+game/NAME
+game/NAME/C
+game/NAME/C/add
+game/NAME/C/request
+game/NAME/C/play
+
+
+Client has five states: "edit", "join", "start-wait(H,P,T)", "join-wait(H,G,P,T)", and "play(H,G,P,T)".
 Let
  S = {self}, i.e. set containing own player key & nothing else,
  I = [self,null,null...], i.e. initial player list with self as player #1 and no other players,
  R = {G.rootNonterminal}.
 
-In "edit" mode:
+In "edit":
 On clicking "Start game",
- let C = "play/G.name/RandomNumber",
- broadcast Message(C,H,I,R) on channels {C,"join/G.name"}, subscribe to channels C and "grammar/H",
+ let C = new unique ID from server,
+ broadcast Message(C,H,I,R) on channel "join/G.name/C",
  if G is single-player,
-   go to "play" mode with state (H,I,R),
+   goto "play(H,G,I,R)",
   otherwise,
-   go into "wait" mode with state (H,I,R).
+   subscribe to channel "game/G.name/C",
+   goto "start-wait(H,I,R)".
 On clicking "Join game",
  subscribe to channel "join",
- go into "join" mode.
+ goto "join".
 On clicking "Test game",
- go into "play" mode with state (H,I,R).
+ goto "play(H,G,I,R)".
 
-In "join" mode:
+In "join":
 On receipt of Message(C,H,P,T):
- add (C,H,P,T,G.name or "anonymous game") to selectable game list.
-On selecting game (C,H,P,T...) from the game list:
- broadcast Message(C,H,P',T) where P' is P with self written into next available player role,
+ add (C=>(H,P,T,G.name)) to selectable game list.
+On selecting game (C=>(H,P,T,G.name)) from the game list:
+ let P' be P with self written into next available player role,
+ broadcast Message(C,H,P',T) on channel "game/G.name/C/add",
  unsubscribe from channel "join",
- subscribe to channel C,
- go into "wait" mode with state (H,P',T).
-On editing the grammar,
+ subscribe to channels "game/G.name/C/play", "join/G.name/C" and "grammar/H",
+ goto "join-wait(H,null,P',T)".
+On quitting or editing the grammar,
  unsubscribe from all channels,
- go into "edit" mode.
+ goto "edit".
 
-In "wait" mode with current state (H,P0,T0):
+In "start-wait(H,P0,T)":
+Periodically rebroadcast Message(C,H,P0,T) on "join/G.name/C".
 On receipt of Message(C,H,P,T),
- where P0 \subseteq P and T0 is consistent with T:
- if message signature is incomplete and P[1] = self,
-  sign Message(C,H,P,T) and rebroadcast;
- if P has all players and (P[1] = self or message is signed by P[1]),
+ where P0 \subseteq P:
+ if P not fully signed by self,
+  sign Message(C,H,P,T) and broadcast on channel "join/G.name/C";
+ if P has all players,
     render initial tree T,
-    go to "play" mode with state (H,P,T).
+    goto "play(H,G,P,T)".
   otherwise (still need more players or player1 signature),
-   verify that T = T0,
-   go to "wait" mode with state (H,P,T).
-On editing the grammar,
+   goto "start-wait(H,P,T)".
+On receipt of GrammarRequest(H),
+ broadcast GrammarResponse(G) on channel "grammar/H/C".
+On quitting or editing the grammar,
  unsubscribe from all channels,
- go into "edit" mode.
+ goto "edit".
 
-In "play" mode with current state (H,P,T0):
+In "join-wait(H,G0,P0,T0)":
+On receipt of GrammarResponse(G),
+ verify that md5hash(G) = H,
+ unsubscribe from "grammar/H",
+ goto "join-wait(H,G,P0,T0)".
+On receipt of Message(C,H,P,T),
+ where P is fully signed by P[1]:
+ if P conflicts with P0,
+    unsubscribe from all channels,
+    subscribe to channel "join",
+    goto "join".
+ if P has all players,
+    if G0 != null, then render initial tree T,
+     otherwise broadcast GrammarRequest(H) on channel "game/G.name/C/request";
+    unsubscribe from channel "join/G.name/C",
+    goto "play(H,G0,P,T)".
+  otherwise (still need more players),
+   goto "join-wait(H,G0,P,T)".
+On quitting or editing the grammar,
+ unsubscribe from all channels,
+ goto "edit".
+
+In "play(H,G0,P,T0)":
+On receipt of GrammarResponse(G),
+ verify that md5hash(G) = H,
+ render tree T0,
+ unsubscribe from "grammar/H",
+ goto "play(H,G,P,T0)".
 On receipt of Message(C,H,P,T),
  where T0 is consistent with T:
  let T' = union(T0,T),
  if T' != T0,
-  render new tree T'.
+  if G0 != null, then render tree T',
+  otherwise broadcast GrammarRequest(H) on channel "game/G.name/C/request";
+ goto "play(H,G0,P,T')".
+On receipt of GrammarRequest(H),
+ broadcast GrammarResponse(G) on channel "grammar/H/C".
 On expanding T0->T,
-  render new tree T,
-  broadcast Message(C,H,P,T) on channel C,
-  go to "play" mode with state (H,P,T).
-On editing the grammar,
+  render tree T,
+  broadcast Message(C,H,P,T) on channel "game/G.name/C/play",
+  goto "play(H,G0,P,T)".
+On quitting or editing the grammar,
  unsubscribe from all channels,
- go into "edit" mode.
+ goto "edit".
 
 
-On receiving a "GrammarRequest" on channel grammar/H in any mode,
- broadcast a "GrammarResponse", including grammar G, on channel grammar/H/response.
 
 
 Core engine enhancements:

@@ -1,0 +1,41 @@
+Multiplayer
+
+http://blog.modulus.io/nodejs-and-express-create-rest-api
+http://blog.modulus.io/nodejs-and-express-basic-authentication
+
+http://faye.jcoglan.com/node.html
+http://faye.jcoglan.com/browser.html
+http://faye.jcoglan.com/browser/subscribing.html
+http://faye.jcoglan.com/browser/publishing.html
+
+
+Server:
+ Simple RESTful API
+  POST source
+   PUT source/sourceID  (requires authentication)
+   GET source/sourceID returns LetterWriter source code
+  GET uniqueid/game returns unique gameID (autoincrements)
+  GET uniqueid/player returns unique playerID (autoincrements)
+ Faye instance
+
+Client:
+ "Join existing game"
+   -> publish on lobby/wanted
+   -> subscribe to lobby/offered (show list of available games...)
+    -> publish on lobby/join/gameID { player: { playerNumber: playerID } }
+    -> subscribe to lobby/start/gameID; wait for acknowledgement, then start game
+ "Start new game": get unique game ID, then
+   -> publish new game announcement on lobby/offered/sourceID { game: gameID, gameHash: md5HashOfGameSource, player: { playerNumber: playerID } }
+   -> subscribe to lobby/wanted, repeat-publish new game announcement on lobby/offered/sourceID as wanted requests come in
+   -> subscribe to lobby/join/gameID
+    -> publish on lobby/start/gameID... acknowledgement message: { player: { 1: player2ID, 2: player2ID } }
+ Game in progress:
+  Publish moves on game/gameID/player/playerID, including moves made by computer on your side
+  Subscribe to game/gameID/player/otherPlayerID; when a move comes in, crawl the tree, expanding other player's nodes
+
+Core engine enhancements:
+ Compact JSON representation of parse tree
+ Extend language to flag nonterminals as being player1, player2, or nextPlayer (the latter means "opposite of parent")
+  Six options on Player dropdown menu: Player1, Computer1, Player2, Computer2, NextPlayer, NextComputer
+ Two player score variables (Player 1 score left-aligned, Player 2 score right-aligned)
+ Language extensions: "players 1" or "players 2", "score $score1 $score2", player prefix to rule ("#1", "#2", or nothing for "next"), "$x#" expands to "$x".(currentPlayerNumber)

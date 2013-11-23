@@ -6,26 +6,93 @@ http://faye.jcoglan.com/browser/subscribing.html
 http://faye.jcoglan.com/browser/publishing.html
 
 
-Boil all of it (REST, negotiation, play) into a single monoidal crypto-question:
-Message(C,HG,T,P,Q):
- Does anyone want to play a choose-your-own Adventure game using the multiplayer turn-attributed grammar G which has MD5 hash HG,
-  with [possibly incomplete] player list P,
-   and rooted parse subtree T?
+Boil all of it (gamefile publication, negotiation, play) into a single monoidal crypto-question:
+Message(C,H,P,K,T,Q):
+ Does anyone want to play a choose-your-own Adventure game using the multiplayer turn-attributed grammar G which has MD5 hash H,
+  with [possibly incomplete] player list P (a map playerNumber=>privateKey),
+   some subset of whom K \in P know the grammar G itself,
+  starting from rooted parse subtree T?
  If so, and
-   your augmented player-list and/or parse tree are (P',T'),
-    where P \subseteq P' and T \subseteq T',
-   then respond on channel C with Message(C,HG,T',P',Q').
+   your augmented player-lists and/or parse trees are (P',K',T'),
+    where P \subseteq P', K \subset K', and T \subseteq T',
+   then respond on channel C with Message(C,H,P',K',T',Q').
  Signed (cryptographically), some set of players Q, where Q \subseteq P.
-[optionally includes G, or request for G]
-[if P is incomplete for HG, rebroadcast on channel 'join/G.name' as well as C, where G.name is the name of the grammar]
-[if G.private==true, then (T,Q) encrypted for members of P]
+[optionally includes G, the grammar (in which case K=1); or G.name, the name of the grammar]
+[if P is incomplete for G, rebroadcast on channel 'join/G.name' as well as C, where G.name is the name of the grammar]
+[if G.private==true, then (T,Q) parameters of message are encrypted so that only members of P can read.]
 
-http://openpgpjs.org/
+
+Client has four modes: "edit", "join", "wait" and "play".
+
+In "edit" mode:
+On clicking "Start game" in "edit" mode,
+ let C = "play/G.name/RandomNumber",
+ broadcast Message(C,H,{self},{self},{start},{self}) on channels {C,"join/G.name"},
+ subscribe to channel C,
+ go into "wait" mode.
+On clicking "Join game" in "edit" mode,
+ subscribe to channel "join",
+ go into "join" mode.
+
+In "join" mode:
+On receipt of Message(C,H,P,K,T,Q) in "join" mode:
+ add (C,H,P,K,T,G.name or "anonymous game") to selectable game list.
+On selecting game (C,H,P,K,T...) from the game list in "join" mode:
+ broadcast Message(C,H,P',K,T,Q') where P=P+self and Q'=Q+self,
+ unsubscribe from channel "join",
+ subscribe to channel C,
+ if domain(P) = all players in G (got all players),
+   if P=K'=Q' (all players in receipt of grammar and ready to play),
+    go into "play" mode with state (H,P',T),
+   otherwise,
+    go into "wait" mode with state (H,P',K,T).
+
+In "wait" mode:
+On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with current state (H,P0,K0,T),
+ where P0 \subset P, K0 \subset K:
+ if incoming message includes G and we didn't have it before,
+   verify that md5hash(G) = H,
+   confirm with user that T is a permissible handicap (default behavior: reject if T \noteq {G.startNonterminal}),
+   broadcast Message(C,H,P,K'=K+self,T,Q'={self}) along with G (if K' \noteq P) on channels {C,"join/G.name"};
+  otherwise (already had G or it wasn't included),
+   broadcast Message(C,H,P,K'=K,T,Q'=Q+self);
+ if domain(P) = all players in G (got all players),
+   if P=K'=Q' (all players in receipt of grammar and ready to play),
+     render T,
+     go to "play" mode with state (H,P,T).
+    otherwise,
+     if \argmin_{n \in K'} P[n] = self  (i.e. we are the lowest-numbered player that knows the grammar),
+      broadcast Message(C,H,P,K',T,{self}) along with G on channel C;
+     go to "wait" mode with state (H,P,K',T).
+  otherwise (still need more players),
+   go to "wait" mode with state (H,P,K,T).
+
+In "play" mode:
+On receipt of Message(C,H,P,P,T,Q) in "play" mode with state (H,P,T0),
+ where T is consistent with T0:
+ let T' = union(T0,T).
+ if T' \noteq T0,
+  render T'.
+ if Q \noteq P,
+  broadcast Message(C,H,P,P,T',T'=T ? (Q+self) : {self}).
+ go to (H,P,T').
+On moving from T0->T in "play" mode with state (H,P,T0),
+  broadcast Message(C,H,P,P,T,{self}),
+  go to "play" mode with state (H,P,T).
+
 
 
 Core engine enhancements:
  Compact JSON representation of parse tree
- Extend turn-attributed grammar language to flag nonterminals as being player1, player2, or nextPlayer (the latter means "opposite of parent")
-  Six options on Player dropdown menu: Player1, Computer1, Player2, Computer2, NextPlayer, NextComputer
- Two player score variables (Player 1 score left-aligned, Player 2 score right-aligned)
- Language extensions: "players 1" or "players 2", "score $score1 $score2", player prefix to rule ("#1", "#2", or nothing for "next"), "$x#" expands to "$x".(currentPlayerNumber)
+ Extend turn-attributed grammar language to flag nonterminals as being player1, player2, ..., playerN, or nextPlayer (the player whose player number is one higher than the parent, modulo N)
+  Add new "Player Number" to nonterminal editor
+ N player score variables (evenly spaced along one line)
+ LetterWriter language/model extensions:
+  "players N"
+  player prefix to rule ("#1", "#2", or nothing for "next")
+  "$x#" expands to "$x".(currentPlayerNumber)
+  "score $score" implies $score1,$score2...$scoreN
+
+
+The first implementation doesn't need hashes, encryption or signatures, but they can be added using this library:
+http://openpgpjs.org/

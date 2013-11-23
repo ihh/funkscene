@@ -29,16 +29,18 @@ On clicking "Start game" in "edit" mode,
  let C = "play/G.name/RandomNumber",
  broadcast Message(C,H,{self},{self},{start},{self}) on channels {C,"join/G.name"},
  subscribe to channel C,
- go into "wait" mode.
+ go into "wait" mode with state (H,{self},{self},{start}).
 On clicking "Join game" in "edit" mode,
  subscribe to channel "join",
  go into "join" mode.
+On clicking "Test game" in "edit" mode,
+ go into "play" mode with state (null,H,{*=>self},{start}).
 
 In "join" mode:
-On receipt of Message(C,H,P,K,T,Q) in "join" mode:
+On receipt of Message(C,H,P,K,T,P) in "join" mode:
  add (C,H,P,K,T,G.name or "anonymous game") to selectable game list.
 On selecting game (C,H,P,K,T...) from the game list in "join" mode:
- broadcast Message(C,H,P',K,T,Q') where P=P+self and Q'=Q+self,
+ broadcast Message(C,H,P',K,T,{self}) where P'=P+self,
  unsubscribe from channel "join",
  subscribe to channel C,
  if domain(P) = all players in G (got all players),
@@ -47,19 +49,21 @@ On selecting game (C,H,P,K,T...) from the game list in "join" mode:
    otherwise,
     go into "wait" mode with state (H,P',K,T).
 
-In "wait" mode:
+In "wait" mode with current state (H,P0,K0,T):
 On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with current state (H,P0,K0,T),
  where P0 \subset P, K0 \subset K:
- if incoming message includes G and we didn't have it before,
+ if we've seen G (before or via this message), let K'=K+self, otherwise let K'=K;
+ if self \in K' and self \notin K0 (i.e. we have G and didn't have it before),
    verify that md5hash(G) = H,
    confirm with user that T is a permissible handicap (default behavior: reject if T \noteq {G.startNonterminal}),
-   broadcast Message(C,H,P,K'=K+self,T,Q'={self}) along with G (if K' \noteq P) on channels {C,"join/G.name"};
+   broadcast Message(C,H,P,K',T,Q'={self}) on channels {C,"join/G.name"};
   otherwise (already had G or it wasn't included),
-   broadcast Message(C,H,P,K'=K,T,Q'=Q+self);
+   if self \notin Q,
+    broadcast Message(C,H,P,K',T,Q'=Q+self) on channels {C,"join/G.name"};
  if domain(P) = all players in G (got all players),
    if P=K'=Q' (all players in receipt of grammar and ready to play),
-     render T,
-     go to "play" mode with state (H,P,T).
+     render initial tree T,
+     go to "play" mode with state (C,H,P,T).
     otherwise,
      if \argmin_{n \in K'} P[n] = self  (i.e. we are the lowest-numbered player that knows the grammar),
       broadcast Message(C,H,P,K',T,{self}) along with G on channel C;
@@ -67,18 +71,22 @@ On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with curre
   otherwise (still need more players),
    go to "wait" mode with state (H,P,K,T).
 
-In "play" mode:
-On receipt of Message(C,H,P,P,T,Q) in "play" mode with state (H,P,T0),
+In "play" mode with current state (C,H,P,T0):
+On receipt of Message(C,H,P,P,T,Q) in "play" mode with current state (H,P,T0),
  where T is consistent with T0:
  let T' = union(T0,T).
  if T' \noteq T0,
-  render T'.
+  render new tree T'.
  if Q \noteq P,
-  broadcast Message(C,H,P,P,T',T'=T ? (Q+self) : {self}).
- go to (H,P,T').
-On moving from T0->T in "play" mode with state (H,P,T0),
-  broadcast Message(C,H,P,P,T,{self}),
-  go to "play" mode with state (H,P,T).
+  if T'=T,
+   broadcast Message(C,H,P,P,T',Q+self) on channel C;
+  otherwise,
+   broadcast Message(C,H,P,P,T',{self}) on channel C;
+ go to "play" mode with state (C,H,P,T').
+On expanding T0->T in "play" mode with current state (H,P,T0),
+  render new tree T,
+  broadcast Message(C,H,P,P,T,{self}) on channel C,
+  go to "play" mode with state (C,H,P,T).
 
 
 

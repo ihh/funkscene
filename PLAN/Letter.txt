@@ -150,13 +150,15 @@ Core engine enhancements:
  Receiving nodes on channels gives visual feedback:
    Visual feedback when node received in peer message: text fades to faintly-red
    Visual feedback when node received in message from player 1: text fades to black
- Extend turn-attributed grammar language to flag nonterminals as being player1, player2, ..., playerN, or nextPlayer (the player whose player number is one higher than the parent, modulo N)
-  Add new "Player Number" to nonterminal editor
+ Extend turn-attributed grammar language to flag nonterminal ownership:
+    player1, player2, ..., playerN,
+    samePlayer, nextPlayer, previousPlayer
+  Add new "Player Number" to nonterminal editor (incl. same, next, previous)
  N player score variables (evenly spaced along one line)
  LetterWriter language/model extensions:
   "players N"
-  player prefix to rule ("#1", "#2", or nothing for "next")
-  "$x#" expands to "$x".(currentPlayerNumber)
+  player prefix to rule ("#1", "#2", "#next", "#previous", "#same" (default))
+  "$#x" expands to "$x".(currentPlayerNumber)
   "score $score" implies $score1,$score2...$scoreN
 
 

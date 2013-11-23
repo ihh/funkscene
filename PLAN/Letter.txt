@@ -43,14 +43,11 @@ On selecting game (C,H,P,K,T...) from the game list in "join" mode:
  broadcast Message(C,H,P',K,T,{self}) where P'=P+self,
  unsubscribe from channel "join",
  subscribe to channel C,
- if domain(P) = all players in G (got all players),
-   if P=K'=Q' (all players in receipt of grammar and ready to play),
-    go into "play" mode with state (H,P',T),
-   otherwise,
-    go into "wait" mode with state (H,P',K,T).
+ if domain(P') = all players in G (got all players),
+   go into "wait" mode with state (H,P',K,T,{self}).
 
-In "wait" mode with current state (H,P0,K0,T):
-On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with current state (H,P0,K0,T),
+In "wait" mode with current state (H,P0,K0,T,Q0):
+On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with current state (H,P0,K0,T,Q0),
  where P0 \subset P, K0 \subset K:
  if we've seen G (before or via this message), let K'=K+self, otherwise let K'=K;
  if self \in K' and self \notin K0 (i.e. we have G and didn't have it before),
@@ -58,8 +55,10 @@ On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with curre
    confirm with user that T is a permissible handicap (default behavior: reject if T \noteq {G.startNonterminal}),
    broadcast Message(C,H,P,K',T,Q'={self}) on channels {C,"join/G.name"};
   otherwise (already had G or it wasn't included),
-   if self \notin Q,
-    broadcast Message(C,H,P,K',T,Q'=Q+self) on channels {C,"join/G.name"};
+   if P=P0 and K'=K0 and self \notin Q,
+     broadcast Message(C,H,P,K',T,Q'=Q0+Q+self) on channels {C,"join/G.name"};
+    otherwise,
+     broadcast Message(C,H,P,K',T,Q'={self}) on channels {C,"join/G.name"};
  if domain(P) = all players in G (got all players),
    if P=K'=Q' (all players in receipt of grammar and ready to play),
      render initial tree T,

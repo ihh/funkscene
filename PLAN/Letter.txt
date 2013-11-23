@@ -10,13 +10,14 @@ Boil all of it (gamefile publication, negotiation, play) into a single monoidal 
 Message(C,H,P,K,T,Q):
  Does anyone want to play a choose-your-own Adventure game using the multiplayer turn-attributed grammar G which has MD5 hash H,
   with [possibly incomplete] player list P (a map playerNumber=>privateKey),
-   some subset of whom K \in P know the grammar G itself,
   starting from rooted parse subtree T?
  If so, and
    your augmented player-lists and/or parse trees are (P',K',T'),
     where P \subseteq P', K \subset K', and T \subseteq T',
    then respond on channel C with Message(C,H,P',K',T',Q').
- Signed (cryptographically), some set of players Q, where Q \subseteq P.
+ Signed (cryptographically), some set of players Q, where Q \subseteq P,
+     some subset of whom K \in P know the grammar G itself.
+[K should be a part of Q, so each player doesn't have to sign off on each others' knowledge; can take unions of K's & Q's together]
 [optionally includes G, the grammar (in which case K=1); or G.name, the name of the grammar]
 [if P is incomplete for G, rebroadcast on channel 'join/G.name' as well as C, where G.name is the name of the grammar]
 [if G.private==true, then (T,Q) parameters of message are encrypted so that only members of P can read.]
@@ -49,6 +50,7 @@ On selecting game (C,H,P,K,T...) from the game list in "join" mode:
 In "wait" mode with current state (H,P0,K0,T,Q0):
 On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with current state (H,P0,K0,T,Q0),
  where P0 \subset P, K0 \subset K:
+ [Step 1: aggregate K's and Q's]
  if we've seen G (before or via this message), let K'=K+self, otherwise let K'=K;
  if self \in K' and self \notin K0 (i.e. we have G and didn't have it before),
    verify that md5hash(G) = H,
@@ -59,6 +61,7 @@ On receipt of Message(C,H,P,K,T,Q), plus optionally G, in "wait" mode with curre
      broadcast Message(C,H,P,K',T,Q'=Q0+Q+self) on channels {C,"join/G.name"};
     otherwise,
      broadcast Message(C,H,P,K',T,Q'={self}) on channels {C,"join/G.name"};
+ [Step 2: check if ready to play]
  if domain(P) = all players in G (got all players),
    if P=K'=Q' (all players in receipt of grammar and ready to play),
      render initial tree T,

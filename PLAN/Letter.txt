@@ -24,24 +24,25 @@ Message(C,H,P,T):
 
 GrammarRequest(H).
 GrammarResponse(G).
+Quit.
 
 
 Channels:
 join
-join/NAME
-join/NAME/C
+join/H
+join/H/C
 grammar
 grammar/H
 grammar/H/C
 game
-game/NAME
-game/NAME/C
-game/NAME/C/add
-game/NAME/C/request
-game/NAME/C/play
+game/H
+game/H/C
+game/H/C/join
+game/H/C/request
+game/H/C/play
 
 
-Client has five states: "edit", "join", "start-wait(H,P,T)", "join-wait(H,G,P,T)", and "play(H,G,P,T)".
+Client has five states: "edit", "join", "start-wait(C,H,P,T)", "join-wait(C,H,G,P,T)", and "play(C,H,G,P,T)".
 Let
  S = {self}, i.e. set containing own player key & nothing else,
  I = [self,null,null...], i.e. initial player list with self as player #1 and no other players,
@@ -50,53 +51,55 @@ Let
 In "edit":
 On clicking "Start game",
  let C = new unique ID from server,
- broadcast Message(C,H,I,R) on channel "join/G.name/C",
+ broadcast Message(C,H,I,R) on channel "join/H/C/new",
  if G is single-player,
-   goto "play(H,G,I,R)",
+   goto "play(C,H,G,I,R)",
   otherwise,
-   subscribe to channel "game/G.name/C",
-   goto "start-wait(H,I,R)".
+   subscribe to channel "game/H/C",
+   goto "start-wait(C,H,I,R)".
 On clicking "Join game",
  subscribe to channel "join",
  goto "join".
 On clicking "Test game",
- goto "play(H,G,I,R)".
+ goto "play(C,H,G,I,R)".
 
 In "join":
 On receipt of Message(C,H,P,T):
- add (C=>(H,P,T,G.name)) to selectable game list.
-On selecting game (C=>(H,P,T,G.name)) from the game list:
+ add (C=>(C,H,P,T,G.name)) to selectable game list.
+On selecting game (C=>(C,H,P,T,G.name)) from the game list:
  let P' be P with self written into next available player role,
- broadcast Message(C,H,P',T) on channel "game/G.name/C/add",
+ broadcast Message(C,H,P',T) on channel "game/H/C/join",
  unsubscribe from channel "join",
- subscribe to channels "game/G.name/C/play", "join/G.name/C" and "grammar/H",
- goto "join-wait(H,null,P',T)".
-On quitting or editing the grammar,
+ subscribe to channels "game/H/C/play", "join/H/C" and "grammar/H",
+ goto "join-wait(C,H,null,P',T)".
+On quitting, receiving Quit, or editing the grammar,
+ broadcast Quit on channel "join/H/C/quit",
  unsubscribe from all channels,
  goto "edit".
 
-In "start-wait(H,P0,T)":
-Periodically rebroadcast Message(C,H,P0,T) on "join/G.name/C".
+In "start-wait(C,H,P0,T)":
+Periodically rebroadcast Message(C,H,P0,T) on "join/H/C".
 On receipt of Message(C,H,P,T),
  where P0 \subseteq P:
  if P not fully signed by self,
-  sign Message(C,H,P,T) and broadcast on channel "join/G.name/C";
+  sign Message(C,H,P,T) and broadcast on channel "join/H/C";
  if P has all players,
     render initial tree T,
-    goto "play(H,G,P,T)".
+    goto "play(C,H,G,P,T)".
   otherwise (still need more players or player1 signature),
-   goto "start-wait(H,P,T)".
-On receipt of GrammarRequest(H),
+   goto "start-wait(C,H,P,T)".
+On receipt of GrammarRequest(C,H),
  broadcast GrammarResponse(G) on channel "grammar/H/C".
-On quitting or editing the grammar,
+On quitting, receiving Quit, or editing the grammar,
+ broadcast Quit on channel "join/H/C/quit",
  unsubscribe from all channels,
  goto "edit".
 
-In "join-wait(H,G0,P0,T0)":
+In "join-wait(C,H,G0,P0,T0)":
 On receipt of GrammarResponse(G),
  verify that md5hash(G) = H,
  unsubscribe from "grammar/H",
- goto "join-wait(H,G,P0,T0)".
+ goto "join-wait(C,H,G,P0,T0)".
 On receipt of Message(C,H,P,T),
  where P is fully signed by P[1]:
  if P conflicts with P0,
@@ -105,35 +108,36 @@ On receipt of Message(C,H,P,T),
     goto "join".
  if P has all players,
     if G0 != null, then render initial tree T,
-     otherwise broadcast GrammarRequest(H) on channel "game/G.name/C/request";
-    unsubscribe from channel "join/G.name/C",
-    goto "play(H,G0,P,T)".
+     otherwise broadcast GrammarRequest(H) on channel "game/H/C/request";
+    goto "play(C,H,G0,P,T)".
   otherwise (still need more players),
-   goto "join-wait(H,G0,P,T)".
-On quitting or editing the grammar,
+   goto "join-wait(C,H,G0,P,T)".
+On quitting, receiving Quit, or editing the grammar,
+ broadcast Quit on channel "join/H/C/quit",
  unsubscribe from all channels,
  goto "edit".
 
-In "play(H,G0,P,T0)":
+In "play(C,H,G0,P,T0)":
 On receipt of GrammarResponse(G),
  verify that md5hash(G) = H,
  render tree T0,
  unsubscribe from "grammar/H",
- goto "play(H,G,P,T0)".
+ goto "play(C,H,G,P,T0)".
 On receipt of Message(C,H,P,T),
  where T0 is consistent with T:
  let T' = union(T0,T),
  if T' != T0,
   if G0 != null, then render tree T',
-  otherwise broadcast GrammarRequest(H) on channel "game/G.name/C/request";
- goto "play(H,G0,P,T')".
-On receipt of GrammarRequest(H),
+  otherwise broadcast GrammarRequest(H) on channel "game/H/C/request";
+ goto "play(C,H,G0,P,T')".
+On receipt of GrammarRequest(C),
  broadcast GrammarResponse(G) on channel "grammar/H/C".
 On expanding T0->T,
   render tree T,
-  broadcast Message(C,H,P,T) on channel "game/G.name/C/play",
-  goto "play(H,G0,P,T)".
-On quitting or editing the grammar,
+  broadcast Message(C,H,P,T) on channel "game/H/C/play",
+  goto "play(C,H,G0,P,T)".
+On quitting, receiving Quit, or editing the grammar,
+ broadcast Quit on channel "join/H/C/quit",
  unsubscribe from all channels,
  goto "edit".
 
@@ -142,8 +146,12 @@ On quitting or editing the grammar,
 
 Core engine enhancements:
  Compact JSON representation of parse tree
-  Unique node identifier consisting of path to node & choices/sibling positions all along the way; includes parent ID
-   e.g. "@start/c3/s2/@opening/c2/s4/@salutation"
+ Easily-deduced DIV identifier consisting of path to node & choices/sibling positions all along the way; includes parent ID
+   e.g. { name:"start", type:"nonterm", choice:3,
+          child: [ null, { name:"opening", type:"nonterm", choice:2,
+                            child: [ null, null, null, { name:"salutation", type:"nonterm" } ... ] } ...] }
+   yields  "@start/c3/s2/@opening/c2/s4/@salutation"
+    ...which can be used to quickly locate the node using JQuery
  Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
    Text default color is bright-red (unless number of players = 1, in which case it's black)
     Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red

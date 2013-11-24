@@ -85,11 +85,11 @@ On selecting game (C=>(C,H,P,T,G.name)) from the game list,
  broadcast Message(C,H,P',T) on channel "game/H/C/apply/ROLE1ID/ROLE2ID/.../SELF",
  deactivate InvitationListener,
  activate
-  ConflictListener on "game/H/C/play/P,
+  ConflictListener on "game/H/C/play/P",
   QuitListener on "quit/H/C",
   GrammarListener on "grammar/H".
 
-QuitListener:
+QuitListener on "quit/H/C":
 On quitting, receiving Quit(C) on "quit/H/C", or editing the grammar,
  broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  unsubscribe from all channels,

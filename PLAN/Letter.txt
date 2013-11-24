@@ -23,18 +23,18 @@ Message(C,H,P,T):
 { channel: C,
   hashgram: H,
   grammar: G,  // or grammar:null for GrammarRequest
-  player: [ { key: PUBLICKEY_OF_PLAYER1, sig: PLAYER1_SIGNATURE_OF_CH },
-  	    { key: PUBLICKEY_OF_PLAYER2, sig: PLAYER2_SIGNATURE_OF_CH, ack: PLAYER1_SIGNATURE_OF_sig },
-  	    { key: PUBLICKEY_OF_PLAYER3, sig: PLAYER3_SIGNATURE_OF_CH, ack: PLAYER1_SIGNATURE_OF_sig } ],
-  tree: { name:"start", type:"nonterm", choice:3, owner:1, sig:PLAYER1_SIGNATURE_OF_PATH,
-          child: [ null, { name:"opening", type:"nonterm", choice:2, owner:2, sig:PLAYER2_SIGNATURE_OF_PATH,
+  player: [ { uid: USERID_OF_PLAYER1, key: PUBLICKEY_OF_PLAYER1, keyid: ID_OF_PUBLICKEY_OF_PLAYER1, sig: PLAYER1_SIGNATURE_OF_CH },
+  	    { uid: USERID_OF_PLAYER2, key: PUBLICKEY_OF_PLAYER2, keyid: ID_OF_PUBLICKEY_OF_PLAYER2, sig: PLAYER2_SIGNATURE_OF_"join~SIG1", ack: PLAYER1_SIGNATURE_OF_"ack~SIG2" },
+  	    { uid: USERID_OF_PLAYER3, key: PUBLICKEY_OF_PLAYER3, keyid: ID_OF_PUBLICKEY_OF_PLAYER3, sig: PLAYER3_SIGNATURE_OF_"join~SIG2", ack: PLAYER1_SIGNATURE_OF_"ack~SIG3" } ],  // last ack is "ACKN"
+  tree: { name:"start", type:"nonterm", owner:1, choice:3, sig:PLAYER1_SIGNATURE_OF_"play~ACKN~PATH",  // play~ACKN~PATH is play~ACKN~start/3
+          child: [ null, { name:"opening", type:"nonterm", owner:2, choice:2, sig:PLAYER2_SIGNATURE_OF_ACKN/PATH,  // play~ACKN~PATH is play~ACKN~start/3/2/opening/2
                            child: [ null, null, null, { name:"salutation", type:"nonterm", owner:3 } ... ] } ...] } }
 
   	      
 
 GrammarRequest(H).  // a Message containing only hashgram:H
 GrammarResponse(G).  // a Message containing only hashgram:H and grammar:G
-Quit(C).  // a Message with quit:true
+Quit(C).  // a Message with { quit: { role: N, sig: PLAYERN_SIGNATURE_OF_"quit~SIGN" } }
 
 
 Channels:

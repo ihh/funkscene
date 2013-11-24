@@ -34,7 +34,7 @@ Message(C,H,P,T):
 
 GrammarRequest(H).  // a Message containing only hashgram:H
 GrammarResponse(G).  // a Message containing only hashgram:H and grammar:G
-Quit(C).  // a Message with { quit: { role: N, sig: PLAYERN_SIGNATURE_OF_"quit~SIGN" } }
+Quit(C).  // a Message with { channel: C, hashgram: H, quit: { role: N, sig: PLAYERN_SIGNATURE_OF_"quit~SIGN" } }
 
 
 Channels:
@@ -67,7 +67,11 @@ On clicking "Start game",
    render tree R,
   otherwise,
    broadcast Message(C,H,I,R) on channel "invite/H/C/SELF",
-   activate ApplicationListener, RequestListener, QuitListener.
+   activate
+    InvitationPublisher(I),
+    ApplicationListener on "game/H/C/apply",
+    RequestListener on "game/H/C/request",
+    QuitListener on "quit/H/C".
 
 On clicking "Join game",
 "join":
@@ -84,8 +88,10 @@ On selecting game (C=>(C,H,P,T,G.name)) from the game list,
  let P' be P with self written into next available player role,
  broadcast Message(C,H,P',T) on channel "game/H/C/apply/ROLE1ID/ROLE2ID/.../SELF",
  deactivate InvitationListener,
+ set G0 = null,
  activate
-  ConflictListener on "game/H/C/play/P",
+  ConflictListener(P') on "game/H/C/play/P",
+  GameListener on "game/H/C/play/P'",
   QuitListener on "quit/H/C",
   GrammarListener on "grammar/H".
 
@@ -95,35 +101,42 @@ On quitting, receiving Quit(C) on "quit/H/C", or editing the grammar,
  unsubscribe from all channels,
  goto "edit".
 
-InvitationPublisher:
+InvitationPublisher(P0):
 Periodically rebroadcast Message(C,H,P0,T) on channel "invite/H/C/P0".
 
-ApplicationListener: Channel "game/H/C/apply" Message(C,H,P,T)
+ApplicationListener: Channel "game/H/C/apply/P0" Message(C,H,P,T)
  where P0 \subset P:
-  sign Message(C,H,P,T) and broadcast on channels "invite/H/C/P", "game/H/C/play/P";
+  sign Message(C,H,P,T) and broadcast on channels "invite/H/C/P", "game/H/C/play/P",
+  deactivate ApplicationListener, InvitationPublisher,
  if P has all players,
-    render initial tree T.
+   render initial tree T;
+  otherwise,
+   activate
+    InvitationPublisher(P),
+    ApplicationListener on "game/H/C/apply/P".
 
 RequestListener: Channel "game/H/C/request" GrammarRequest(C,H)
  broadcast GrammarResponse(G) on channel "grammar/H/C".
 
 GrammarListener: Channel "grammar/H" GrammarResponse(G)
  verify that md5hash(G) = H,
- deactivate GrammarListener,
- goto "join-wait(C,H,G,P0,T0)".
+ set G0 = G,
+ deactivate GrammarListener.
 
-ConflictListener: Channel "game/H/C/play/[all-but-last-of-P0]" Message(C,H,P,T),
+ConflictListener(P0): Channel "game/H/C/play/[all-but-last-of-P0]" Message(C,H,P,T),
  where P is fully signed by P[1]:
  if P conflicts with P0,
     unsubscribe from all channels,
     activate InvitationListener on "invite",
     goto "join".
+
+GameListener: Channel "game/H/C/play/P0" Message(C,H,P,T),
+ deactivate ConflictListener, GameListener,
  if P has all players,
     if G0 != null, then render initial tree T,
      otherwise broadcast GrammarRequest(H) on channel "game/H/C/request";
-    goto "play(C,H,G0,P,T)".
   otherwise (still need more players),
-   goto "join-wait(C,H,G0,P,T)".
+   activate GameListener on "game/H/C/play/P".
 
 MoveListener: Channel "game/H/C/play/P/~OWNER/NODE" Message(C,H,P,T)
  expand T0->T from NODE, activating MoveListeners at unowned tips

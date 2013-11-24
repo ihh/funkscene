@@ -69,6 +69,8 @@ On clicking "Start game",
     QuitListener on "quit/H/C".
 
 On clicking "Join game",
+ goto "join".
+
 "join":
  present empty game list,
  activate InvitationListener on "invite".

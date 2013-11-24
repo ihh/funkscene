@@ -52,74 +52,71 @@ game/H/C/request
 game/H/C/play/ROLE1ID/ROLE2ID/.../ROLENID/~ROLE/@nonterm/cCHOICE/sSIBLING/@nonterm/cCHOICE/sSIBLING...
 
 
-TODO: convert the following from state-machine to event-driven callbacks that subscribe to/unsubscribe from various channels, and present/hide various interfaces
-
-
-Client has five states: "edit", "join", "start-wait(C,H,P,T)", "join-wait(C,H,G,P,T)", and "play(C,H,G,P,T)".
 Let
  SELF = crypto identifier, e.g. public key, or (as channel segment) last 8 chars of public key
     S = {SELF}, i.e. set containing own player key & nothing else,
     I = [SELF,null,null...], i.e. initial player list with self as player #1 and no other players,
     R = {G.rootNonterminal}.
 
-In "edit":
+"edit":
+Present "Start game", "Join game", "Test game".
+
 On clicking "Start game",
  let C = new unique ID from server,
  if G is single-player,
    render tree R,
-   goto "play(C,H,G,I,R)",
   otherwise,
    broadcast Message(C,H,I,R) on channel "invite/H/C/SELF",
-   subscribe to channel "game/H/C",
-   goto "start-wait(C,H,G,I,R)".
-On clicking "Join game",
- subscribe to channel "invite",
- goto "join".
-On clicking "Test game",
- goto "play(C,H,G,I,R)".
+   activate ApplicationListener, RequestListener, QuitListener.
 
-In "join":
-On receipt of Message(C,H,P,T):
+On clicking "Join game",
+"join":
+ present empty game list,
+ activate InvitationListener on "invite".
+
+On clicking "Test game",
+ render tree R, with test mode turned on (solo mode, no pub/sub).
+
+InvitationListener: Channel "invite" Message(C,H,P,T)
  add (C=>(C,H,P,T,G.name)) to selectable game list.
-On selecting game (C=>(C,H,P,T,G.name)) from the game list:
+
+On selecting game (C=>(C,H,P,T,G.name)) from the game list,
  let P' be P with self written into next available player role,
  broadcast Message(C,H,P',T) on channel "game/H/C/apply/ROLE1ID/ROLE2ID/.../SELF",
- unsubscribe from channel "invite",
- subscribe to channels "game/H/C/play", "invite/H/C", "quit/H/C", and "grammar/H",
- goto "join-wait(C,H,null,P',T)".
-On quitting, receiving Quit(C), or editing the grammar,
+ deactivate InvitationListener,
+ activate
+  ConflictListener on "game/H/C/play/P,
+  QuitListener on "quit/H/C",
+  GrammarListener on "grammar/H".
+
+QuitListener:
+On quitting, receiving Quit(C) on "quit/H/C", or editing the grammar,
  broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  unsubscribe from all channels,
  goto "edit".
 
-In "start-wait(C,H,G,P0,T)":
-Periodically rebroadcast Message(C,H,P0,T) on "invite/H/C/P0".
-On receipt of Message(C,H,P,T),
- where P0 \subseteq P:
- if P not fully signed by self,
-  sign Message(C,H,P,T) and broadcast on channel "invite/H/C/P";
- if P has all players,
-    render initial tree T,
-    goto "play(C,H,G,P,T)".
-  otherwise (still need more players or player1 signature),
-   goto "start-wait(C,H,G,P,T)".
-On receipt of GrammarRequest(C,H),
- broadcast GrammarResponse(G) on channel "grammar/H/C".
-On quitting, receiving Quit(C), or editing the grammar,
- broadcast Quit(C) on channel "quit/H/C/~1/SELF",
- unsubscribe from all channels,
- goto "edit".
+InvitationPublisher:
+Periodically rebroadcast Message(C,H,P0,T) on channel "invite/H/C/P0".
 
-In "join-wait(C,H,G0,P0,T0)":
-On receipt of GrammarResponse(G),
+ApplicationListener: Channel "game/H/C/apply" Message(C,H,P,T)
+ where P0 \subset P:
+  sign Message(C,H,P,T) and broadcast on channels "invite/H/C/P", "game/H/C/play/P";
+ if P has all players,
+    render initial tree T.
+
+RequestListener: Channel "game/H/C/request" GrammarRequest(C,H)
+ broadcast GrammarResponse(G) on channel "grammar/H/C".
+
+GrammarListener: Channel "grammar/H" GrammarResponse(G)
  verify that md5hash(G) = H,
- unsubscribe from "grammar/H",
+ deactivate GrammarListener,
  goto "join-wait(C,H,G,P0,T0)".
-On receipt of Message(C,H,P,T),
+
+ConflictListener: Channel "game/H/C/play/[all-but-last-of-P0]" Message(C,H,P,T),
  where P is fully signed by P[1]:
  if P conflicts with P0,
     unsubscribe from all channels,
-    subscribe to channel "invite",
+    activate InvitationListener on "invite",
     goto "join".
  if P has all players,
     if G0 != null, then render initial tree T,
@@ -127,34 +124,13 @@ On receipt of Message(C,H,P,T),
     goto "play(C,H,G0,P,T)".
   otherwise (still need more players),
    goto "join-wait(C,H,G0,P,T)".
-On quitting, receiving Quit(C), or editing the grammar,
- broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
- unsubscribe from all channels,
- goto "edit".
 
-In "play(C,H,G0,P,T0)":
-On receipt of GrammarResponse(G),
- verify that md5hash(G) = H,
- render tree T0,
- unsubscribe from "grammar/H",
- goto "play(C,H,G,P,T0)".
-On receipt of Message(C,H,P,T),
- where T0 is consistent with T:
- let T' = union(T0,T),
- if T' != T0,
-  if G0 != null, then render tree T',
-  otherwise broadcast GrammarRequest(H) on channel "game/H/C/request";
- goto "play(C,H,G0,P,T')".
-On receipt of GrammarRequest(C),
- broadcast GrammarResponse(G) on channel "grammar/H/C".
+MoveListener: Channel "game/H/C/play/P/~OWNER/NODE" Message(C,H,P,T)
+ expand T0->T from NODE, activating MoveListeners at unowned tips
+
 On expanding T0->T at node N,
-  render tree T,
+  render tree T, activating MoveListeners at unowned tips
   broadcast Message(C,H,P,T) on channel "game/H/C/play/P/~SELF/N",
-  goto "play(C,H,G0,P,T)".
-On quitting, receiving Quit(C), or editing the grammar,
- broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
- unsubscribe from all channels,
- goto "edit".
 
 
 

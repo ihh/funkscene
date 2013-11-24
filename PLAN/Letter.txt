@@ -38,15 +38,12 @@ Quit(C).  // a Message with { channel: C, hashgram: H, quit: { role: N, sig: PLA
 
 
 Channels:
-game
-game/H
-game/H/C
-game/H/C/invite/ROLE1ID/ROLE2ID/ROLE3ID...
-game/H/C/apply/ROLE1ID/ROLE2ID/.../NEWROLEID
-game/H/C/request
-game/H/C/grammar
-game/H/C/play/ROLE1ID/ROLE2ID/.../ROLENID/~ROLE/@nonterm/cCHOICE/sSIBLING/@nonterm/cCHOICE/sSIBLING...
-game/H/C/quit/~ROLE/ID
+invite/H/C/ROLE1ID/ROLE2ID/ROLE3ID...
+apply/H/C/ROLE1ID/ROLE2ID/.../NEWROLEID
+request/H/C
+grammar/H/C
+play/H/C/ROLE1ID/ROLE2ID/.../ROLENID/~ROLE/@nonterm/cCHOICE/sSIBLING/@nonterm/cCHOICE/sSIBLING...
+quit/H/C/~ROLE/ID
 
 
 
@@ -64,97 +61,97 @@ On clicking "Start game",
  if G is single-player,
     RenderTree(null,R);
   otherwise,
-   broadcast Message(C,H,I,R) on channel "game/H/C/invite/SELF",
+   broadcast Message(C,H,I,R) on channel "invite/H/C/SELF",
    activate
     InvitationPublisher(I),
-    ApplicationListener on "game/H/C/apply",
-    RequestListener on "game/H/C/request",
-    QuitListener on "game/H/C/quit".
+    ApplicationListener on "apply/H/C",
+    RequestListener on "request/H/C",
+    QuitListener on "quit/H/C".
 
 On clicking "Join game",
 "join":
  present empty game list,
- activate InvitationListener on "game/*/*/invite".
+ activate InvitationListener on "invite".
 
 On clicking "Test game",
  turn on test mode (solo play, no roles, no pub/sub);
  RenderTree(null,R).
 
-InvitationListener: Channel "game/*/*/invite" Message(C,H,P,T)
+InvitationListener: Channel "invite" Message(C,H,P,T)
  add (C=>(C,H,P,T,G.name)) to selectable game list (make unselectable if full).
 
 On selecting game (C=>(C,H,P,T,G.name)) from the game list,
  let P' be P with self written into next available player role,
- broadcast Message(C,H,P',T) on channel "game/H/C/apply/ROLE1ID/ROLE2ID/.../SELF",
+ broadcast Message(C,H,P',T) on channel "apply/H/C/ROLE1ID/ROLE2ID/.../SELF",
  deactivate InvitationListener,
  set G0 = null,
  set T0 = null,
  activate
-  ConflictListener(P') on "game/H/C/play/P",
-  GameListener on "game/H/C/play/P'",
-  QuitListener on "game/H/C/quit",
-  GrammarListener on "game/H/*/grammar".
+  ConflictListener(P') on "play/H/C/P",
+  GameListener on "play/H/C/P'",
+  QuitListener on "quit/H/C",
+  GrammarListener on "grammar/H".
 
-QuitListener on "game/H/C/quit":
-On quitting, receiving Quit(C) on "game/H/C/quit", or editing the grammar,
- broadcast Quit(C) on channel "game/H/C/quit/~ROLE/SELF",
+QuitListener on "quit/H/C":
+On quitting, receiving Quit(C) on "quit/H/C", or editing the grammar,
+ broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  deactivate all listeners,
  goto "edit".
 
 InvitationPublisher(P0):
-Periodically rebroadcast Message(C,H,P0,T) on channel "game/H/C/invite/P0".
+Periodically rebroadcast Message(C,H,P0,T) on channel "invite/H/C/P0".
 
-ApplicationListener: Channel "game/H/C/apply/P0" Message(C,H,P,T)
+ApplicationListener: Channel "apply/H/C/P0" Message(C,H,P,T)
  where P0 \subset P:
-  sign Message(C,H,P,T) and broadcast on channels "game/H/C/invite/P", "game/H/C/play/P",
+  broadcast Message(C,H,P,T) on channels "invite/H/C/P", "play/H/C/P",
   deactivate ApplicationListener, InvitationPublisher,
  if P has all players,
    RenderTree(null,T);
   otherwise,
    activate
     InvitationPublisher(P),
-    ApplicationListener on "game/H/C/apply/P".
+    ApplicationListener on "apply/H/C/P".
 
-RequestListener: Channel "game/H/C/request" GrammarRequest(C,H)
- broadcast GrammarResponse(G) on channel "game/H/C/grammar".
+RequestListener: Channel "request/H/C" GrammarRequest(C,H)
+ broadcast GrammarResponse(G) on channel "grammar/H/C".
 
-GrammarListener: Channel "game/H/*/grammar" GrammarResponse(G)
+GrammarListener: Channel "grammar/H" GrammarResponse(G)
  verify that md5hash(G) = H,
  deactivate GrammarListener,
  set G0 = G,
  if T0 != null,
   RenderTree(null,T0).
 
-ConflictListener(P0): Channel "game/H/C/play/[all-but-last-of-P0]" Message(C,H,P,T),
+ConflictListener(P0): Channel "play/H/C/[all-but-last-of-P0]" Message(C,H,P,T),
  where P is fully signed by P[1]:
  if P conflicts with P0,
     deactivate all listeners,
-    activate InvitationListener on "game/*/*/invite",
+    activate InvitationListener on "invite",
     goto "join".
 
-GameListener: Channel "game/H/C/play/P0" Message(C,H,P,T),
+GameListener: Channel "play/H/C/P0" Message(C,H,P,T),
  deactivate ConflictListener, GameListener,
  if P has all players,
     if G0 != null,
        RenderTree(null,T);
       otherwise,
        set T0 = T,
-       broadcast GrammarRequest(H) on channel "game/H/C/request",
-       activate GameListener on "game/H/C/play/P";
+       broadcast GrammarRequest(H) on channel "request/H/C",
+       activate GameListener on "play/H/C/P";
   otherwise (still need more players),
-   activate GameListener on "game/H/C/play/P".
+   activate GameListener on "play/H/C/P".
 
-MoveListener[NODE]: Channel "game/H/C/play/P/~OWNER/NODE" Message(C,H,P,T)
+MoveListener[NODE]: Channel "play/H/C/P/~OWNER/NODE" Message(C,H,P,T)
  deactivate MoveListener[NODE],
  RenderTree(T0,T).
 
 On expanding T0->T at node N,
   RenderTree(T0,T);
-  broadcast Message(C,H,P,T) on channel "game/H/C/play/P/~SELF/N",
+  broadcast Message(C,H,P,T) on channel "play/H/C/P/~SELF/N",
 
 RenderTree(T0,T):
  while T contains choices not in T0, expand a tip nonterminal in T0, as per T;
- foreach foreign tip LEAF in T0, activate MoveListener[LEAF] on "game/H/C/play/P/~OWNER/LEAF".
+ foreach foreign tip LEAF in T0, activate MoveListener[LEAF] on "play/H/C/P/~OWNER/LEAF".
 
 
 

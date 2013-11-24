@@ -19,44 +19,59 @@ Message(C,H,P,T):
    then respond on channel C with Message(C,H,P',T').
  Some subset of the player list is signed by P[1], the first player (must be all if message originates from P[1]).
  Each internal node of T is signed (cryptographically) by the player who expanded that node.
-[if P is incomplete for G, rebroadcast on channel 'join/G.name' as well as C, where G.name is the name of the grammar]
-[if G.private==true, then (T,Q) parameters of message are encrypted so that only members of P can read.]
 
-GrammarRequest(H).
-GrammarResponse(G).
-Quit.
+{ channel: C,
+  hashgram: H,
+  grammar: G,  // or grammar:null for GrammarRequest
+  player: [ { key: PUBLICKEY_OF_PLAYER1, sig: PLAYER1_SIGNATURE_OF_CH },
+  	    { key: PUBLICKEY_OF_PLAYER2, sig: PLAYER2_SIGNATURE_OF_CH, ack: PLAYER1_SIGNATURE_OF_sig },
+  	    { key: PUBLICKEY_OF_PLAYER3, sig: PLAYER3_SIGNATURE_OF_CH, ack: PLAYER1_SIGNATURE_OF_sig } ],
+  tree: { name:"start", type:"nonterm", choice:3, owner:1, sig:PLAYER1_SIGNATURE_OF_PATH,
+          child: [ null, { name:"opening", type:"nonterm", choice:2, owner:2, sig:PLAYER2_SIGNATURE_OF_PATH,
+                           child: [ null, null, null, { name:"salutation", type:"nonterm", owner:3 } ... ] } ...] } }
+
+  	      
+
+GrammarRequest(H).  // a Message containing only hashgram:H
+GrammarResponse(G).  // a Message containing only hashgram:H and grammar:G
+Quit(C).  // a Message with quit:true
 
 
 Channels:
 join
-join/H
-join/H/C
+join/H/C/ROLE1ID/ROLE2ID/ROLE3ID...
+quit/H/C/~ROLE/ID
 grammar
 grammar/H
 grammar/H/C
 game
 game/H
 game/H/C
-game/H/C/join
+game/H/C/join/ROLE1ID/ROLE2ID/.../NEWROLEID
 game/H/C/request
-game/H/C/play
+game/H/C/play/ROLE1ID/ROLE2ID/.../ROLENID/~ROLE/@nonterm/cCHOICE/sSIBLING/@nonterm/cCHOICE/sSIBLING...
+
+
+TODO: convert the following from state-machine to event-driven callbacks that subscribe to/unsubscribe from various channels, and present/hide various interfaces
 
 
 Client has five states: "edit", "join", "start-wait(C,H,P,T)", "join-wait(C,H,G,P,T)", and "play(C,H,G,P,T)".
 Let
- S = {self}, i.e. set containing own player key & nothing else,
- I = [self,null,null...], i.e. initial player list with self as player #1 and no other players,
- R = {G.rootNonterminal}.
+ SELF = crypto identifier, e.g. public key, or (as channel segment) last 8 chars of public key
+    S = {SELF}, i.e. set containing own player key & nothing else,
+    I = [SELF,null,null...], i.e. initial player list with self as player #1 and no other players,
+    R = {G.rootNonterminal}.
 
 In "edit":
 On clicking "Start game",
  let C = new unique ID from server,
- broadcast Message(C,H,I,R) on channel "join/H/C/new",
  if G is single-player,
+   render tree R,
    goto "play(C,H,G,I,R)",
   otherwise,
+   broadcast Message(C,H,I,R) on channel "join/H/C/SELF",
    subscribe to channel "game/H/C",
-   goto "start-wait(C,H,I,R)".
+   goto "start-wait(C,H,G,I,R)".
 On clicking "Join game",
  subscribe to channel "join",
  goto "join".
@@ -68,30 +83,30 @@ On receipt of Message(C,H,P,T):
  add (C=>(C,H,P,T,G.name)) to selectable game list.
 On selecting game (C=>(C,H,P,T,G.name)) from the game list:
  let P' be P with self written into next available player role,
- broadcast Message(C,H,P',T) on channel "game/H/C/join",
+ broadcast Message(C,H,P',T) on channel "game/H/C/join/ROLE1ID/ROLE2ID/.../SELF",
  unsubscribe from channel "join",
- subscribe to channels "game/H/C/play", "join/H/C" and "grammar/H",
+ subscribe to channels "game/H/C/play", "join/H/C", "quit/H/C", and "grammar/H",
  goto "join-wait(C,H,null,P',T)".
-On quitting, receiving Quit, or editing the grammar,
- broadcast Quit on channel "join/H/C/quit",
+On quitting, receiving Quit(C), or editing the grammar,
+ broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  unsubscribe from all channels,
  goto "edit".
 
-In "start-wait(C,H,P0,T)":
-Periodically rebroadcast Message(C,H,P0,T) on "join/H/C".
+In "start-wait(C,H,G,P0,T)":
+Periodically rebroadcast Message(C,H,P0,T) on "join/H/C/P0".
 On receipt of Message(C,H,P,T),
  where P0 \subseteq P:
  if P not fully signed by self,
-  sign Message(C,H,P,T) and broadcast on channel "join/H/C";
+  sign Message(C,H,P,T) and broadcast on channel "join/H/C/P";
  if P has all players,
     render initial tree T,
     goto "play(C,H,G,P,T)".
   otherwise (still need more players or player1 signature),
-   goto "start-wait(C,H,P,T)".
+   goto "start-wait(C,H,G,P,T)".
 On receipt of GrammarRequest(C,H),
  broadcast GrammarResponse(G) on channel "grammar/H/C".
-On quitting, receiving Quit, or editing the grammar,
- broadcast Quit on channel "join/H/C/quit",
+On quitting, receiving Quit(C), or editing the grammar,
+ broadcast Quit(C) on channel "quit/H/C/~1/SELF",
  unsubscribe from all channels,
  goto "edit".
 
@@ -112,8 +127,8 @@ On receipt of Message(C,H,P,T),
     goto "play(C,H,G0,P,T)".
   otherwise (still need more players),
    goto "join-wait(C,H,G0,P,T)".
-On quitting, receiving Quit, or editing the grammar,
- broadcast Quit on channel "join/H/C/quit",
+On quitting, receiving Quit(C), or editing the grammar,
+ broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  unsubscribe from all channels,
  goto "edit".
 
@@ -132,12 +147,12 @@ On receipt of Message(C,H,P,T),
  goto "play(C,H,G0,P,T')".
 On receipt of GrammarRequest(C),
  broadcast GrammarResponse(G) on channel "grammar/H/C".
-On expanding T0->T,
+On expanding T0->T at node N,
   render tree T,
-  broadcast Message(C,H,P,T) on channel "game/H/C/play",
+  broadcast Message(C,H,P,T) on channel "game/H/C/play/P/~SELF/N",
   goto "play(C,H,G0,P,T)".
-On quitting, receiving Quit, or editing the grammar,
- broadcast Quit on channel "join/H/C/quit",
+On quitting, receiving Quit(C), or editing the grammar,
+ broadcast Quit(C) on channel "quit/H/C/~ROLE/SELF",
  unsubscribe from all channels,
  goto "edit".
 

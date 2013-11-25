@@ -1,6 +1,6 @@
 score $score
 undo { wait: 0 }
-@start => [_Well, this is it: the dreaded cover letter. Final step in your application to Arcane College._
+@start => [<h1>The Letter</h1> _Well, this is it: the dreaded cover letter. Final step in your application to Arcane College._
 
 _Competition is fierce, with over fifteen applicants to a place, and it's gotten worse during the recession (despite the government slashing the Magical Ingredient Allowance, which you might think would deter people). You're going to have to make your letter stand out._
 

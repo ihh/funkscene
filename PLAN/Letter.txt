@@ -159,6 +159,8 @@ RenderTree(T0,T):
 
 
 Core engine enhancements:
+ Move letter.html JavaScript code into LetterWriter.Navigator
+  Add code to present main menu ("Start", "Join", "Test") and selectable game list
  Compact JSON representation of parse tree
  Easily-deduced DIV identifier consisting of path to node & choices/sibling positions all along the way; includes parent ID
    e.g. { name:"start", type:"nonterm", choice:3,

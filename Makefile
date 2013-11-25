@@ -46,6 +46,11 @@ img/icon:
 pagedown:
 	hg clone https://code.google.com/p/pagedown/
 
+# Run test server
+server:
+	node node/simple-node-test-server.js
+
+# for make
 .SECONDARY:
 
 .SUFFIXES:

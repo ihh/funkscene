@@ -543,11 +543,17 @@ input {
 }
 
 /* Restart DIV for LetterWriter */
-.restart {
+.restartContainer {
     float: left;
 }
 
+/* Menu DIV for LetterWriter */
+.menuContainer {
+    text-align: center;
+}
+
 /* Score DIVs for LetterWriter */
+/* annoyingly, can't get this to be same width as parent div when in play mode */
 .scoreContainerHidden {
     border-style: none;
     position: fixed;
@@ -616,9 +622,13 @@ input {
 }
 
 /* Undo DIV for LetterWriter */
+.undoContainer {
+    float: right;
+    min-width: 4em;
+}
+
 .letter .undo {
     float: right;
-    padding: .1em;
 }
 
 .letter .undoMeter {

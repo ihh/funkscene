@@ -89,9 +89,7 @@ On selecting game (C=>(C,H,P,T,G.name)) from the game list,
  set T0 = null,
  activate
   ConflictListener(P') on "play/H/C/P/**",
-  GameListener on "play/H/C/P'/**",
-  QuitListener on "quit/H/C/**",
-  GrammarListener on "grammar/H/*".
+  GameListener on "play/H/C/P'/**".
 
 QuitListener on "quit/H/C":
 On quitting, receiving Quit(C) on "quit/H/C", or editing the grammar,
@@ -133,12 +131,9 @@ ConflictListener(P0): Channel "play/H/C/[all-but-last-of-P0]" Message(C,H,P,T),
 GameListener: Channel "play/H/C/P0" Message(C,H,P,T),
  deactivate ConflictListener, GameListener,
  if P has all players,
-    if G0 != null,
-       RenderTree(null,T);
-      otherwise,
-       set T0 = T,
-       broadcast GrammarRequest(H) on channel "request/H/C",
-       activate GameListener on "play/H/C/P/**";
+    activate
+     QuitListener on "quit/H/C/**",
+     GrammarListener on "grammar/H/*".
   otherwise (still need more players),
    activate GameListener on "play/H/C/P/**".
 
@@ -158,6 +153,8 @@ RenderTree(T0,T):
 
 
 Core engine enhancements:
+ At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
+ Allow Boolean comparison expressions in ParamFunc's
  Move letter.html JavaScript code into LetterWriter.Navigator
   Add code to present main menu ("Start", "Join", "Test") and selectable game list
  Compact JSON representation of parse tree

@@ -27,14 +27,24 @@
 	      <span id="menuLinkContainer" class="letter menu"><small><i><a href="#" id="menuLink" onclick="nav.showMultiplayerMenu()">menu</a></i></small></span>
 	      <div class="undoContainer"><span id="undo" class="letter undo"></span></div></div>
 
-	    <span text-align="center" id="menu" style="display:none">
+	    <span text-align="center" id="multiplayerMenu" style="display:none">
 	      <br><br><br>
 	      <h2>Choose</h2>
 	      <ol>
-		<li><a href="#">Start a game</a></li>
-		<li><a href="#">Join a game</a></li>
-		<li><a href="#">Play solo</a></li>
+		<li><a href="#" onclick="nav.hideMultiplayerMenu()">Play solo</a></li>
+		<li><a href="#" onclick="nav.startGame()">Start a game</a></li>
+		<li><a href="#">Join a game</a>
+		  <ul id="gameList">
+		  </ul>
+		</li>
 	      </ol>
+	    </span>
+
+	    <span text-align="center" id="pendingMultiplayer" style="display:none">
+	      <br><br><br>
+	      <h2 id="pendingGrammarName"></h2>
+	      <ol id="playerList"></ol>
+	      <a href="#" onclick="nav.quitMultiplayer()">Cancel</a>
 	    </span>
 
 	    <span id="letter">

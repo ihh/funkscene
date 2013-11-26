@@ -144,7 +144,9 @@
 }
 
 start
- = spc* statement*  { return { nonterm: nontermObj,
+ = spc* statement*  { return { name: "LetterWriter game",
+			       roles: 1,
+			       nonterm: nontermObj,
 			       start: getStart(),
 			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
 			       params: params,

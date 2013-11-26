@@ -55,3 +55,5 @@ var server = http.createServer(function(request, response) {
 
 bayeux.attach(server);
 server.listen(port);
+
+console.log("Server up. Try here:\nhttp://localhost:" + port + "/letter.html")

@@ -9,6 +9,11 @@
     <!-- sigma.js graph library -->
     <script type="text/javascript" src="sigma/sigma.concat.js"></script>
 
+    <!-- Faye pub/sub framework -->
+    <!-- uncomment this to use the node-served version -->
+    <!-- script type="text/javascript" src="/faye/client.js"></script -->
+    <script type="text/javascript" src="node/faye/browser/faye-browser-min.js"></script>
+
     <title>The Letter</title>
   </head>
   <body style="background-color:#eee">
@@ -32,8 +37,8 @@
 	      <h2>Choose</h2>
 	      <ol>
 		<li><a href="#" onclick="nav.hideMultiplayerMenu()">Play solo</a></li>
-		<li><a href="#" onclick="nav.startGame()">Start a game</a></li>
-		<li><a href="#">Join a game</a>
+		<li id="startGameItem" style="display:none"><a href="#" onclick="nav.startGame()">Start a game</a></li>
+		<li id="joinGameItem" style="display:none">Join a game
 		  <ul id="gameList">
 		  </ul>
 		</li>

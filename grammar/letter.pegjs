@@ -48,6 +48,8 @@
 	    nonterm.commit = props.commit;
 	if ("random" in props)
 	    nonterm.random = props.random;
+	if ("role" in props)
+	    nonterm.role = props.role;
 
 	if (nonterm.random) {
 	    if (nonterm.commit) {
@@ -197,6 +199,8 @@ nonterm_modifier
  = "pause" spc*  { return { pause: true } }
  / "commit" spc* { return { commit: true } }
  / "random" spc* { return { random: true } }
+ / "#" n:positive_integer spc* { return { role: n.toString() } }
+ / "#" r:("+"/"-"/"=") spc* { return { role: r } }
 
 rhs_list
  = rhs ("|" spc* rhs_list)?

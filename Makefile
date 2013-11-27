@@ -56,7 +56,7 @@ img/icon:
 	rm -rf game-icons.net
 
 # Run test server
-server: faye
+server:
 	node node/simple-node-test-server.js
 
 # for make

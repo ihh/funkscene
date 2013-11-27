@@ -17,7 +17,7 @@ var server = http.createServer(function(request, response) {
     // GET /id returns new unique (ascending) integer ID
     var regex = new RegExp("^/id/?$")
     if (regex.test(request.url)) {
-	response.writeHead(404, {"Content-Type": "text/plain"});
+	response.writeHead(200, {"Content-Type": "text/plain"});
 	response.write("" + ++n);
 	response.end();
 	return;

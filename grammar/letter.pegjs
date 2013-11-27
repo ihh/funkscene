@@ -1,11 +1,13 @@
 {
-    var params = [];
-    var scoreParam = undefined;
-    var anonNonterms = 0;
-    var lhsStack = [];
-    var nonterms = [];
-    var nontermObj = {};
-    var undo = {};
+    var params = []
+    var scoreParam = undefined
+    var anonNonterms = 0
+    var lhsStack = []
+    var nonterms = []
+    var nontermObj = {}
+    var undo = {}
+    var title = "The Letter"
+    var roles = 1
 
     function extend(a,b) { return LetterWriter.extend(a,b) }
 
@@ -144,22 +146,29 @@
 }
 
 start
- = spc* statement*  { return { name: "LetterWriter game",
-			       role: ["Player1"],
-			       nonterm: nontermObj,
-			       start: getStart(),
-			       nonterms: nonterms.map(function(id){return nontermObj[id]}),
-			       params: params,
-			       scoreParam: scoreParam,
-			       undo: undo } }
+    = spc* statement*  { return { title: title,
+				  roles: roles,
+				  nonterm: nontermObj,
+				  start: getStart(),
+				  nonterms: nonterms.map(function(id){return nontermObj[id]}),
+				  params: params,
+				  scoreParam: scoreParam,
+				  undo: undo } }
 
-statement = score_param_decl / param_decl / undo / rule
+// statement = title_decl / roles_decl / score_param_decl / param_decl / undo / rule
+statement = title_decl / roles_decl / score_param_decl / param_decl / undo / rule
 
 score_param_decl
     = "score" spc+ id:bare_param_id spc*  &{ return addScoreParam(id) }
 
+title_decl
+    = "title" spc+ "{" t:text "}" spc* { title = t; }
+
+roles_decl
+    = "roles" spc+ n:positive_integer spc* { roles = n; }
+
 undo
-    = "undo" spc* "{" spc* "wait" spc* ":" spc* w:nonnegative_numeric_literal spc* "}" spc* { undo.wait = w }
+    = "undo" spc* "{" spc* "wait" spc* ":" spc* w:nonnegative_numeric_literal spc* "}" spc* { undo.wait = w; }
 
 param_decl
  = "control" spc+ param_list spc*

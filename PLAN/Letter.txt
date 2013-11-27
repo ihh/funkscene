@@ -159,10 +159,10 @@ Core engine enhancements:
   Add code to present main menu ("Start", "Join", "Test") and selectable game list
  Compact JSON representation of parse tree
  Easily-deduced DIV identifier consisting of path to node & choices/sibling positions all along the way; includes parent ID
-   e.g. { name:"start", type:"nonterm", choice:3,
-          child: [ null, { name:"opening", type:"nonterm", choice:2,
+   e.g. { name:"start", type:"nonterm", rule:3,
+          child: [ null, { name:"opening", type:"nonterm", rule:2,
                             child: [ null, null, null, { name:"salutation", type:"nonterm" } ... ] } ...] }
-   yields  "@start/c3/s2/@opening/c2/s4/@salutation"
+   yields  "@start/r3/s2/@opening/r2/s4/@salutation"
     ...which can be used to quickly locate the node using JQuery
  Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
    Text default color is bright-red (unless number of players = 1, in which case it's black)

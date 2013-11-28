@@ -7,6 +7,7 @@ Replace janky $#variable syntax with proper (pseudo-)arrays: $variable[$#] where
   This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc
    Ditto a new kind of ParamReference e.g. ArrayParamReference
   For score declaration we should have "score $sc[$#]" rather than "score $#sc"
+  ... although the latter could be a synonym
 
 Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
  e.g. "@battle#2" or "@test#3;"

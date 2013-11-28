@@ -21,13 +21,13 @@ In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
  i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
  this makes for a fairer distribution of turns
 
-Input nodes e.g. "$variable?" generates a textbox
- array version "$variable[$index]?"  ... note the index could change dynamically; I guess this is OK
- with commit modifier "$variable?!" means you can only edit it once, reducing parent node's unexpandedChildren count
+Input nodes e.g. "$variable=?" generates a textbox
+ array version "$variable[$index]=?"  ... note the index could change dynamically; I guess this is OK
+ with commit modifier "$variable=?!" means you can only edit it once, reducing parent node's unexpandedChildren count
  without commit modifier, it can be edited at any time, multiple times
 
 ParamFunc for string concatenation
-ParamFunc for "-", syntactic sugar for "--" and "-=" (NEED this for scores!)
+Syntactic sugar for "--" and "-=" (designers will expect this for scoring!)
 
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
 

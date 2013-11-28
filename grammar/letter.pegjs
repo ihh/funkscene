@@ -224,17 +224,17 @@ hint_text
 hint_modifier = times_hidden / max_count
 
 times_hidden
-    = "[" spc* "hidden" spc+ n:positive_integer spc* "]" spc*  { return {timesHidden:n} }
-    / "[" spc* "hidden" spc* "once" spc* "]" spc*  { return {timesHidden:1} }
-    / "[" spc* "hidden" spc* "twice" spc* "]" spc*  { return {timesHidden:2} }
-    / "[" spc* "hidden" spc* "thrice" spc* "]" spc*  { return {timesHidden:3} }
+    = "[" spc* "hide" spc+ n:positive_integer spc* "]" spc*  { return {timesHidden:n} }
+    / "[" spc* "hide" spc* "once" spc* "]" spc*  { return {timesHidden:1} }
+    / "[" spc* "hide" spc* "twice" spc* "]" spc*  { return {timesHidden:2} }
+    / "[" spc* "hide" spc* "thrice" spc* "]" spc*  { return {timesHidden:3} }
 
 
 max_count
-    = "[" spc* "most" spc+ n:positive_integer spc* "]" spc*  { return {maxUsage:n} }
-    / "[" spc* "once" spc* "]" spc*  { return {maxUsage:1} }
-    / "[" spc* "twice" spc* "]" spc*  { return {maxUsage:2} }
-    / "[" spc* "thrice" spc* "]" spc*  { return {maxUsage:3} }
+    = "[" spc* "use" spc+ n:positive_integer spc* "]" spc*  { return {maxUsage:n} }
+    / "[" spc* ("use" spc+)? "once" spc* "]" spc*  { return {maxUsage:1} }
+    / "[" spc* ("use" spc+)? "twice" spc* "]" spc*  { return {maxUsage:2} }
+    / "[" spc* ("use" spc+)? "thrice" spc* "]" spc*  { return {maxUsage:3} }
 
 positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }

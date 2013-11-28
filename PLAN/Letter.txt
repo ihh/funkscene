@@ -1,7 +1,9 @@
 Allow players to change names via textbox on multiplayer menu screen
 
-Replace janky $#variable syntax with proper (pseudo-)arrays: $variable[$#] where $# is scope role
-  ...also $## for total number of roles
+Fix "Evaluates to..." in debugger parse tree view, for array variables e.g. $#sc in GoodNews/BadNews
+
+Replace janky $#variable pseudo-array syntax with proper(-ish) arrays: $variable[$#] where $# is scope role
+  ...also $## for total number of roles? then need modulus, etc; could postpone this
  Arrays are actually associative arrays/hashes.
   For now we can hack this in by expanding e.g. if $i=3 then "$x[$i]" expands to "x[3]"
   This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc

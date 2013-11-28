@@ -36,6 +36,8 @@ Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
 
 Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
 
+Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
+
 FunkScene-style menus (c.f. ChoiceScript)
 
 More visual feedback on network operations

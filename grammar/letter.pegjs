@@ -26,7 +26,7 @@
     function pushLhs(sym) { lhsStack.push(sym); nonterms.push(sym); return true }
     function popLhs() { return lhsStack.pop() }
     function currentLhs() { return getNontermObject (lhsStack[lhsStack.length - 1]) }
-    function addRule(hint,rhs,count) { currentLhs().addRule(hint,rhs,count); return true }
+    function addRule(hint,rhs,props) { currentLhs().addRule(hint,rhs,props); return true }
 
     function makeAnonId() { return ++anonNonterms; }
     function isAnonId (sym) { return /^[\d]+$/.test(sym) }
@@ -191,8 +191,8 @@ nonterm_symbol
 
 rule
  = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifier* spc* &{return pushLhs(lhs)}
-   n:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
-   &{return setNontermProperties(currentLhs(),extend(extend(extend({maxUsage:n},mods.reduce(LetterWriter.extend,{})),q.reduce(LetterWriter.extend,{})),ppp))}
+   maxUsage:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
+    &{return setNontermProperties(currentLhs(),extend(extend(extend((maxUsage?maxUsage:{}),mods.reduce(LetterWriter.extend,{})),q.reduce(LetterWriter.extend,{})),ppp))}
    "{" rhs_list "}" spc* {popLhs()}
 
 nonterm_modifier
@@ -206,25 +206,32 @@ rhs_list
  = rhs ("|" spc* rhs_list)?
 
 rhs
- = hc:hint_with_count symbols:sym_expr* { addRule(hc[0],symbols,hc[1]) }
+ = hc:hint_with_modifiers symbols:sym_expr* { addRule(hc[0],symbols,hc[1]) }
 
 ui_rhs
  = symbols:sym_expr* { return symbols }
 
-hint_with_count
- = text:hint_text n:max_count "=>" { return [text, n] }
- / text:hint_text "=>" { return [text, undefined] }
- / { return ["", undefined] }
+hint_with_modifiers
+    = text:hint_text mods:hint_modifier* "=>" { return [text, mods.reduce(LetterWriter.extend,{})] }
 
 hint_text
     = spc* f:sum_weight_expr spc* { return f.asText() }
     / text
 
+hint_modifier = times_hidden / max_count
+
+times_hidden
+    = "[" spc* "hidden" spc+ n:positive_integer spc* "]" spc*  { return {timesHidden:n} }
+    / "[" spc* "hidden" spc* "once" spc* "]" spc*  { return {timesHidden:1} }
+    / "[" spc* "hidden" spc* "twice" spc* "]" spc*  { return {timesHidden:2} }
+    / "[" spc* "hidden" spc* "thrice" spc* "]" spc*  { return {timesHidden:3} }
+
+
 max_count
- = "[" spc* "most" spc+ n:positive_integer spc* "]" spc*  { return n }
- / "[" spc* "once" spc* "]" spc*  { return 1 }
- / "[" spc* "twice" spc* "]" spc*  { return 2 }
- / "[" spc* "thrice" spc* "]" spc*  { return 3 }
+    = "[" spc* "most" spc+ n:positive_integer spc* "]" spc*  { return {maxUsage:n} }
+    / "[" spc* "once" spc* "]" spc*  { return {maxUsage:1} }
+    / "[" spc* "twice" spc* "]" spc*  { return {maxUsage:2} }
+    / "[" spc* "thrice" spc* "]" spc*  { return {maxUsage:3} }
 
 positive_integer
  = h:[1-9] t:[0-9]* { t.unshift(h); return parseInt (t.join(""), 10); }

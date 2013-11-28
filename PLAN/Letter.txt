@@ -37,6 +37,7 @@ Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
 Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
 
 More visual feedback on network operations
+ Color unexpanded remotely-controlled node placeholder text differently, to indicate pending remote expansion
  Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
    Text default color is bright-red (unless number of players = 1, in which case it's black)
     Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red

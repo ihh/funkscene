@@ -615,10 +615,9 @@ input {
     color: DarkRed;
 }
 
-.scoreLabel {
-}
-
-.score {
+.scoreTable {
+    width: 100%;
+    table-layout: fixed;
 }
 
 /* Undo DIV for LetterWriter */

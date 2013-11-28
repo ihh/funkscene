@@ -1,6 +1,6 @@
 {
     var params = []
-    var scoreParam = undefined
+    var scoreParam = undefined, scoreParamType = undefined
     var anonNonterms = 0
     var lhsStack = []
     var nonterms = []
@@ -11,8 +11,9 @@
 
     function extend(a,b) { return LetterWriter.extend(a,b) }
 
-    function addScoreParam(p) {
+    function addScoreParam(t,p) {
 	scoreParam = p;
+	scoreParamType = t;
 	return true;
     }
 
@@ -155,13 +156,14 @@ start
 				  nonterms: nonterms.map(function(id){return nontermObj[id]}),
 				  params: params,
 				  scoreParam: scoreParam,
+				  scoreParamType: scoreParamType,
 				  undo: undo } }
 
 // statement = title_decl / roles_decl / score_param_decl / param_decl / undo / rule
 statement = title_decl / roles_decl / score_param_decl / param_decl / undo / rule
 
 score_param_decl
-    = "score" spc+ id:bare_param_id spc*  &{ return addScoreParam(id) }
+    = "score" spc+ id:bare_param_id spc*  &{ return addScoreParam(id[0],id[1]) }
 
 title_decl
     = "title" spc+ "{" t:text "}" spc* { title = t; }
@@ -320,17 +322,19 @@ primary_weight_expr
     / "(" linespc* e:sum_weight_expr linespc* ")"  { return e; }
 
 param_func
-    = x:param_identifier  { return new LetterWriter.ParamFunc ({op:"$",param:x.toLowerCase()}) }
+    = x:param_identifier  { return new LetterWriter.ParamFunc ({op:x[0],param:x[1].toLowerCase()}) }
 
 param_identifier
     = bare_param_id
     / clothed_param_id
 
 bare_param_id
-    = "$" x:symbol  { return x }
+    = "$" x:symbol  { return ["$",x] }
+    / "$#" x:symbol  { return ["$#",x] }
 
 clothed_param_id
-    = "${" x:symbol "}"  { return x }
+    = "${" x:symbol "}"  { return ["$",x] }
+    / "$#{" x:symbol "}"  { return ["$#",x] }
 
 numeric_literal
     = ("+" linespc*)? n:nonnegative_numeric_literal  { return n; }
@@ -351,18 +355,18 @@ linespc
 // Used within RHS of rules
 param_assignment
     = id:param_identifier linespc* "@=" linespc* expr:param_expr param_terminator
-{ return new LetterWriter.ParamAssignment ({id:id,value:expr,local:true}) }
+{ return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:expr,local:true}) }
     / id:param_identifier linespc* "=" linespc* expr:param_expr param_terminator
-{ return new LetterWriter.ParamAssignment ({id:id,value:expr,local:false}) }
+{ return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:expr,local:false}) }
     / id:param_identifier linespc* op:cumulative_op "=" linespc* increment_expr:param_expr param_terminator
-{ var param_func = new LetterWriter.ParamFunc ({op:"$",param:id.toLowerCase()})
+{ var param_func = new LetterWriter.ParamFunc ({op:id[0],param:id[1].toLowerCase()})
   var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:op})
-  return new LetterWriter.ParamAssignment ({id:id,value:rhs_expr,local:false}) }
+  return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:rhs_expr,local:false}) }
     / id:param_identifier linespc* "++" linespc* param_terminator
-{ var param_func = new LetterWriter.ParamFunc ({op:"$",param:id.toLowerCase()})
+{ var param_func = new LetterWriter.ParamFunc ({op:id[0],param:id[1].toLowerCase()})
   var increment_expr = new LetterWriter.ParamFunc ({op:"#",value:1})
   var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:"+"})
-  return new LetterWriter.ParamAssignment ({id:id,value:rhs_expr,local:false}) }
+  return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:rhs_expr,local:false}) }
 
 cumulative_op = "+" / "/" / "*"
 
@@ -370,9 +374,9 @@ param_terminator = line_terminator / ";" / !source_character
 
 param_expansion
     = id:clothed_param_id
-{ return new LetterWriter.ParamReference (id) }
+{ return new LetterWriter.ParamReference (id[0], id[1]) }
     / id:bare_param_id (param_terminator / &(linespc* !(linespc / "=")))
-{ return new LetterWriter.ParamReference (id) }
+{ return new LetterWriter.ParamReference (id[0], id[1]) }
 
 
 param_expr

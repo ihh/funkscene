@@ -212,7 +212,8 @@ ui_rhs
  = symbols:sym_expr* { return symbols }
 
 hint_with_modifiers
-    = text:hint_text mods:hint_modifier* "=>" { return [text, mods.reduce(LetterWriter.extend,{})] }
+    = text:hint_text spc* mods:hint_modifier* "=>" { return [text, mods.reduce(LetterWriter.extend,{})] }
+    / { return ["", {}] }
 
 hint_text
     = spc* f:sum_weight_expr spc* { return f.asText() }

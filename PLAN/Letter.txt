@@ -1,8 +1,34 @@
-Multiplayer
+Allow players to change names via textbox on multiplayer menu screen
 
-Core engine enhancements:
- At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
- Allow Boolean comparison expressions in ParamFunc's
+Replace janky $#variable syntax with proper (pseudo-)arrays: $variable[$#] where $# is scope role
+  ...also $## for total number of roles
+ Arrays are actually associative arrays/hashes.
+  For now we can hack this in by expanding e.g. if $i=3 then "$x[$i]" expands to "x[3]"
+  This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc
+   Ditto a new kind of ParamReference e.g. ArrayParamReference
+  For score declaration we should have "score $sc[$#]" rather than "score $#sc"
+
+Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
+ e.g. "@battle#2" or "@test#3;"
+
+Role names
+ e.g. "roles {Optimist Pessimist}" as alternative syntax to "roles 2"
+  can then refer to roles by name e.g. "#Optimist" instead of "#1"
+ Drag-and-drop editable role list for Editor
+  auto-replace of role names throughout text, when edited
+
+In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
+ i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
+ this makes for a fairer distribution of turns
+
+Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
+
+At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
+Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
+
+Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
+
+More visual feedback on network operations
  Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
    Text default color is bright-red (unless number of players = 1, in which case it's black)
     Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red

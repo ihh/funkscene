@@ -518,28 +518,10 @@ input {
     user-select: none;
 }
 
-/* Fade-in for LetterWriter */
-/* Unfortunately this does not seem to work, so we do the fade manually */
+/* multiplayer */
 
-@keyframes fade-text {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@-webkit-keyframes fade-text {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-@-moz-keyframes fade-text {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-}
-
-.fadein {
-    animation: fade-text 2s linear 1;
-    -webkit-animation: fade-text 2s linear 1;
-    -moz-animation: fade-text 2s linear 1;
+.moveListener {
+    color: DarkBlue;
 }
 
 /* Restart DIV for LetterWriter */

@@ -13,7 +13,6 @@ Input nodes e.g. "$variable=?" generates a textbox
  with commit modifier "$variable=?!" means you can only edit it once, reducing parent node's unexpandedChildren count
  without commit modifier, it can be edited at any time, multiple times
 
-Fix "Evaluates to..." in debugger parse tree view, for array variables e.g. $#sc in GoodNews/BadNews
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner

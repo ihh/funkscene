@@ -1,24 +1,14 @@
 Allow players to change names via textbox on multiplayer menu screen
 
-Fix "Evaluates to..." in debugger parse tree view, for array variables e.g. $#sc in GoodNews/BadNews
+FunkScene-style menus (c.f. ChoiceScript)
 
-Replace janky $#variable pseudo-array syntax with proper(-ish) arrays: $variable[$#] where $# is scope role
-  ...also $## for total number of roles? then need modulus, etc; could postpone this
- Arrays are actually associative arrays/hashes.
-  For now we can hack this in by expanding e.g. if $i=3 then "$x[$i]" expands to "x[3]"
-  This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc
-   Ditto a new kind of ParamReference e.g. ArrayParamReference
-  For score declaration we should have "score $sc[$#]" rather than "score $#sc"
-  ... although the latter could be a synonym
+At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
+Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
+
+Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
 
 Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
  e.g. "@battle#2" or "@test#3;"
-
-Role names
- e.g. "roles {Optimist Pessimist}" as alternative syntax to "roles 2"
-  can then refer to roles by name e.g. "#Optimist" instead of "#1"
- Drag-and-drop editable role list for Editor
-  auto-replace of role names throughout text, when edited
 
 In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
  i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
@@ -29,25 +19,26 @@ Input nodes e.g. "$variable=?" generates a textbox
  with commit modifier "$variable=?!" means you can only edit it once, reducing parent node's unexpandedChildren count
  without commit modifier, it can be edited at any time, multiple times
 
-ParamFunc for string concatenation
-Syntactic sugar for "--" and "-=" (designers will expect this for scoring!)
-
+Fix "Evaluates to..." in debugger parse tree view, for array variables e.g. $#sc in GoodNews/BadNews
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
-
-At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
-Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
-
-Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
 
-FunkScene-style menus (c.f. ChoiceScript)
-
 More visual feedback on network operations
- Color unexpanded remotely-controlled node placeholder text differently, to indicate pending remote expansion
  Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
    Text default color is bright-red (unless number of players = 1, in which case it's black)
     Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red
  Receiving nodes on channels gives visual feedback:
    Visual feedback when node received in peer message: text fades to faintly-red
    Visual feedback when node received in message from player 1: text fades to black
+
+Extend $variable[$#] pseudo-array syntax to allow any index, dynamically computed
+  This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc
+   Ditto a new kind of ParamReference e.g. ArrayParamReference
+ParamFunc for string concatenation
+
+Role names
+ e.g. "roles {Optimist Pessimist}" as alternative syntax to "roles 2"
+  can then refer to roles by name e.g. "#Optimist" instead of "#1"
+ Drag-and-drop editable role list for Editor
+  auto-replace of role names throughout text, when edited

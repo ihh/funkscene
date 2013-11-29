@@ -330,10 +330,14 @@ param_identifier
 
 bare_param_id
     = "$#" x:symbol  { return ["$#",x] }
+    / "$" x:symbol "[" spc* "$#" spc* "]"  { return ["$#",x] }
+    / "$" x:symbol "[" spc* n:positive_integer spc* "]"  { return ["$",x + "[" + n + "]"] }
     / "$" x:symbol  { return ["$",x] }
 
 clothed_param_id
     = "$#{" x:symbol "}"  { return ["$#",x] }
+    / "$#{" x:symbol "}" spc* "[" spc* "$#" spc* "]"  { return ["$#",x] }
+    / "${" x:symbol "}" spc* "[" spc* n:positive_integer spc* "]"  { return ["$",x + "[" + n + "]"] }
     / "${" x:symbol "}"  { return ["$",x] }
 
 numeric_literal
@@ -367,8 +371,13 @@ param_assignment
   var increment_expr = new LetterWriter.ParamFunc ({op:"#",value:1})
   var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:"+"})
   return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:rhs_expr,local:false}) }
+    / id:param_identifier linespc* "--" linespc* param_terminator
+{ var param_func = new LetterWriter.ParamFunc ({op:id[0],param:id[1].toLowerCase()})
+  var increment_expr = new LetterWriter.ParamFunc ({op:"#",value:1})
+  var rhs_expr = new LetterWriter.ParamFunc ({l:param_func,r:increment_expr,op:"-"})
+  return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:rhs_expr,local:false}) }
 
-cumulative_op = "+" / "/" / "*"
+cumulative_op = "+" / "-" / "/" / "*"
 
 param_terminator = line_terminator / ";" / !source_character
 

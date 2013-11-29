@@ -195,7 +195,7 @@ rule
  = mods:nonterm_modifier* lhs:nonterm_symbol q:sym_modifier* spc* &{return pushLhs(lhs)}
    maxUsage:max_count? "=>" spc* ppp:preamble_placeholder_prompt spc*
     &{return setNontermProperties(currentLhs(),extend(extend(extend((maxUsage?maxUsage:{}),mods.reduce(LetterWriter.extend,{})),q.reduce(LetterWriter.extend,{})),ppp))}
-   "{" rhs_list "}" spc* {popLhs()}
+   "{" rhs_list "}" spc* {return popLhs()}
 
 nonterm_modifier
  = "pause" spc*  { return { pause: true } }

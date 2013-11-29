@@ -2,13 +2,7 @@ Allow players to change names via textbox on multiplayer menu screen
 
 FunkScene-style menus (c.f. ChoiceScript)
 
-At occluded siblings of "pause" nodes, postpone computer move until node becomes visible
 Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
-
-Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
-
-Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
- e.g. "@battle#2" or "@test#3;"
 
 In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
  i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
@@ -24,13 +18,19 @@ Add missing auto-renaming functionality to Editor (ParamAssignments & ParamRefer
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
 
+Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
+ e.g. "@battle#2" or "@test#3;"
+
 More visual feedback on network operations
- Click, which triggers code for expanding tree, also broadcasts message (yielding a promise)
+ Exploit then() callback on publication promise:
    Text default color is bright-red (unless number of players = 1, in which case it's black)
     Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red
  Receiving nodes on channels gives visual feedback:
    Visual feedback when node received in peer message: text fades to faintly-red
    Visual feedback when node received in message from player 1: text fades to black
+
+Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
+ Syntax: "weight_expr => hint => rhs_symbols"
 
 Extend $variable[$#] pseudo-array syntax to allow any index, dynamically computed
   This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc

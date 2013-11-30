@@ -31,6 +31,17 @@
 	      IDE
 	    </form>
 	  </div>
+
+	    <div class="letterDebuggerShortcuts">
+	      <a href="#gameContainer">Game</a>
+	      | <a href="#editorParseTreeContainer">Tree</a>
+	      | <a href="#editorMapContainer">Map</a>
+	      | <a href="#editorNontermsHeader">Choices</a>
+	      | <a href="#editorParamsHeader">Sliders</a>
+	      | <a href="#editorConfigHeader">Config</a>
+	      | <a href="#editorTemplateHeader">Raw</a>
+	    </div>
+
 	<div id="gameAndParseTreeContainer">
 	  <div id="leftPadding" style="width:400px;height:1em"></div>
 	  <div id="gameContainer" style="border-style:none;left:20%">
@@ -54,7 +65,7 @@
 		</li>
 	      </ol>
 	      <br>
-	      Your player handle: <form><input type="text" id="playerName" value="Player"/></form>
+	      Your player handle: <form><input type="text" id="playerName" value=""/></form>
 	    </span>
 
 	    <span text-align="center" id="pendingMultiplayer" style="display:none">
@@ -87,7 +98,6 @@
 
 	</div>
 
-	  <div id="showShortcutsCheckboxContainer" style="float:right;display:none">
 	    <div class="letterDebuggerShortcuts">
 	      <a href="#gameContainer">Game</a>
 	      | <a href="#editorParseTreeContainer">Tree</a>
@@ -97,7 +107,6 @@
 	      | <a href="#editorConfigHeader">Config</a>
 	      | <a href="#editorTemplateHeader">Raw</a>
 	    </div>
-	  </div>
 
 	<div id="editorMapContainer" style="display:none">
 	  <a name="editorMap">

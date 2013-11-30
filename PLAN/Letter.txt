@@ -1,5 +1,4 @@
-Randomize default player ID from a long list of fun names
- Save player ID in local storage
+Save player ID in local storage
  Show player IDs in score table
 
 More visual feedback on network operations

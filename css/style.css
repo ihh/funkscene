@@ -535,7 +535,7 @@ input {
 }
 
 @-webkit-keyframes unpublishedColorPulse { 0% {color: #400;} 100% {color: #f00;} }
-@-webkit-keyframes publishedColorPulse { 0% {color: #800;} 100% {color: black;} }
+@-webkit-keyframes publishedColorPulse { 0% {color: #400;} 100% {color: black;} }
 .unpublished {
     color: #f00;
     -webkit-animation: unpublishedColorPulse 1s; 

@@ -1,5 +1,4 @@
 Save player ID in local storage
- Show player IDs in score table
 
 More visual feedback on network operations
  Exploit then() callback on publication promise:

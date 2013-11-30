@@ -1,6 +1,6 @@
 Randomize default player ID from a long list of fun names
-
-Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
+ Save player ID in local storage
+ Show player IDs in score table
 
 More visual feedback on network operations
  Exploit then() callback on publication promise:
@@ -31,3 +31,5 @@ Role names
   can then refer to roles by name e.g. "#Optimist" instead of "#1"
  Drag-and-drop editable role list for Editor
   auto-replace of role names throughout text, when edited
+
+Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)

@@ -2,8 +2,6 @@ Allow players to change names via textbox on multiplayer menu screen
 
 FunkScene-style menus (c.f. ChoiceScript)
 
-Allow comparison ParamFunc's, e.g. "$a > $b", yielding 1 or 0
-
 In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
  i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
  this makes for a fairer distribution of turns
@@ -34,7 +32,6 @@ Allow weights on human-played rules, determining (a) if rule is visible, (b) wha
 Extend $variable[$#] pseudo-array syntax to allow any index, dynamically computed
   This will require a new kind of ParamAssignment e.g. ArrayParamAssignment, where array index is a ParamFunc
    Ditto a new kind of ParamReference e.g. ArrayParamReference
-ParamFunc for string concatenation
 
 Role names
  e.g. "roles {Optimist Pessimist}" as alternative syntax to "roles 2"

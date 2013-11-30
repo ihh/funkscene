@@ -218,7 +218,7 @@ hint_with_modifiers
     / { return ["", {}] }
 
 hint_text
-    = spc* f:sum_weight_expr spc* { return f.asText() }
+    = spc* f:param_expr spc* { return f.asText() }
     / text
 
 hint_modifier = times_hidden / max_count
@@ -303,24 +303,6 @@ line_terminator
 source_character
   = .
 
-// Used to parse "hints" for randomized nonterminals as probabilistic weights
-sum_weight_expr
-    = l:product_weight_expr linespc* op:("+"/"-"/"or"i) linespc* r:sum_weight_expr
-{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
-  / product_weight_expr
-
-product_weight_expr
-    = l:primary_weight_expr linespc* op:("*"/"/"/"and"i/"vs"i) linespc* r:product_weight_expr
-{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
-    / ("!" linespc* / ("not"i linespc+)) l:product_weight_expr
-{ return new LetterWriter.ParamFunc ({op:"!",l:l}) }
-  / primary_weight_expr
-
-primary_weight_expr
-    = n:nonnegative_numeric_literal  { return new LetterWriter.ParamFunc ({op:"#",value:n}) }
-    / param_func
-    / "(" linespc* e:sum_weight_expr linespc* ")"  { return e; }
-
 param_func
     = x:param_identifier  { return new LetterWriter.ParamFunc ({op:x[0],param:x[1].toLowerCase()}) }
 
@@ -394,15 +376,25 @@ param_expr
     / sum_expr
 
 sum_expr
-    = l:product_expr linespc* op:("+"/"-") linespc* r:sum_expr
+    = l:product_expr linespc* op:("+"/"||"/"or"i/"-") linespc* r:sum_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
   / product_expr
 
 product_expr
-    = l:primary_expr linespc* op:("*"/"/") linespc* r:product_expr
+    = l:relation_expr linespc* op:("*"/"&&"/"and"i/"/"/"vs"i) linespc* r:product_expr
 { return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
     / "!" linespc* l:product_expr
 { return new LetterWriter.ParamFunc ({op:"!",l:l}) }
+  / relation_expr
+
+relation_expr
+    = l:equality_expr linespc* op:("<"/"<="/">"/">=") linespc* r:relation_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
+  / equality_expr
+
+equality_expr
+    = l:primary_expr linespc* op:("!="/"==") linespc* r:relation_expr
+{ return new LetterWriter.ParamFunc ({l:l,r:r,op:op}) }
   / primary_expr
 
 primary_expr

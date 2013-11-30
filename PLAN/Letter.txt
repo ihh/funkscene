@@ -1,3 +1,5 @@
+Debug for Firefox
+
 Save player ID in local storage
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner

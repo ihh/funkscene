@@ -1,4 +1,7 @@
-Debug for Firefox
+Debug CSS/HTML
+ Score delta animations in Firefox
+ Score bar is too wide in all browsers
+ Hidden sceneMenus are pushing attribute sliders out of view; try supplementing "opacity:0" with "display:none"?
 
 Save player ID in local storage
 

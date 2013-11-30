@@ -21,6 +21,10 @@ html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMe
     font-size: medium;
 }
 
+.sceneMenuContainer {  /* LetterWriter only */
+    padding-top: 1em;
+}
+
 .NontermControlValue input[type='checkbox'] {
     -webkit-appearance:none;
     width:2em;

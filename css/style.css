@@ -592,13 +592,13 @@ input {
 }
 
 .scoreDeltaPositive {
-    position: relative;
+    position: absolute;
     font-size: small;
     color: DarkGreen;
 }
 
 .scoreDeltaNegative {
-    position: relative;
+    position: absolute;
     font-size: small;
     color: DarkRed;
 }

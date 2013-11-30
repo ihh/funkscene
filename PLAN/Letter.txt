@@ -1,13 +1,5 @@
 Save player ID in local storage
 
-More visual feedback on network operations
- Exploit then() callback on publication promise:
-   Text default color is bright-red (unless number of players = 1, in which case it's black)
-    Visual feedback when promise fulfilled: text fades from bright-red to somewhat-red
- Receiving nodes on channels gives visual feedback:
-   Visual feedback when node received in peer message: text fades to faintly-red
-   Visual feedback when node received in message from player 1: text fades to black
-
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
 
 Role assignment ideas:

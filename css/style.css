@@ -239,6 +239,7 @@ input {
 .continue {
     display:block;
     width:100%;
+    min-height:2em;
     font-family: Verdana, Geneva, sans-serif;
     font-size:30px;
     font-weight:bold;
@@ -525,9 +526,24 @@ input {
 /* multiplayer */
 
 @-webkit-keyframes listenerColorPulse { 0% {color: black;} 20% {color: blue;} 100% {color: black;} }
+.moveListenerConnecting {
+    color: black;
+}
 .moveListener {
     color: DarkBlue;
     -webkit-animation: listenerColorPulse 3s infinite normal; 
+}
+
+@-webkit-keyframes unpublishedColorPulse { 0% {color: #400;} 100% {color: #f00;} }
+@-webkit-keyframes publishedColorPulse { 0% {color: #800;} 100% {color: black;} }
+.unpublished {
+    color: #f00;
+    -webkit-animation: unpublishedColorPulse 1s; 
+}
+
+.published {
+    color: black;
+    -webkit-animation: publishedColorPulse 1s; 
 }
 
 /* Restart DIV for LetterWriter */
@@ -561,6 +577,7 @@ input {
     position: fixed;
     bottom: 20;
     width: 49%;
+    min-height: 1em;
 }
 
 .scoreContainerIncreasing {

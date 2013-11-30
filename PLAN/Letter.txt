@@ -1,4 +1,5 @@
 Fix synchronization bug where player #1 can play moves before other players have received grammar
+ ...when applying to join a game, request grammar first, then proceed to the joinGame state
 
 Allow pause on input nodes: "$variable=?;"
 

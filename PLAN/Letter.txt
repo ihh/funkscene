@@ -1,7 +1,4 @@
-Fix synchronization bug where player #1 can play moves before other players have received grammar
- ...when applying to join a game, request grammar first, then proceed to the joinGame state
-
-Allow pause on input nodes: "$variable=?;"
+Randomize default player ID from a long list of fun names
 
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
 

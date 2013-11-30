@@ -270,6 +270,12 @@ commit_modifier
 random_modifier
  = "?" { return { random: true } }
 
+no_modifier
+ = { return { } }
+
+optional_pause_modifier
+ = pause_modifier / no_modifier
+
 text
  = "\\" escaped:[#\[\]\{\}\|=\@\$] tail:text? { return escaped + tail; }
  / "\\\\" tail:text? { return "\\\\" + tail; }
@@ -341,10 +347,10 @@ linespc
 
 // Used within RHS of rules
 param_input
-    = id:param_identifier linespc* "@=?"
-{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:true}) }
-    / id:param_identifier linespc* "=?"
-{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:false}) }
+    = id:param_identifier linespc* "@=?" mods:optional_pause_modifier
+{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:true,mods:mods}) }
+    / id:param_identifier linespc* "=?" mods:optional_pause_modifier
+{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:false,mods:mods}) }
 
 param_assignment
     = id:param_identifier linespc* "@=" linespc* expr:param_expr param_terminator

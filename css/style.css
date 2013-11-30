@@ -912,6 +912,8 @@ body>.ui-tooltip {
 }
 
 .letterDebuggerShortcuts {
+    display: none;  /* IDE initially hidden */
+
     float: right;
     background-color: NavajoWhite;
 

@@ -1,8 +1,6 @@
-Input nodes e.g. "$variable=?" generates a textbox
-  array version "$#variable=?"
- new type of parse tree node, e.g. ParamInput
- you can only enter it once (converts to ParamAssignment & publishes, reduces parent node's unexpandedChildren count)
-  until you commit to entering something, it won't update the scope (for multiplayer)
+Fix synchronization bug where player #1 can play moves before other players have received grammar
+
+Allow pause on input nodes: "$variable=?;"
 
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
 

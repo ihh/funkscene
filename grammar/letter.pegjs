@@ -244,6 +244,7 @@ sym_expr
     { return makeNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
  / ppp:preamble_placeholder_prompt sym:anonymous_nonterm q:sym_modifier*
     { return makeAnonNontermReference(sym,extend(ppp,q.reduce(LetterWriter.extend,{}))) }
+ / param_input
  / param_assignment
  / param_expansion
  / text:text  { return makeTerm(text) }
@@ -339,6 +340,12 @@ linespc
 
 
 // Used within RHS of rules
+param_input
+    = id:param_identifier linespc* "@=?"
+{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:true}) }
+    / id:param_identifier linespc* "=?"
+{ return new LetterWriter.ParamInput ({type:id[0],id:id[1].toLowerCase(),local:false}) }
+
 param_assignment
     = id:param_identifier linespc* "@=" linespc* expr:param_expr param_terminator
 { return new LetterWriter.ParamAssignment ({type:id[0],id:id[1].toLowerCase(),value:expr,local:true}) }

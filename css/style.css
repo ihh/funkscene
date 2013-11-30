@@ -520,10 +520,10 @@ input {
 
 /* multiplayer */
 
-@-webkit-keyframes listenerColorPulse { 0% {color: black;} 100% {color: blue;} }
+@-webkit-keyframes listenerColorPulse { 0% {color: black;} 20% {color: blue;} 100% {color: black;} }
 .moveListener {
     color: DarkBlue;
-    -webkit-animation: listenerColorPulse 3s infinite alternate; 
+    -webkit-animation: listenerColorPulse 3s infinite normal; 
 }
 
 /* Restart DIV for LetterWriter */

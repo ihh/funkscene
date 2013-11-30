@@ -35,8 +35,9 @@
 	      <span id="menuLinkContainer" class="letter menu"><small><i><a href="#" id="menuLink" onclick="nav.showMultiplayerMenu()">menu</a></i></small></span>
 	      <div class="undoContainer"><span id="undo" class="letter undo"></span></div></div>
 
+	    <br>
 	    <span text-align="center" id="multiplayerMenu" style="display:none">
-	      <br><br><br>
+	      <br><br>
 	      <h2>Choose</h2>
 	      <ol>
 		<li><a href="#" onclick="nav.hideMultiplayerMenu()">Play solo</a></li>
@@ -46,10 +47,12 @@
 		  </ul>
 		</li>
 	      </ol>
+	      <br>
+	      Your player handle: <form><input type="text" id="playerName" value="Player"/></form>
 	    </span>
 
 	    <span text-align="center" id="pendingMultiplayer" style="display:none">
-	      <br><br><br>
+	      <br><br>
 	      <h2 id="pendingGrammarName"></h2>
 	      <span id="pendingGrammarText"></span>
 	      <ol id="playerList"></ol>

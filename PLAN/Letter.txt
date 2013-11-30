@@ -1,22 +1,10 @@
-Allow players to change names via textbox on multiplayer menu screen
-
-FunkScene-style menus (c.f. ChoiceScript)
-
-In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
- i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
- this makes for a fairer distribution of turns
-
 Input nodes e.g. "$variable=?" generates a textbox
- array version "$variable[$index]=?"  ... note the index could change dynamically; I guess this is OK
+ array version "$#variable=?"
  with commit modifier "$variable=?!" means you can only edit it once, reducing parent node's unexpandedChildren count
  without commit modifier, it can be edited at any time, multiple times
+ OR -- can only be edited while parent nonterm has unexpanded children; then force commit by adding dummy link to parent? (needs more thought: if parent has no unexpanded children, cannot edit?)
 
 Add missing auto-renaming functionality to Editor (ParamAssignments & ParamReferences in rhs of rules)
-
-Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
-
-Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
- e.g. "@battle#2" or "@test#3;"
 
 More visual feedback on network operations
  Exploit then() callback on publication promise:
@@ -25,6 +13,15 @@ More visual feedback on network operations
  Receiving nodes on channels gives visual feedback:
    Visual feedback when node received in peer message: text fades to faintly-red
    Visual feedback when node received in message from player 1: text fades to black
+
+Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
+
+Role assignment ideas:
+ Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
+  e.g. "@battle#2" or "@test#3;"
+ In Node constructor, parentRole should be replaced by olderSiblingOrParentRole
+  i.e. "#=", "#+" and "#-" should be relative to older sibling's role, where available
+  this makes for a fairer distribution of turns
 
 Allow weights on human-played rules, determining (a) if rule is visible, (b) what order rules are presented in
  Syntax: "weight_expr => hint => rhs_symbols"

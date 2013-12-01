@@ -1,4 +1,5 @@
 \documentclass{acm_proc_article-sp}
+\bibliographystyle{unsrt}
 
 \begin{document}
 
@@ -17,48 +18,226 @@ Ian Holmes\\
 
 \maketitle
 \begin{abstract}
-Multiplayer SCFG games.
+Multiplayer choose-your-own stories based on context-free grammars.
+Fully self-contained editor (with map overview), parse tree debugger, network player.
 \end{abstract}
 
 % A category with the (minimum) three required fields
-\category{H.4}{Information Systems Applications}{Miscellaneous}
+%\category{H.4}{Information Systems Applications}{Miscellaneous}
 %A category including the fourth, optional field follows...
-\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
+%\category{D.2.8}{Software Engineering}{Metrics}[complexity measures, performance measures]
 
-% \terms{Theory}
-
-% \keywords{ACM proceedings, \LaTeX, text tagging} % NOT required for Proceedings
 
 \section{Introduction}
 
-\section{Design}
+What is a CFG?
+How does a CFG subsume the state machine of an FSA?
+How is a CFG like a pushdown automaton?
+How is a CFG like CYOA with GOSUB?
+How is a CFG like CYOA with continuation-passing style?
+How does an SCFG subsume a CFG? (Turing wanted true randomness in all computers...)
 
+\cite{DBLP:conf/icalp/EtessamiWY08}
+
+Grammars as metaphysical systems
+\cite{SanskritSutras}
+\cite{Priscian}
+
+Grammars as tools of social unification and control
+\cite{AcademieFrancaise}
+\cite{RobertLowth}
+
+Formal grammars and commonalities of human language
+\cite{Chomsky}
+
+Grammars and compilers
+\cite{AhoLamSethiUllmanCompilersDragonBook}
+
+Games and scripts
+\cite{EricBerneGamesPeoplePlay,EricBerneWhatDoYouSayAfterYouSayHello}
+
+Grammars in graphics and games
+\cite{LSystems}
+\cite{Sims3}
+
+Grammars in DNA sequence analysis
+\cite{Durbin98}
+
+Choose-your-own story engines and interactive authoring environments
+\cite{Twine,InkleWriter,ChoiceScript,Undum,RenPy}
+
+
+\section{Design}
 
 \subsection{Game language}
 
-Domain-specific language...
+Declarative, domain-specific language.
+Attributed context-free gramamr.
+
+Core element is transformation rule.
+Syntactically, defines a choice (whitespace can be ignored):
+\begin{verbatim}
+ @scene => { hint1 => expansion1
+           | hint2 => expansion2
+           | hint3 => expansion3 }
+\end{verbatim}
+Any number of (hint,expansion) tuples are allowed.
+
+In language of formal grammar theory, symbol {\tt \@scene} is a {\em nonterminal}
+(to be contrasted with rendered text, which is composed of {\em terminal} symbols, i.e. characters).
+Each nonterminal has a number of possible expansions, and so corresponds to a choice.
+Expansions can themselves contain more nonterminals, so the choices continue.
+
+All nonterminal symbols begin with {\tt \@}.
+Special characters {\tt \$\@[\{\}]} can be escaped with a backslash if required in the text.
+Quotation marks and other common punctuation are not special characters and can be used directly, as can HTML tags.
+Some syntactic sugar for HTML tags (e.g. flanking underscores for italics) is borrowed from Markdown \cite{Markdown}.
+
+Semantically, application of these rules expands an initial starting nonterminal (the first choice) into a parse tree (the final text).
+
+The tree itself is post-processed before being rendered,
+so the terminals themselves do not necessarily correspond exactly to what is shown on screen
+(rather, it is more accurate to think of the expanded parse tree as specifying a final {\em program text} that then deterministically computes the {\em story text} presented to the player).
+As noted above, a MarkDown-like macro expansion is applied to all terminal text, for quick HTML styling \cite{Markdown}.
+Simple scoped variable substitutions offer a context-sensitive grammar.
+
+Extra keywords e.g. to specify that some variables are directly controlled by the player, using sliders,
+or to delineate a variable as the score.
+Other keywords to specify title of game, or control ``undo'' link.
+
+Not all rules are shown immediately, or indefinitely.
+They can be hidden, or limited.
+Various modifier keywords can be associated with nonterminals to indicate this in the game source file.
+
+More computationally expressive logic control available via computer player.
+Normally plays randomly, but boolean logic expressions can be used in place of (or combination with) random weights.
+Player can also ``steer'' random player via sliders in HTML page.
+
+Optional longer form
+\begin{verbatim}
+ @scene => [ preamble | placeholder | prompt ]
+           { hint1 => expansion1
+           | hint2 => expansion2
+           | hint3 => expansion3 }
+\end{verbatim}
+
+Preamble is text describing scene.
+Placeholder is text temporarily displayed at bottom of scene, deleted when an expansion is selected.
+Prompt text, also transiently displayed, is associated with the list of choices (typically in the form of a question addressed directly to the player).
+
+Preamble and/or placeholder can be omitted.
+Hints can also be omitted.
+
+Example \cite{ChoiceOfGamesBlog}:
+\begin{verbatim}
+ @unrest =>
+[ The peasants are revolting. 
+  | _So tedious..._ 
+  | What will you do? ] 
+{ Feed them.
+   => You cast grain from the battlements.
+      @peace
+| Play some music.
+   => No lute can drown their hungry groans.
+      @revolt }
+\end{verbatim}
+
+The words ``{\em So tedious...}'' will disappear when a selection is made; being wrapped in underscores, they will also appear in italics, as a result of the Markdown-like macro transformation.
+The prompt ``What will you do?'' will also disappear when a selection made.
+(In multiplayer mode, the prompt is only shown to the active player.)
 
 
 \subsection{Editor}
 
+FIGURE
+
+Bottom line is a text edit box where game source can be edited directly.
+A number of UI elements are presented that afford an Interactive Development Environment (IDE) to assist editing.
+
+Drag-and-drop-sortable list of nonterminal panes.
+Each nonterminal pane contains a drag-and-drop-sortable list of transformation rules.
+
+Quick-reference text summaries of orphan nonterminals, bare nonterminals, empty rules.
+
+Drag-and-drop-sortable list of sliders.
+
+Hyperlink navigation to incoming/outgoing nonterminals, also to map.
+
+\subsection{Map}
+
+FIGURE
+
+Map is visualized using graph library.
+Nodes: nonterminals (arranged in circular layout).
+Edges: existence of edge $a \to b$ implies some rule from $a$ that generates (at least) $b$.
+
+Click on a node to show incoming \& outgoing edges.
 
 \subsection{Parse tree viewer}
 
+FIGURE
+
+Parse tree is visualized using graph library.
+Type and status of nodes indicated via size and coloring (terminals, expanded/unexpanded nonterminals, expanded/unexpanded computer-controlled nonterminals, parameter references/assignments/inputs).
+Mouseover node for more info, click for shortcut to editor.
 
 \subsection{Game client}
 
+Rendering of tree with minimal, discreet styling and animation (e.g. fade-in).
+
+``Undo'' button with gradually-increasing recharge time is offered as an optional game mechanic for solo play.
 
 \subsection{Multiplayer operation}
 
+Publish-subscribe model.
+Invitation channel.
+Play channel: hierarchically-structured channels, one channel for each node of parse tree.
+Discreet animations conveying (a) successful publication of rule expansion to server, (b) successful server subscription at a given placeholder, listening for remote player choice.
+
+\section{Discussion}
+
+Structured chat-room?
+Scripted interactive date?
+Dungeonmaster-player?
+Many possibilities...
 
 
+\subsection{Cryptographic play}
+
+Sketch of crypto-signed play.
+
+Crucial messages can be signed (and counter-signed when received): invitations, applications to join the game, expansions of nodes in the parse tree.
+No need for central authority.
+
+\subsection{Optimal strategies}
+
+Strategically optimal algorithms for playing this kind of game are known to exist when the scoring scheme is extremely predictable (e.g. linear in nonterminal usage \cite{DBLP:conf/icalp/EtessamiWY08}).
+However, the scoring scheme described here is considerably more flexible, modeling many aspects of context-sensitive grammars as well as CFGs.
+
+The programming language for the computer player does not attempt to model AI in any deep sense:
+it is very simple, just offering variables, conditional tests, and the in-built facility for looping and recursion that comes for free with the CFG.
+
+A theoretical extension is to use an ambiguous grammar (multiple parse trees consistent with observed output)
+and introduce a computer player that can parse the current output (e.g. using Earley \cite{Stolcke}) and predict future outcomes.
+
+\subsection{Implementation}
+
+JavaScript, SigmaJS, PegJS, JQuery, OpenPGP, Node, Faye.
+
+Early choose-your-own story prototype developed using Scheme.
+Prototype of parser-based play developed using Perl.
 
 
+\subsection{Availability}
 
+{\tt https://github.com/ihh/funkscene}
 
 \section{References}
 
-Recursive Stochastic Games with Positive Rewards. Etessami, Wojtczak, Yannakakis. Automata, Languages and Programming. Lecture Notes in Computer Science Volume 5125, 2008, pp 711-723
+%Recursive Stochastic Games with Positive Rewards. Etessami, Wojtczak, Yannakakis. Automata, Languages and Programming. Lecture Notes in Computer Science Volume 5125, 2008, pp 711-723
+
+\bibliography{lwpaper}
+
 \balancecolumns
 % That's all folks!
 \end{document}

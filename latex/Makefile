@@ -6,8 +6,11 @@ all: lwpaper.pdf.open
 
 %.pdf: %.tex
 	pdflatex $*.tex
-	bibtex $*.bib
+	bibtex $*
 	pdflatex $*.tex
 	pdflatex $*.tex
+
+clean:
+	rm lwpaper.pdf *.aux *.log *.bbl *.blg
 
 .SECONDARY:

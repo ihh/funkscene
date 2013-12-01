@@ -71,49 +71,28 @@ Choose-your-own story engines and interactive authoring environments
 
 \subsection{Game language}
 
-Declarative, domain-specific language.
-Attributed context-free gramamr.
+At the core of LetterWriter is LetterLanguage,
+a declarative, domain-specific language for specifying an attributed context-free gramamr.
 
-Core element is transformation rule.
-Syntactically, defines a choice (whitespace can be ignored):
+The core element in this grammar, syntactically and semantically, is the {\em transformation rule}.
+\begin{verbatim}
+ @scene => { hint => expansion }
+\end{verbatim}
+In this, {\tt \@scene} is a label denoting the current scene;
+{\tt hint} is text presented to the player as a choice;
+and {\tt expansion} is text that will be generated if the player makes this choice
+(which can include further scene labels).
+
+A block of transformation rules represents a list of choices:
 \begin{verbatim}
  @scene => { hint1 => expansion1
            | hint2 => expansion2
            | hint3 => expansion3 }
 \end{verbatim}
-Any number of (hint,expansion) tuples are allowed.
-
-In language of formal grammar theory, symbol {\tt \@scene} is a {\em nonterminal}
-(to be contrasted with rendered text, which is composed of {\em terminal} symbols, i.e. characters).
-Each nonterminal has a number of possible expansions, and so corresponds to a choice.
-Expansions can themselves contain more nonterminals, so the choices continue.
-
-All nonterminal symbols begin with {\tt \@}.
-Special characters {\tt \$\@[\{\}]} can be escaped with a backslash if required in the text.
-Quotation marks and other common punctuation are not special characters and can be used directly, as can HTML tags.
-Some syntactic sugar for HTML tags (e.g. flanking underscores for italics) is borrowed from Markdown \cite{Markdown}.
-
-Semantically, application of these rules expands an initial starting nonterminal (the first choice) into a parse tree (the final text).
-
-The tree itself is post-processed before being rendered,
-so the terminals themselves do not necessarily correspond exactly to what is shown on screen
-(rather, it is more accurate to think of the expanded parse tree as specifying a final {\em program text} that then deterministically computes the {\em story text} presented to the player).
-As noted above, a MarkDown-like macro expansion is applied to all terminal text, for quick HTML styling \cite{Markdown}.
-Simple scoped variable substitutions offer a context-sensitive grammar.
-
-Extra keywords e.g. to specify that some variables are directly controlled by the player, using sliders,
-or to delineate a variable as the score.
-Other keywords to specify title of game, or control ``undo'' link.
-
-Not all rules are shown immediately, or indefinitely.
-They can be hidden, or limited.
-Various modifier keywords can be associated with nonterminals to indicate this in the game source file.
-
-More computationally expressive logic control available via computer player.
-Normally plays randomly, but boolean logic expressions can be used in place of (or combination with) random weights.
-Player can also ``steer'' random player via sliders in HTML page.
-
-Optional longer form
+Any number of ({\tt hint},{\tt expansion}) tuples are allowed.
+Whitespace can be ignored (although it is preserved in rendered text),
+and the {\tt hint=>} can be omitted as well.
+There is also an optional longer form
 \begin{verbatim}
  @scene => [ preamble | placeholder | prompt ]
            { hint1 => expansion1
@@ -121,14 +100,16 @@ Optional longer form
            | hint3 => expansion3 }
 \end{verbatim}
 
-Preamble is text describing scene.
-Placeholder is text temporarily displayed at bottom of scene, deleted when an expansion is selected.
-Prompt text, also transiently displayed, is associated with the list of choices (typically in the form of a question addressed directly to the player).
+Here, {\tt preamble} is text describing the scene;
+{\tt placeholder} is text temporarily displayed at the bottom of the scene (before the list of choices),
+and deleted when an expansion is selected;
+and {\tt prompt} is text, also transiently displayed, that is associated with the list of choices.
+(Typically the prompt takes the form of a question addressed directly to the player.)
 
-Preamble and/or placeholder can be omitted.
-Hints can also be omitted.
+As with other parts of the syntax beyond the core idea of a context-free transformation rule,
+the preamble and/or placeholder can be omitted.
 
-Example \cite{ChoiceOfGamesBlog}:
+Here is an actual working example \cite{ChoiceOfGamesBlog}:
 \begin{verbatim}
  @unrest =>
 [ The peasants are revolting. 
@@ -146,6 +127,49 @@ The words ``{\em So tedious...}'' will disappear when a selection is made; being
 The prompt ``What will you do?'' will also disappear when a selection made.
 (In multiplayer mode, the prompt is only shown to the active player.)
 
+
+
+In the terminology of formal grammar theory: the scene label {\tt \@scene} is a {\em nonterminal symbol},
+whereas other rendered text is composed of {\em terminal symbols} (ASCII characters).
+Nonterminal symbols denote points in the text (scenes) where further expansion is possible;
+terminal symbols denote static endpoints of the text.
+
+All nonterminal symbols begin with {\tt \@}.
+Special characters {\tt \$\@[\{\}]} can be escaped with a backslash if required in the text.
+Quotation marks and other common punctuation are not special characters and can be used directly, as can HTML tags.
+Some syntactic sugar for HTML tags (e.g. flanking underscores for italics) is borrowed from Markdown \cite{Markdown}.
+
+Starting from an initial designated nonterminal (named {\tt @start} by default),
+iterated application of these rules generates a {\em parse tree},
+with nonterminal symbols at internal nodes and terminal symbols at the tips.
+The final text can be read off from the terminals at the leaf nodes.
+
+The sequence of terminals is post-processed before being rendered,
+so the terminals themselves do not necessarily correspond exactly to what is shown on screen
+(rather, it is more accurate to think of the expanded parse tree as specifying a final {\em program text}
+that then deterministically computes the {\em story text} presented to the player).
+As noted above, a Markdown-like macro expansion is applied to all terminal text, for quick HTML styling \cite{Markdown}.
+The post-processor also allows scoped variable substitutions,
+offering (in grammar-theroteic terms) a limited amount of {\em context-sensitivity}
+to the otherwise context-free grammar.
+
+Extra keywords are available; for example, to specify that some variables are directly controlled by the player,
+(using sliders), or to delineate a variable as the score.
+Other keywords can specify the game title, or control the behavior of the ``undo'' button.
+
+Not all transformation rules need be presented to the player at every opportunity.
+The designer can flag individual rules as hidden from view some fixed number of times
+before first being shown, or limited to some finite number of uses.
+Various modifier keywords can be associated with nonterminals to indicate this in the game source file.
+
+More computationally expressive logic for controlling story flow is available via the use of computer players.
+For nonterminals that are flagged as belonging to the computer player,
+rules are normally played at random,
+but this behavior can be manipulated by the designer to
+assign different probabilistic weights to the rules
+(and these weights can also be boolean logic expressions, allowing for more sophisticated control of flow).
+The player can also ``steer'' the computer player by manipulating probabilistic weight parameters directly,
+by means of slider controls in the HTML page.
 
 \subsection{Editor}
 

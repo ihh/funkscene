@@ -4,7 +4,7 @@ all: lwpaper.pdf.open
 %.open: %
 	open $<
 
-%.pdf: %.tex
+%.pdf: %.tex %.bib
 	pdflatex $*.tex
 	bibtex $*
 	pdflatex $*.tex

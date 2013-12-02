@@ -1,0 +1,451 @@
+/* Common stuff */
+
+/*  Main body */
+html, body {
+    border: 0px;
+}
+
+html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMenu ul>li {
+    margin: 0px; 
+    padding: 0px;
+    background-color: #eee;
+    color: black;
+    font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
+}
+
+.letterWriterBody {
+    background-color: #fffff8;
+}
+
+.sceneMenu select, .sceneMenu select>option {
+    font-size: medium;
+}
+
+.sceneMenuContainer {  /* LetterWriter only */
+    padding-top: 1em;
+}
+
+textarea {
+    font-family: "Courier", monospace;
+
+    border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+input {
+    border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.undefinedParameter {
+    color: red;
+    font-style: italic;
+}
+
+/* Basic FunkScene game */
+#gameContainer {
+    max-width: 700px;
+    position: relative;
+    margin: 10px auto; 
+    padding: 0 10px;
+}
+
+/* FunkScene game + debugger */
+#debugContainer {
+    min-width: 1200px;
+    margin: 0 20px 0 20px; /* top right bottom left */
+    padding: 0;
+}
+
+#debugContainer #game {
+    width: 500px;
+    float: left;
+
+    border-radius: 4px 0 4px 0;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+
+    overflow:scroll;
+    overflow-x:hidden;
+
+    padding: 0 10px 0 10px;
+}
+
+#debugContainer #debugger {
+    width: 500px;
+    float: left;
+    margin: 0;
+    padding: 0;
+}
+
+#debuggerMapContainer {
+    position: relative;
+    border-color: '#fff';
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    height: 400px;
+    margin: 10px 0 10px 0;
+}
+
+#debuggerMap {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    margin: 10px 0 10px 0;
+    border-radius: 3;
+    padding: 5;
+    background: #fff;
+    color: #000;
+    box-shadow: 0 0 4px #666;
+}
+
+.debuggerInfo {
+    box-shadow: 0 0 4px #666;
+    border-color: '#fff';
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+
+    background: #fff;
+    color: #000;
+
+    padding: 5;
+    margin: 10px 0 10px 0;
+
+    float: left;
+    clear: left;
+
+    width: 100%;
+
+    font-size: 75%;
+}
+
+.debuggerInfo>ul {
+    list-style-type: none;
+    padding-left: 0em;
+}
+
+.debuggerInfo>ul>li {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+/* Menu item */
+.sceneMenu>label{
+    color: black;
+    line-height:20px;
+    display:block;
+    padding: 10px 10px 10px;
+    border-color:#b0b0b0;
+    border-style:solid;
+    border-width: 1px 1px 0px 1px
+}
+
+.sceneMenu>label:hover {
+    background-color: #e0e0e0;
+}
+
+.sceneMenu>label[disabled] {
+    font-style: italic;
+    color: gray;
+}
+.sceneMenu>label:hover[disabled] {
+    background-color: #f0f0f0;
+}
+
+/* First item in list */
+.sceneMenu>.firstOption{
+    border-top-width:1px;
+    border-top-right-radius:10px;
+    border-top-left-radius:10px;
+}
+
+/* Last item in list */
+.sceneMenu>.lastOption{
+    border-bottom-width:1px;
+    border-bottom-right-radius:10px;
+    border-bottom-left-radius:10px;
+}
+
+/* Only item in list */
+.sceneMenu>.onlyOption{
+    border-width:1px;
+    border-radius:10px;
+}
+
+/* Button to advance story to next page */
+.continue {
+    display:block;
+    width:100%;
+    min-height:2em;
+    font-family: Verdana, Geneva, sans-serif;
+    font-size:30px;
+    font-weight:bold;
+    color: #f0f0f0; /* Same as body background color */ 
+    background-color: #606060; /* Darker than body background color */ 
+    border: none;
+    border-radius: 1em;
+    padding: 10px;
+}
+
+.continue:hover {
+    color: #e0e0e0;  /* Same as .sceneMenu option hover color, darker than usual foreground color */
+    background-color: #505050; /* Darker than usual background color */ 
+}
+
+/* Text input */
+.glowing-border {
+    border:2px solid #dadada;
+    border-radius:4px;
+}
+
+.glowing-border:focus { 
+    outline:none;
+    border-color:#9ecaed;
+    box-shadow:0 0 6px #9ecaed;
+}
+
+/* Horizontal status bar */
+.meter { 
+	height: 20px;  /* Can be anything */
+	position: relative;
+	background: #555;
+	-moz-border-radius: 25px;
+	-webkit-border-radius: 25px;
+	border-radius: 25px;
+	padding: 10px;
+	-webkit-box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+	-moz-box-shadow   : inset 0 -1px 1px rgba(255,255,255,0.3);
+	box-shadow        : inset 0 -1px 1px rgba(255,255,255,0.3);
+}
+
+.meter > span {
+	display: block;
+	height: 100%;
+	   -webkit-border-top-right-radius: 8px;
+	-webkit-border-bottom-right-radius: 8px;
+	       -moz-border-radius-topright: 8px;
+	    -moz-border-radius-bottomright: 8px;
+	           border-top-right-radius: 8px;
+	        border-bottom-right-radius: 8px;
+	    -webkit-border-top-left-radius: 20px;
+	 -webkit-border-bottom-left-radius: 20px;
+	        -moz-border-radius-topleft: 20px;
+	     -moz-border-radius-bottomleft: 20px;
+	            border-top-left-radius: 20px;
+	         border-bottom-left-radius: 20px;
+	background-color: rgb(43,194,83);
+	background-image: -webkit-gradient(
+	  linear,
+	  left bottom,
+	  left top,
+	  color-stop(0, rgb(43,194,83)),
+	  color-stop(1, rgb(84,240,84))
+	 );
+	background-image: -webkit-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -moz-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -ms-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	background-image: -o-linear-gradient(
+	  center bottom,
+	  rgb(43,194,83) 37%,
+	  rgb(84,240,84) 69%
+	 );
+	-webkit-box-shadow: 
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	-moz-box-shadow: 
+	  inset 0 2px 9px  rgba(255,255,255,0.3),
+	  inset 0 -2px 6px rgba(0,0,0,0.4);
+	position: relative;
+	overflow: hidden;
+}
+
+.orange > span {
+	background-color: #f1a165;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f1a165),color-stop(1, #f36d0a));
+	background-image: -webkit-linear-gradient(top, #f1a165, #f36d0a); 
+        background-image: -moz-linear-gradient(top, #f1a165, #f36d0a);
+        background-image: -ms-linear-gradient(top, #f1a165, #f36d0a);
+        background-image: -o-linear-gradient(top, #f1a165, #f36d0a);
+}
+
+.red > span {
+	background-color: #f0a3a3;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #f0a3a3),color-stop(1, #f42323));
+	background-image: -webkit-linear-gradient(top, #f0a3a3, #f42323);
+        background-image: -moz-linear-gradient(top, #f0a3a3, #f42323);
+        background-image: -ms-linear-gradient(top, #f0a3a3, #f42323);
+        background-image: -o-linear-gradient(top, #f0a3a3, #f42323);
+}
+
+.purple > span {
+	background-color: #a165f1;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #a165f1),color-stop(1, #6d0af3));
+	background-image: -webkit-linear-gradient(top, #a165f1, #6d0af3); 
+        background-image: -moz-linear-gradient(top, #a165f1, #6d0af3);
+        background-image: -ms-linear-gradient(top, #a165f1, #6d0af3);
+        background-image: -o-linear-gradient(top, #a165f1, #6d0af3);
+}
+
+.blue > span {
+	background-color: #a3a3f0;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #a3a3f0),color-stop(1, #2323f4));
+	background-image: -webkit-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -moz-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -ms-linear-gradient(top, #a3a3f0, #2323f4);
+        background-image: -o-linear-gradient(top, #a3a3f0, #2323f4);
+}
+
+.gray > span {
+	background-color: #e0e0f0;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e0e0f0),color-stop(1, #909098));
+	background-image: -webkit-linear-gradient(top, #e0e0f0, #909098); 
+        background-image: -moz-linear-gradient(top, #e0e0f0, #909098);
+        background-image: -ms-linear-gradient(top, #e0e0f0, #909098);
+        background-image: -o-linear-gradient(top, #e0e0f0, #909098);
+}
+
+.yellow > span {
+	background-color: #d1e165;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #d1e165),color-stop(1, #bdc30a));
+	background-image: -webkit-linear-gradient(top, #d1e165, #bdc30a); 
+        background-image: -moz-linear-gradient(top, #d1e165, #bdc30a);
+        background-image: -ms-linear-gradient(top, #d1e165, #bdc30a);
+        background-image: -o-linear-gradient(top, #d1e165, #bdc30a);
+}
+
+.pink > span {
+	background-color: #e165c1;
+	background-image: -webkit-gradient(linear,left top,left bottom,color-stop(0, #e165c1),color-stop(1, #e30a8d));
+	background-image: -webkit-linear-gradient(top, #e165c1, #e30a8d); 
+        background-image: -moz-linear-gradient(top, #e165c1, #e30a8d);
+        background-image: -ms-linear-gradient(top, #e165c1, #e30a8d);
+        background-image: -o-linear-gradient(top, #e165c1, #e30a8d);
+}
+
+.meterTable {
+    width: 100%;
+}
+
+.meterTableLabel {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.meterTableBar {
+    width: 100%;
+}
+
+.badgeTable {
+    width: 100%;
+}
+
+.badge {
+    white-space: nowrap;
+}
+
+.badgeIcon {
+    width: 3em;
+    height: 3em;
+}
+
+.badgeText {
+    text-align: left;
+    width: 100%;
+}
+
+
+/* Cazoo minigame environment */
+.board {
+}
+
+.cell {
+    background: #000;
+    float: left;
+}
+
+.cell:nth-child(3n){
+    background: #222;
+}
+
+.cell>img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.toolbar {
+}
+
+.toolSlot {
+    float: left;
+    padding: .1em;
+}
+
+.tool {
+    padding: .5em;
+}
+
+.toolIcon {
+    width: 3em;
+    height: 3em;
+    clear: both;
+}
+
+.toolMeter {
+    background: #eee;
+    position: relative;
+    border: 1px solid;
+    border-radius: 3px;
+    height: .5em;
+    clear: both;
+}
+
+.toolMeter > span {
+    display: block;
+    height: 100%;
+    background: #844;
+}
+
+.toolSpacer {
+    height: .25em;
+    clear: both;
+    width: 100%;
+}
+
+.unselected {
+}
+
+.unselected:hover {
+    background-color: #e0e0e0;
+}
+
+.selected {
+    background-color: #808080;
+}
+
+.selected:hover {
+}
+
+.unselectable {
+    cursor: default;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}

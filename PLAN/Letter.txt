@@ -1,6 +1,5 @@
 Debug CSS/HTML
  Faders badly broken in Safari
- Score bar is too wide in all browsers
 
 Save player ID in local storage
 

@@ -5,7 +5,7 @@ html, body {
     border: 0px;
 }
 
-html, body, .sceneMenu ul, .sceneMenu ul>li {
+html, body {
     margin: 0px; 
     padding: 0px;
     background-color: #eee;
@@ -101,7 +101,6 @@ input {
 
 /* Menu item */
 .sceneMenu>label{
-    color: black;
     line-height:20px;
     display:block;
     padding: 10px 10px 10px;
@@ -191,8 +190,8 @@ input {
 @-moz-keyframes mozRevealOpacityPulse { 0% {opacity:0;} 100% {opacity:1;} }
 .reveal {
     opacity: 1;
-    -webkit-animation: webkitRevealOpacityPulse 2s; 
-    -moz-animation: mozRevealOpacityPulse 2s; 
+    -webkit-animation: webkitRevealOpacityPulse 1s; 
+    -moz-animation: mozRevealOpacityPulse 1s; 
 }
 
 .unrevealed {

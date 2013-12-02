@@ -5,7 +5,7 @@ html, body {
     border: 0px;
 }
 
-html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMenu ul>li {
+html, body, .sceneMenu ul, .sceneMenu ul>li {
     margin: 0px; 
     padding: 0px;
     background-color: #eee;
@@ -17,11 +17,7 @@ html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMe
     background-color: #fffff8;
 }
 
-.sceneMenu select, .sceneMenu select>option {
-    font-size: medium;
-}
-
-.sceneMenuContainer {  /* LetterWriter only */
+.sceneMenuContainer {
     padding-top: 1em;
 }
 
@@ -191,26 +187,44 @@ input {
     user-select: none;
 }
 
+@-webkit-keyframes webkitRevealOpacityPulse { 0% {opacity:0;} 100% {opacity:1;} }
+@-moz-keyframes mozRevealOpacityPulse { 0% {opacity:0;} 100% {opacity:1;} }
+.reveal {
+    opacity: 1;
+    -webkit-animation: webkitRevealOpacityPulse 2s; 
+    -moz-animation: mozRevealOpacityPulse 2s; 
+}
+
+.unrevealed {
+    opacity: 0;
+}
+
 /* multiplayer */
 
-@-webkit-keyframes listenerColorPulse { 0% {color: black;} 20% {color: blue;} 100% {color: black;} }
+@-webkit-keyframes wekbitListenerColorPulse { 0% {color: black;} 20% {color: blue;} 100% {color: black;} }
+@-webkit-keyframes mozListenerColorPulse { 0% {color: black;} 20% {color: blue;} 100% {color: black;} }
 .moveListenerConnecting {
 }
 .moveListener {
     color: DarkBlue;
-    -webkit-animation: listenerColorPulse 3s infinite normal; 
+    -webkit-animation: webkitListenerColorPulse 3s infinite normal; 
+    -moz-animation: mozListenerColorPulse 3s infinite normal; 
 }
 
-@-webkit-keyframes unpublishedColorPulse { 0% {color: #400;} 100% {color: #f00;} }
-@-webkit-keyframes publishedColorPulse { 0% {color: #400;} 100% {color: black;} }
+@-webkit-keyframes webkitUnpublishedColorPulse { 0% {color: #400;} 100% {color: #f00;} }
+@-moz-keyframes mozUnpublishedColorPulse { 0% {color: #400;} 100% {color: #f00;} }
 .unpublished {
     color: #f00;
-    -webkit-animation: unpublishedColorPulse 1s; 
+    -webkit-animation: webkitUnpublishedColorPulse 1s; 
+    -moz-animation: mozUnpublishedColorPulse 1s; 
 }
 
+@-webkit-keyframes webkitPublishedColorPulse { 0% {color: #400;} 100% {color: black;} }
+@-moz-keyframes mozPublishedColorPulse { 0% {color: #400;} 100% {color: black;} }
 .published {
     color: black;
-    -webkit-animation: publishedColorPulse 1s; 
+    -webkit-animation: webkitPublishedColorPulse 1s; 
+    -moz-animation: mozPublishedColorPulse 1s; 
 }
 
 /* Restart DIV for LetterWriter */
@@ -229,7 +243,7 @@ input {
     border-style: none;
     position: fixed;
     bottom: 20;
-    max-width: 700px;
+    width: 600px;
 }
 
 .scoreContainer {
@@ -243,7 +257,7 @@ input {
     padding:2px;
     position: fixed;
     bottom: 20;
-    max-width: 700px;
+    width: 600px;
 }
 
 .scoreContainerIncreasing {
@@ -257,7 +271,7 @@ input {
     padding:2px;
     position: fixed;
     bottom: 20;
-    max-width: 700px;
+    width: 600px;
 }
 
 .scoreContainerDecreasing {
@@ -271,7 +285,7 @@ input {
     padding:2px;
     position: fixed;
     bottom: 20;
-    max-width: 700px;
+    width: 600px;
 }
 
 .scoreDeltaPositive {
@@ -644,18 +658,13 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#gameAndParseTreeContainer>#gameContainer {
-    max-width: 700px;
+    width: 600px;
     position: relative;
     margin: 10px auto; 
     padding: 0 10px;
 
     min-height: 600px;
     float: left;
-/* Commented out to get scoreContainer aligned...
-    width: 49%;
-    margin: 20px 10px 10px 20px;
-    padding: 0 2px 0 2px;
-*/
     margin:2px;
     padding:2px;
 
@@ -667,10 +676,10 @@ body>.ui-tooltip {
 }
 
 #letterDebugger>#gameAndParseTreeContainer>#editorParseTreeContainer {
-    width: 48%;
+    width: 40%;
     min-height: 592px;  /* 600px minus top & bottom padding */
     float: left;
-    margin: 20px 0px 10px 0px;
+    margin: 2px;
     padding: 4px;
 
     border: 1px solid;

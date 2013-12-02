@@ -13,16 +13,8 @@ html, body, .sceneMenu select, .sceneMenu select>option, .sceneMenu ul, .sceneMe
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
-.letterWriterBody {
-    background-color: #fffff8;
-}
-
 .sceneMenu select, .sceneMenu select>option {
     font-size: medium;
-}
-
-.sceneMenuContainer {  /* LetterWriter only */
-    padding-top: 1em;
 }
 
 textarea {

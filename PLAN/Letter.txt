@@ -1,6 +1,3 @@
-Debug CSS/HTML
- Faders badly broken in Safari
-
 Save player ID in local storage
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner

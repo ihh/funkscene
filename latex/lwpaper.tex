@@ -18,8 +18,9 @@ Ian Holmes\\
 
 \maketitle
 \begin{abstract}
-Multiplayer choose-your-own stories based on context-free grammars.
-Fully self-contained editor (with map overview), parse tree debugger, network player.
+Choice-based interactive fiction can be based on context-free grammars.
+This paper describes a fully self-contained interactive development environment for such stories,
+with a map overview, parse tree debugger, and network client for multiplayer games.
 \end{abstract}
 
 % A category with the (minimum) three required fields
@@ -30,50 +31,45 @@ Fully self-contained editor (with map overview), parse tree debugger, network pl
 
 \section{Introduction}
 
-Context-free grammars (CFGs) are models for the syntactic structure of text,
-allowing hierarchical, recursive and repetitive patterns.
-The CFG may be viewed as a generalization of the {\em regular grammar}
-(the model underpinning regular expressions).
-Just as regular grammars are related to finite-state machines,
-CFGs are related to {\em pushdown automata} (finite state machines with pushdown stacks).
+Choice-based interactive fiction came of age in the 1980's:
+Choose Your Own Adventure, Fighting Fantasy, and Lone Wolf were well-known imprints.
+The genre has seen an early 21st-century resurgence with the advent of writing tools
+(from domain-specific languages like ChoiceScript, to interactive editors like Twine)
+which have lowered the barriers to game creation and increased the diversity of authorial voices.
 
+A choice-based story can be compared to a flowchart, or a state machine,
+or (in the language of grammar theory) a {\em regular grammar}.
+The main control-flow construct is the conditional {\tt GOTO} statement
+(``{\em if you have the chalice, turn to page 400}'').
+The structure of the story is a linear progression of scenes.
 
-What is a CFG?
-How does a CFG subsume the state machine of an FSA?
-How is a CFG like a pushdown automaton?
-How is a CFG like CYOA with GOSUB?
-How is a CFG like CYOA with continuation-passing style?
-How does an SCFG subsume a CFG? (Turing wanted true randomness in all computers...)
+In modeling many kinds of text, it is often useful to allow a richer structure.
+For example, conversations often make diversions (sometimes multiply nested diversions) before returning to the central topic.
+Epic adventures can include side-quests; stories often have epilogues.
 
-\cite{DBLP:conf/icalp/EtessamiWY08}
+This sort of structure can be modeled using a {\em context-free grammar} (CFG).
+If a typical choice-based story (with a regular grammar) is akin to a state machine,
+ whose main control-flow construct is {\tt GOTO},
+then a CFG-based story is like a pushdown automaton (a finite-state machine with a stack)
+ which allows not only {\tt GOTO} but also {\tt GOSUB}.
 
-Grammars as metaphysical systems
-\cite{SanskritSutras}
-\cite{Priscian}
+To extend choice-based stories in this way might indicate an excessive fondness for formalism.
+However, a well-defined framework provides a robust foundation.
+Here, we describe a software system that allows authoring of story CFGs
+via an interface inspired by graphical editors like Twine and domain-specific languages like ChoiceScript.
+The created games can be played over the web by multiple players in different locations.
 
-Grammars as tools of social unification and control
-\cite{AcademieFrancaise}
-\cite{RobertLowth}
-
-Formal grammars and commonalities of human language
-\cite{Chomsky}
-
-Grammars and compilers
-\cite{AhoLamSethiUllmanCompilersDragonBook}
-
-Games and scripts
-\cite{EricBerneGamesPeoplePlay,EricBerneWhatDoYouSayAfterYouSayHello}
-
-Grammars in graphics and games
-\cite{LSystems}
-\cite{Sims3}
-
-Grammars in DNA sequence analysis
-\cite{Durbin98}
-
-Choose-your-own story engines and interactive authoring environments
-\cite{Twine,InkleWriter,ChoiceScript,Undum,RenPy}
-
+One typical advantage of a formal framework is a rich variety of links to other areas of culture.
+Grammars have variously served as metaphysical systems\cite{SanskritSutras,Priscian},
+tools of social unification and control\cite{AcademieFrancaise,RobertLowth},
+and models of natural language\cite{Chomsky}.
+They have been used in compiler theory\cite{AhoLamSethiUllmanCompilersDragonBook},
+DNA sequence analysis\cite{Durbin98},
+computer graphics\cite{LSystems}, and game AI\cite{Sims3}.
+There is even a literature on game-theoretic analysis of grammar-based games
+\cite{DBLP:conf/icalp/EtessamiWY08}.
+The idea of templates and scripts for social interactions has a rich history in popular psychology\cite{EricBerneGamesPeoplePlay,EricBerneWhatDoYouSayAfterYouSayHello}.
+All of the above influences offer a source of inspiration for single- and multiplayer game design.
 
 \section{Design}
 
@@ -117,7 +113,7 @@ and {\tt prompt} is text, also transiently displayed, that is associated with th
 As with other parts of the syntax beyond the core idea of a context-free transformation rule,
 the preamble and/or placeholder can be omitted.
 
-Here is an actual working example \cite{ChoiceOfGamesBlog}:
+Here is an example:
 \begin{verbatim}
  @unrest =>
 [ The peasants are revolting. 
@@ -296,10 +292,6 @@ Prototype of parser-based play developed using Perl.
 \subsection{Availability}
 
 {\tt https://github.com/ihh/funkscene}
-
-\section{References}
-
-%Recursive Stochastic Games with Positive Rewards. Etessami, Wojtczak, Yannakakis. Automata, Languages and Programming. Lecture Notes in Computer Science Volume 5125, 2008, pp 711-723
 
 \bibliography{lwpaper}
 

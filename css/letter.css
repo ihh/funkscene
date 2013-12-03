@@ -3,18 +3,18 @@
 /*  Main body */
 html, body {
     border: 0px;
-}
-
-html, body {
     margin: 0px; 
     padding: 0px;
-    background-color: #eee;
     color: black;
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
-.letterWriterBody {
+.letterWriterBackground {
     background-color: #fffff8;
+}
+
+.letterWriterBody {
+    margin: 0 20px 0 20px; /* top right bottom left */
 }
 
 .sceneMenuContainer {
@@ -57,6 +57,7 @@ input {
 .sliderlabel {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
     font-size: small;
+    color: white;
 }
 
 .slidermin {
@@ -91,12 +92,18 @@ input {
 
 #sliders {
     border: 1px inset #fff;
-    border-radius: 4px 0 4px 0;
-    box-shadow: 0 0 2px #888;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
+    border-radius: 20px;
+    box-shadow: 0 0 2px #000;
+    -moz-border-radius: 20px;
+    -webkit-border-radius: 20px;
     padding: 10px 20px 10px 20px;
-    background: #f8f8f8;
+}
+
+.slidersBackground {
+    background: #505050;
+    border-color: #202020;
+    color: #f0f0f0;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 /* Menu item */
@@ -234,6 +241,7 @@ input {
 /* Menu DIV for LetterWriter */
 .topLinksContainer {
     text-align: center;
+    font-family: Verdana, Geneva, sans-serif;
 }
 
 /* Score DIVs for LetterWriter */
@@ -252,8 +260,6 @@ input {
     border-style: solid;
     border-width: 1px;
     border-radius: 3px;
-    margin:2px;
-    padding:2px;
     position: fixed;
     bottom: 20;
     width: 600px;
@@ -266,8 +272,6 @@ input {
     border-style: solid;
     border-width: 1px;
     border-radius: 3px;
-    margin:2px;
-    padding:2px;
     position: fixed;
     bottom: 20;
     width: 600px;
@@ -280,8 +284,6 @@ input {
     border-style: solid;
     border-width: 1px;
     border-radius: 3px;
-    margin:2px;
-    padding:2px;
     position: fixed;
     bottom: 20;
     width: 600px;
@@ -344,7 +346,6 @@ h5 {
 
 /* NontermEditor */
 #editor {
-    margin: 0 20px 0 20px; /* top right bottom left */
     padding: 0;
     clear: both;
 }
@@ -622,7 +623,20 @@ body>.ui-tooltip {
     border-radius: 4px;
     -moz-border-radius: 4px;
     -webkit-border-radius: 4px;
+}
 
+.editorPane {
+    border: 1px solid;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    padding: 1px;
+    margin: 1px;
+}
+
+.debuggerPane {
+    background: #fffff0;
+    box-shadow: 0 0 4px #666;
 }
 
 #letterDebugger>#editorMapContainer {
@@ -632,14 +646,6 @@ body>.ui-tooltip {
     clear: both;
     margin: 0;
     padding: 4px;
-
-    border: 1px solid;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-
-    background: #fffff0;
-    box-shadow: 0 0 4px #666;
 }
 
 #letterDebugger>#editorMapContainer>#editorMap {
@@ -668,26 +674,15 @@ body>.ui-tooltip {
     padding:2px;
 
     background: #eee;
-    border: 1px solid;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
 }
 
 #letterDebugger>#gameAndParseTreeContainer>#editorParseTreeContainer {
     width: 40%;
+    min-width: 600px;
     min-height: 592px;  /* 600px minus top & bottom padding */
-    float: left;
+    float: right;
     margin: 2px;
     padding: 4px;
-
-    border: 1px solid;
-    border-radius: 4px;
-    -moz-border-radius: 4px;
-    -webkit-border-radius: 4px;
-
-    background: #fffff0;
-    box-shadow: 0 0 4px #666;
 }
 
 #letterDebugger>#gameAndParseTreeContainer>#editorParseTreeContainer>#editorParseTree {

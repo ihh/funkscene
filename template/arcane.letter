@@ -34,8 +34,8 @@ It is my heart's desire to obtain}
 @apart_from_my_studies I greatly enjoy extracurricular activities. @extracurricular_activities|My background=>@my_background}
 @my_background => [_It never hurts to add a personal touch._
 |...<br>|What kind of childhood did you have?]{Privileged=>I am acutely aware that my education at the Red Dragon School and Winchester Academy of Magic represents a degree of privilege unavailable to most, and I am firmly committed to making the most of these early chances.|Comfortable=>Growing up, I was fortunate to have well-off parents and an excellent education.|Tough=>@triumph_over_hardship}
-random @apart_from_my_studies => [apart from my studies?]{Choose me!=>Apart from my studies, |Choose me!=>As well as my studies, |Choose me!=>When I am not studying, }
-random @among_my_virtues => [among my virtues?]{Choose me!=>Among my virtues is the fact that |Choose me!=>One of my many good qualities is that |Choose me!=>I would like to point out that |Choose me!=>My many favorable qualities include that}
+random @apart_from_my_studies => [apart from my studies?]{1=>Apart from my studies, |1=>As well as my studies, |1=>When I am not studying, }
+random @among_my_virtues => [among my virtues?]{1=>Among my virtues is the fact that |1=>One of my many good qualities is that |1=>I would like to point out that |1=>My many favorable qualities include that}
 @triumph_over_hardship => [_You've faced way more than the usual challenges facing entrants to Arcane. No silver-spoon privileged track for you. Tell them about it._|What was the hardest thing about my childhood?]{My orcish ancestry lends an undeserved reputation for evil=>@life_of_an_orc|My family is not in one of the wealthy Houses=>Arcane's commitment to advancing the underprivileged is important to me, having grown up without many of the advantages that today's wizarding youth enjoy.  @explanation_of_poverty|I was injured by a magical curse=>When I was six years old, I woke early one morning and ran into the back yard. Lying against the shed was a giant puffball -- a fluffy marshmallow of fungal spores. I kicked it joyously, unaware that such puffballs are often home to the NanoFey...
 
 @stalk}
@@ -95,13 +95,13 @@ random @nasty_fluid => [computer phrase extracurricular activities2?]{spit|blood
 random @monsters => [computer phrase extracurricular activities1?]{vampires|lycanthropes|@nasty_fluid-demons}
 @my_sporting_prowess => [I'm a keen athlete. Every weekend, I play ||What sport?]{Broom-based softball=>aerial softball, having developed my flying skills to a high level of proficiency.|Blind soccer=>soccer, using permanently invisible balls.|Golem wrestling=>wrestling with mud-based and (more recently) igneous pumice-based golems.}
 @my_leadership_qualities => [In particular, I have led |...<br>|What did you lead?]{An expedition to the lost pyramid of Mentuhotep=>an expedition to discover the magical treasures of the lost pyramid of Mentuhotep, which despite being (ultimately) unsuccessful, led all seven of us to develop extensive skills in the misdirection and evasion of international police.|A death metal band=>a musical ensemble of my peers (we enjoyed attention from record labels and even some modest success with our cover of "Bohemian Abattoir").|The school debating team=>my high school debating team, where (in addition to leading a group of five eager rhetoricians) I was able to practice both my offensive and defensive Deep Empathy techniques.}
-@yours_sincerely_etc => [What formal closing to use?]{Choose me!=>}
+@yours_sincerely_etc => [What formal closing to use?]{1=>}
 pause @faculty[twice]  => [_This is usually the part of the letter where you say who you want to work with.
 <br>|Let's namedrop a few faculty.]{Professor Dwarfenstein[once] =>@work_with Professor Dwarfenstein.
 @faculty|Dr Ogre[once] =>@work_with Dr Ogre.
 @faculty|Professor Whiskers[once] =>@work_with Professor Whiskers.
 @faculty|I think I've done enough namedropping=>I would of course be interested in working with any faculty who might be available to mentor me.}
-random @work_with => [work with?]{Choose me!=>I'd like to work with|Choose me!=>I would relish the opportunity to work with|Choose me!=>I'd very much like to work with|Choose me!=>It has long been a dream of mine to work with|Choose me!=>It would be a great privilege to collaborate with|Choose me!=>I have long held the desire to exchange ideas with|Choose me!=>I would very much appreciate the honor of working with}
+random @work_with => [work with?]{1=>I'd like to work with|1=>I would relish the opportunity to work with|1=>I'd very much like to work with|1=>It has long been a dream of mine to work with|1=>It would be a great privilege to collaborate with|1=>I have long held the desire to exchange ideas with|1=>I would very much appreciate the honor of working with}
 @transformation_into_hero => [What do you want to say about the transformation you underwent?]{Tell them about the artefact=>_The Silverfish is not, in fact, a fish; it is an Annelid. (It is, however, made of silver.)_
 _The Annelida are the phylum of the ringworms, and the leeches. Annelids have a spiral body plan, quite unlike our own. The larger representatives of the species look truly alien when they writhe._
 _You remember the first time you saw the Silverfish, in the hand of the crone. You shudder, briskly._
@@ -116,11 +116,11 @@ _Love! There's a memory. Difficult to love a liar. Especially difficult if the l
 _What are the odds? As if the racist prejudice about dark elves isn't bad enough, you then get cursed with the ability to compulsively "polish" the truth? It's almost as if that witch had it in for you._
 I learned great respect for integrity, as a part of the character-building process that led me to my secret hero power.}
 @my_relevant_experience => [What experience have you gained already?]{Tell them about that quest thing I did=>@quest|Tell them about my internship=>@apprenticeship|Tell them about my independent research project=>@research_project|Tell them about the conferences you've attended=>My magical experience has been greatly augmented by exposure to cutting-edge thaumaturgical research at conferences such as @conference, @conference, and @conference.}
-random @conference => [conference?]{Choose me![once] =>@pop_culture_conference|Choose me![once] =>@tech_conference|Choose me![once] =>@political_conference|Choose me!=>@magic_conference}
-random @magic_conference => [magic conference?]{Choose me![once] =>the Aprille Confederation on Chyromancie|Choose me![once] =>the NorCal Renaissance Faire's Satellite Meeting on Sex Charms|Choose me![once] =>Gongfest International|Choose me![once] =>SweatLodger|Choose me![once] =>CovenCon|Choose me![once] =>WizMoot|Choose me![once] =>VisionQuest|Choose me![once] =>the Pan-American Seminar on Entheogens|Choose me![once] =>the Annual Revenge Federation}
-random @pop_culture_conference => [conference?]{Choose me![once] =>WorldCon|Choose me![once] =>Lollapalooza|Choose me![once] =>Glastonbury|Choose me![once] =>Burning Man|Choose me![once] =>Coachella|Choose me![once] =>Rainbow Gathering|Choose me![once] =>the San Francisco Bay Area Interactive Fiction Meetup}
-random @tech_conference => [conference?]{Choose me![once] =>DefCon|Choose me![once] =>Biology of Genomes|Choose me![once] =>Black Hat|Choose me![once] =>Evolution|Choose me![once] =>the Game Developers Conference|Choose me![once] =>the Indie Game Jam|Choose me![once] =>Neural Information Processing Systems}
-random @political_conference => [conference?]{Choose me![once] =>Women in Secularism|Choose me![once] =>the Republican National Convention|Choose me![once] =>Marxism 2013|Choose me!=>Netroots Nation}
+random @conference => [conference?]{1[once] =>@pop_culture_conference|1[once] =>@tech_conference|1[once] =>@political_conference|1=>@magic_conference}
+random @magic_conference => [magic conference?]{1[once] =>the Aprille Confederation on Chyromancie|1[once] =>the NorCal Renaissance Faire's Satellite Meeting on Sex Charms|1[once] =>Gongfest International|1[once] =>SweatLodger|1[once] =>CovenCon|1[once] =>WizMoot|1[once] =>VisionQuest|1[once] =>the Pan-American Seminar on Entheogens|1[once] =>the Annual Revenge Federation}
+random @pop_culture_conference => [conference?]{1[once] =>WorldCon|1[once] =>Lollapalooza|1[once] =>Glastonbury|1[once] =>Burning Man|1[once] =>Coachella|1[once] =>Rainbow Gathering|1[once] =>the San Francisco Bay Area Interactive Fiction Meetup}
+random @tech_conference => [conference?]{1[once] =>DefCon|1[once] =>Biology of Genomes|1[once] =>Black Hat|1[once] =>Evolution|1[once] =>the Game Developers Conference|1[once] =>the Indie Game Jam|1[once] =>Neural Information Processing Systems}
+random @political_conference => [conference?]{1[once] =>Women in Secularism|1[once] =>the Republican National Convention|1[once] =>Marxism 2013|1=>Netroots Nation}
 random @research_project[once]  => [research project?]{In my gap year, I undertook a research project. This project led to certain consequences, viz. the accidental loosing of a nameless evil upon the world, with attendant destruction.
 @accidental_unleashing_of_nameless_evil
 
@@ -281,7 +281,7 @@ _Next - again, not sure how - you were in the room. Rastlim was hunched over the
 @inside_dream_room}
 @porcupine => [_"Really?" you stammered. "Porcupine?" She looked away._
 ||Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@outside_dream_room}
-random @memory_of_apprenticeship => [memory?]{Choose me![once] =>_Faint impressions of your apprenticeship rub against each other, like whispers in a vaulted hall..._|Choose me!=> }
+random @memory_of_apprenticeship => [memory?]{1[once] =>_Faint impressions of your apprenticeship rub against each other, like whispers in a vaulted hall..._|1=> }
 random @witches => [witches?]{_It was several weeks into the internship that you first saw the witches. Glimpses, at first, through a window or an archway. Only one at a time, to begin with; always dressed in white robes, always mute. You gave them names: the tall one, the strong one, the spiky one._
 
 _One month into the program, they were waiting in your dorm. They spoke for the first time, each introducing themselves by name: Amelie Long, Suzi Bond, and Porcupine._
@@ -350,7 +350,7 @@ _You still remember the moment when you first knew you'd be good at this work. T
 _Little is known of the book, obscured as it is by tales of curse, tragedy, and ill portent. As well it should be: the Egyptian stories had no word for bacteria, nor any concept that the human skin was crawling with them. The trillion voices quickly overwhelmed any untrained initiate who read the book._
 
 _But this is all a distraction._}
-random @dispel => [dispel?]{Choose me!=>_You wipe the dangerous memories from your mind._
+random @dispel => [dispel?]{1=>_You wipe the dangerous memories from your mind._
 }
 @natural_talent => [Indulge these recollections?]{No, that would be rash=>@dispel|Just a little=>@book_of_thoth}
 @apprenticeship_outcome => [So how did the apprenticeship go?]{Tell them it was a very successful apprenticeship=>My apprenticeship was a great success. @success_of_my_apprenticeship |Admit the project did not work out, but not for want of trying=>Surveying my apprenticeship with hindsight, it was not the greatest success; but this was not for want of effort on my behalf. @failure_of_my_apprenticeship}
@@ -369,5 +369,5 @@ Specifically, |Specifically what?]{Trance states=>Specifically, |Shade invocatio
 |...<br>Of course, they'll know there is a cost...<br>|What spin on the truth do you put?]{That healing is always a zero-sum game=>|That magic attracts daemons=>|Tell them about Uncle Robert=>}
 @my_highly_sought_specialty => [_Everyone says, if you're going to impress them, you need to talk about your academic specialization._
 |What about your specialization makes it so special?]{I'm a healer. Everyone loves a healer.=>@i_am_a_healer|I can go back in time. On short trips.=>@i_can_reverse_time|Your dead? I can raise them.=>@i_can_raise_the_dead|Tell the truth.=>@no_truth  @my_highly_sought_specialty}
-random @no_truth => [no truth?]{Choose me!=>_You long to tell the truth, about your real ability. But of course, you can't._|Choose me!=>_Your true specialization is on the tip of your tongue. You might say it IS the tip of your tongue. But you aren't going to write about it. Dream on._|Choose me!=>_Naturally, the very nature of your superpower makes it unlikely you will tell them what it really is._|Choose me!=>_If only you could tell them your true specialization. But by it's nature... you can't do that._}
+random @no_truth => [no truth?]{1=>_You long to tell the truth, about your real ability. But of course, you can't._|1=>_Your true specialization is on the tip of your tongue. You might say it IS the tip of your tongue. But you aren't going to write about it. Dream on._|1=>_Naturally, the very nature of your superpower makes it unlikely you will tell them what it really is._|1=>_If only you could tell them your true specialization. But by it's nature... you can't do that._}
 @dedication_to_specialist_field => [dedication to field of magic?]{My discipline is highly sought after=>@my_highly_sought_specialty|I'm experienced at fieldwork=>@my_love_of_fieldwork|I have research experience in magical names and theory=>@my_talent_for_magical_naming}

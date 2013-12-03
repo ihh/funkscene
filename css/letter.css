@@ -9,8 +9,12 @@ html, body {
     font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
 }
 
-.letterWriterBackground {
+.letterWriterBackgroundPlayMode {
     background-color: #fffff8;
+}
+
+.letterWriterBackgroundEditMode {
+    background-color: #eee;
 }
 
 .letterWriterBody {
@@ -673,7 +677,12 @@ body>.ui-tooltip {
     min-height: 592px;
 }
 
+.hiddenByYoungerNode {
+    display: none;
+}
+
 .parseTreeHighlight {
+    display: inline;
     background: blue;
     color: yellow;
 }

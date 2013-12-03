@@ -1,5 +1,11 @@
 Save player ID in local storage
 
+Preamble should be fully RHS-like: allow NontermReference, ParamAssignment, ParamReference symbols.
+ Treat it as an implied computer-played symbol:
+  random @nontermWithPreamble => { @preamble @nonterm }
+ Implement using rhsUnexpandedNodes in Rule.prototype.expand
+Placeholder, Prompt and Hints should allow ParamReference.
+
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
 
 Role assignment ideas:

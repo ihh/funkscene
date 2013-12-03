@@ -322,6 +322,15 @@ input {
     width: 100%;
 }
 
+.topLinkButton {
+}
+
+.topLinkButton a:link {
+}
+
+.topLinkButton a:visited {
+}
+
 /* Editor headings */
 h5 {
     -webkit-margin-before: 0em;

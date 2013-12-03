@@ -61,14 +61,12 @@ If a typical choice-based story (with a regular grammar) is akin to a state mach
 then a CFG-based story is like a pushdown automaton (a finite-state machine with a stack)
  which allows not only {\tt GOTO} but also {\tt GOSUB}.
 
-To extend choice-based stories in this way might indicate an excessive fondness for formalism.
-However, a well-defined framework provides a robust foundation.
-
 In this abstract we describe LetterWriter, a software system that allows authoring of story CFGs
 via an interface inspired by graphical editors like Twine and domain-specific languages like ChoiceScript.
 The created games can be played over the web by multiple players in different locations.
 
-One typical advantage of a formal framework is a rich variety of links to other areas of culture.
+To extend choice-based stories in this way might indicate an excessive fondness for formalism.
+However, a well-defined framework provides a robust foundation, as well as a rich variety of links to other areas of culture.
 Grammars have variously served as metaphysical systems\cite{Ashtadhyayi,luhtala2005grammar},
 tools of social unification and control\cite{AcademieFrancaise,RobertLowth},
 and models of natural language\cite{Durbin98}.
@@ -88,36 +86,38 @@ All of the above influences offer a source of inspiration for single- and multip
 The application is based around
 a declarative, domain-specific language for specifying an attributed CFG.
 
-The core element in this grammar, syntactically and semantically, is the {\em transformation rule}.
+The core element in this grammar, syntactically and semantically, is the {\em transformation rule},
+delineated by curly braces and the two characters {\tt =>}
 \begin{verbatim}
- @scene => { hint => expansion }
+ @scene
+  => { This is a hint. => This is its expansion. }
 \end{verbatim}
-In this, {\tt @scene} is a label denoting the current scene;
-{\tt hint} is text presented to the player as a choice;
-and {\tt expansion} is text that will be generated if the player makes this choice
-(which can include further scene labels).
+In this, {\tt scene} is an alphanumeric label denoting the current scene;
+{\tt This is a hint} is text presented to the player as a choice;
+and {\tt This is its expansion} is the text generated if the player makes this choice,
+which can include further scene labels.
 
 A block of transformation rules represents a list of choices:
 \begin{verbatim}
- @scene => { hint1 => expansion1
-           | hint2 => expansion2
-           | hint3 => expansion3 }
+ @scene => { First hint => First expansion
+           | Second hint => Second expansion
+           | Third hint => You get the picture }
 \end{verbatim}
 Any number of ({\tt hint},{\tt expansion}) tuples are allowed.
-Whitespace can be ignored (although it is preserved in rendered text),
-and the {\tt hint=>} can be omitted as well.
+Whitespace can be ignored (although it is preserved in hint and expansion text),
+and the hint itself (along with the {\tt =>}) can be omitted as well.
 There is also an optional longer form
 \begin{verbatim}
- @scene => [ preamble | placeholder | prompt ]
-           { hint1 => expansion1
-           | hint2 => expansion2
-           | hint3 => expansion3 }
+ @scene => [ Preamble | Placeholder | Prompt ]
+           { Hint 1 => Expansion 1
+           | Hint 2 => Expansion 2
+           | Hint 3 => Expansion 3 ... }
 \end{verbatim}
 
-Here, {\tt preamble} is text describing the scene;
-{\tt placeholder} is text temporarily displayed at the bottom of the scene (before the list of choices),
+Here, {\tt Preamble} is text describing the scene;
+{\tt Placeholder} is text temporarily displayed at the bottom of the scene (before the list of choices),
 and deleted when an expansion is selected;
-and {\tt prompt} is text, also transiently displayed, that is associated with the list of choices.
+and {\tt Prompt} is text, also transiently displayed, that is associated with the list of choices.
 (Typically the prompt takes the form of a question addressed directly to the player.)
 
 As with other parts of the syntax beyond the core idea of a context-free transformation rule,
@@ -137,14 +137,15 @@ Here is an example:
       @revolt }
 \end{verbatim}
 
-The words ``{\em So tedious...}'' will disappear when a selection is made; being wrapped in underscores, they will also appear in italics, as a result of the Markdown-like macro transformation.
+The preamble ``{\em So tedious...}'' will disappear when a selection is made; being wrapped in underscores, the words will also appear in italics, as a result of the Markdown-like macro transformation.
 The prompt ``What will you do?'' will also disappear when a selection made.
 (In multiplayer mode, the prompt is only shown to the active player.)
 
 
 
-In the terminology of formal grammar theory: the scene label {\tt \@scene} is a {\em nonterminal symbol},
-whereas other rendered text is composed of {\em terminal symbols} (ASCII characters).
+In the terminology of formal grammar theory: the scene label {\tt \@scene}, which appears on the left-hand-side of the rule, is a {\em nonterminal symbol}.
+Each expansion is a mixture of {\em terminal symbols} (ordinary rendered text, consisting of HTML tags and ASCII characters) and nonterminal symbols.
+
 Nonterminal symbols denote points in the text (scenes) where further expansion is possible;
 terminal symbols denote static endpoints of the text.
 The preamble, placeholder, prompt and hint are {\em attributes}

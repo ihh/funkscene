@@ -144,7 +144,7 @@ The prompt ``What will you do?'' will also disappear when a selection made.
 (In multiplayer mode, the prompt is only shown to the active player.)
 
 An expansion can contain multiple scene labels, or none. This feature distinguishes the CFG from the less-expressive regular grammar.
-In automata theory, it implies a pushdown stack, a.k.a. {\tt GOSUB}.
+From the viewpoint of automata theory, it implies a pushdown stack, a.k.a. {\tt GOSUB}.
 This is good for scheduling scenes in sequence, e.g. the four stages of the Hero's Journey
 \begin{verbatim}
  @quest =>
@@ -258,7 +258,7 @@ The author can mouse-over a node to highlight incoming \& outgoing edges.
 
 The parse tree is visualized using the same graph library as the map (Figure~\ref{fig:tree}, right).
 The various types and status of nodes (terminals; expanded \& unexpanded nonterminals (player- and computer-controlled); parameter references, assignments \& inputs) is indicated via size and coloring.
-The author can mouseover nodes for more info (e.g. the order and time of expansion).
+The tester can mouseover nodes to highlight the expanded text, and see order and time of expansion.
 Clicking on a node navigates to the corresponding nonterminal pane in the editor.
 
 \subsection{Game client}
@@ -287,7 +287,7 @@ and one computer player (for automatic choices).
 
 Multiplayer mode is implemented using a third-party publish-subscribe (pub-sub) framework.
 Games are organized on an invitation channel and then take place on an hierarchically-structured
-play channel, with one channel for each node of the parse tree.
+set of play channels, with one channel for each node of the parse tree.
 CSS animations report
  (a) publication of rules to the pub-sub server (for locally-controlled node expansions),
  (b) subscription of a listener at a particular point in the parse tree (for remotely-controlled nodes).

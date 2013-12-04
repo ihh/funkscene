@@ -87,15 +87,16 @@ The application is based around
 a declarative, domain-specific language for specifying an attributed CFG.
 
 The core element in this grammar, syntactically and semantically, is the {\em transformation rule},
-delineated by curly braces and the two characters {\tt =>}
+delineated by curly braces and the two characters ``{\tt =>}''
 \begin{verbatim}
  @scene
-  => { This is a hint. => This is its expansion. }
+  => { This is a hint.
+   => This is its expansion, leading to @next_scene. }
 \end{verbatim}
-In this, {\tt scene} is an alphanumeric label denoting the current scene;
-{\tt This is a hint} is text presented to the player as a choice;
-and {\tt This is its expansion} is the text generated if the player makes this choice,
-which can include further scene labels.
+In this, ``{\tt @scene}'' and ``{\tt @next\_scene}'' are labels denoting (respectively) the current and upcoming scenes;
+``{\tt This is a hint}'' is {\em hint text} presented to the player as a choice;
+and ``{\tt This is its expansion, leading to @next\_scene}'' is the {\em expansion text} generated if the player makes this choice
+(note that the expansion text includes another scene label).
 
 A block of transformation rules represents a list of choices:
 \begin{verbatim}
@@ -103,10 +104,15 @@ A block of transformation rules represents a list of choices:
            | Second hint => Second expansion
            | Third hint => You get the picture }
 \end{verbatim}
-Any number of ({\tt hint},{\tt expansion}) tuples are allowed.
-Whitespace can be ignored (although it is preserved in hint and expansion text),
-and the hint itself (along with the {\tt =>}) can be omitted as well.
-There is also an optional longer form
+Any number of ``{\tt hint => expansion}'' rules are allowed.
+Rules can also be declared separately:
+\begin{verbatim}
+ @scene => { First hint => First expansion }
+ @scene => { Second hint => Second expansion }
+ @scene => { Third hint => You get the picture }
+\end{verbatim}
+
+An optional longer form includes additional text fields:
 \begin{verbatim}
  @scene => [ Preamble | Placeholder | Prompt ]
            { Hint 1 => Expansion 1
@@ -118,15 +124,11 @@ Here, {\tt Preamble} is text describing the scene;
 {\tt Placeholder} is text temporarily displayed at the bottom of the scene (before the list of choices),
 and deleted when an expansion is selected;
 and {\tt Prompt} is text, also transiently displayed, that is associated with the list of choices.
-(Typically the prompt takes the form of a question addressed directly to the player.)
 
-As with other parts of the syntax beyond the core idea of a context-free transformation rule,
-the preamble and/or placeholder can be omitted.
-
-Here is an example:
+Typically the prompt takes the form of a question addressed directly to the player:
 \begin{verbatim}
  @unrest =>
-[ The peasants are revolting. 
+[ "Sire, the peasants are revolting."
   | _So tedious..._ 
   | What will you do? ] 
 { Feed them.
@@ -141,9 +143,18 @@ The preamble ``{\em So tedious...}'' will disappear when a selection is made; be
 The prompt ``What will you do?'' will also disappear when a selection made.
 (In multiplayer mode, the prompt is only shown to the active player.)
 
+An expansion can contain multiple scene labels, or none. This feature distinguishes the CFG from the less-expressive regular grammar.
+In automata theory, it implies a pushdown stack, a.k.a. {\tt GOSUB}.
+This is good for scheduling scenes in sequence, e.g. the four stages of the Hero's Journey
+\begin{verbatim}
+ @quest =>
+ [ Do you accept the Monomyth?? ]
+ { No => Have a happy life eating mush.
+ | Yes => @separate @descend @ascend @unify }
+\end{verbatim}
 
 
-In the terminology of formal grammar theory: the scene label {\tt \@scene}, which appears on the left-hand-side of the rule, is a {\em nonterminal symbol}.
+In the terminology of formal grammar theory: the scene labels ({\tt @scene}, {\tt @quest}, {\tt @next\_scene}) which appear before the first ``{\tt =>}'' sign and also (sometimes) flanked by text in the expansions, are {\em nonterminal symbols}.
 Each expansion is a mixture of {\em terminal symbols} (ordinary rendered text, consisting of HTML tags and ASCII characters) and nonterminal symbols.
 
 Nonterminal symbols denote points in the text (scenes) where further expansion is possible;
@@ -156,7 +167,7 @@ Special characters such as {\tt \$@[]\{\}} can be escaped with a backslash if re
 Quotation marks and other common punctuation are not special characters and can be used directly, as can HTML tags.
 Some syntactic sugar for HTML tags (e.g. flanking underscores for italics) is borrowed from Markdown \cite{Markdown}.
 
-Starting from an initial designated nonterminal (named {\tt @start} by default),
+Starting from a designated initial nonterminal (named {\tt @start} by default),
 iterated application of these rules generates a {\em parse tree} (Figure~\ref{fig:tree}, right),
 with nonterminal symbols at internal nodes and terminal symbols at the tips.
 The final text can be read off from the terminals at the leaf nodes (Figure~\ref{fig:tree}, left).
@@ -220,7 +231,7 @@ and also to the map view.
 
 Another drag-and-drop sortable list specifies the parameters that the player
 can set directly via slider controls.
-A few properties of the grammar (such as its title) can be directly edited.
+Some properties of the grammar (e.g. its title) can be directly edited.
 
 \subsection{Map}
 
@@ -257,8 +268,7 @@ Minimal styling is used to present choice lists and animate key events,
 e.g. fading-in of newly-rendered text.
 
 An ``undo'' button with gradually-increasing recharge time is offered as an optional game mechanic for solo play.
-(The complications of implementing ``undo'' in multiplayer play were eschewed;
- we observe in any case that ``undo'' is rarely a participation-enhancing mechanic for choose-your-own games.)
+(The complications of implementing multiplayer ``undo'' were eschewed.)
 
 \subsection{Multiplayer operation}
 
@@ -278,9 +288,9 @@ and one computer player (for automatic choices).
 Multiplayer mode is implemented using a third-party publish-subscribe (pub-sub) framework.
 Games are organized on an invitation channel and then take place on an hierarchically-structured
 play channel, with one channel for each node of the parse tree.
-Discreet animations convey
- (a) successful publication of rules to the pub-sub server (for locally-controlled node expansions),
- (b) successful subscription of a listener at a particular point in the parse tree (for remotely-controlled nodes).
+CSS animations report
+ (a) publication of rules to the pub-sub server (for locally-controlled node expansions),
+ (b) subscription of a listener at a particular point in the parse tree (for remotely-controlled nodes).
 
 \section{Discussion}
 
@@ -292,7 +302,7 @@ serious uses in IT enterprise (e.g. structured chat-rooms for product support),
 through traditional game tropes (e.g. dungeonmaster-player conversations),
 through new electronic models of social interaction (e.g. scripted interactive dates).
 
-Below, we discuss some possible extensions.
+% Below, we discuss some possible extensions.
 
 \subsection{Cryptographic signatures}
 
@@ -316,13 +326,13 @@ and predict future outcomes probabilistically.
 
 \section{Implementation}
 
-LetterWriter was implemented in JavaScript
+Implemented in JavaScript
 using SigmaJS, PegJS, JQuery, OpenPGP, Node, and Faye,
 with CSS from ChoiceScript.
-The software has been tested in Google Chrome and Mozilla Firefox.
+Tested in Google Chrome and Mozilla Firefox.
 
-An early choice-based engine prototype ({\em Schooz}) was developed in Scheme.
-A prototype parser-driven AI ({\em Gertie}) was developed in Perl.
+% An early choice-based engine prototype ({\em Schooz}) was developed in Scheme.
+% A prototype parser-driven AI ({\em Gertie}) was developed in Perl.
 
 
 \subsection{Availability}

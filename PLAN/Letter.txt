@@ -8,6 +8,8 @@ Placeholder, Prompt and Hints should allow ParamReference.
 
 Private nodes, whose immediate text children (preamble, placeholder, terminals) are only visible to owner
 
+Allow arbitrary functions (ParamFunc eval'd in calling scope): $x => $y+$z;  or $x @=> $y+$z;
+
 Role assignment ideas:
  Allow sym_modifiers in grammar (NontermReference in code) to specify a role that overrides nonterminal role
   e.g. "@battle#2" or "@test#3;"

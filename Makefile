@@ -9,9 +9,6 @@ all: jquery parsers README.html doc/CheatSheet.html img/icon pagedown
 pegjs:
 	npm install pegjs
 
-faye:
-	npm install faye
-
 pagedown:
 	hg clone https://code.google.com/p/pagedown/
 
@@ -20,9 +17,6 @@ jquery:
 	wget http://jqueryui.com/resources/download/jquery-ui-1.10.3.zip
 	unzip jquery-ui-1.10.3.zip
 	mv jquery-ui-1.10.3 $@
-
-openpgpjs:
-	git clone https://github.com/openpgpjs/openpgpjs.git
 
 # Parsers
 
@@ -33,9 +27,6 @@ lib/parser/funkscene.js: grammar/funkscene.pegjs
 
 lib/parser/graph.js: grammar/graph.pegjs
 	$(PEGJS) -e FunkScene.graphGenerator --track-line-and-column $< $@
-
-lib/parser/letter.js: grammar/letter.pegjs
-	$(PEGJS) -e LetterWriter.parser --track-line-and-column $< $@
 
 lib/parser/cazoo.js: grammar/cazoo.pegjs
 	$(PEGJS) -e Cazoo.parser --track-line-and-column $< $@
@@ -54,10 +45,6 @@ img/icon:
 	test -e img || mkdir img
 	mv game-icons.net/icons/lorc/originals/svg $@
 	rm -rf game-icons.net
-
-# Run test server
-server:
-	node node/simple-node-test-server.js
 
 # for make
 .SECONDARY:

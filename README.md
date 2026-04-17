@@ -17,7 +17,7 @@ The source code is available at [GitHub](https://github.com/ihh/funkscene).
 
 If you want to modify the compiler you will need [PegJS](http://pegjs.majda.cz/).
 
-The minimal [demo code](https://github.com/ihh/funkscene/blob/master/scene/belsidore.scene) is usually running at [tinyurl.com/funkscene](http://tinyurl.com/funkscene).
+The minimal [demo code](https://github.com/ihh/funkscene/blob/master/scene/belsidore.scene) is hosted at [ihh.github.io/funkscene](https://ihh.github.io/funkscene/).
 
 The FunkScene Language
 ======================
